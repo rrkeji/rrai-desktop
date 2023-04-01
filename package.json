@@ -1,0 +1,29 @@
+{
+  "name": "rrai-desktop",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "author": "rrkeji <rrkeji@163.com>",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.0.1",
+    "@tauri-apps/api": "^1.2.0",
+    "antd": "^5.3.3",
+    "classnames": "^2.3.2",
+    "umi": "^4.0.64"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.2.2",
+    "@types/node": "^18.7.10",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}

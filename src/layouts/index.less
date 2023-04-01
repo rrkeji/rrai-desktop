@@ -1,0 +1,91 @@
+@import url('../variable.less');
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex: 1;
+
+    .navs {
+      width: 60px;
+      height: 100%;
+      background-color: @primary-bg-color;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .items {
+        display: flex;
+        flex-direction: column;
+
+        .item {
+          width: 60px;
+          height: 60px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: #6f6f6f;
+
+          .item_icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+          }
+
+          .item_title {
+            font-size: 12px;
+            margin-top: -10px;
+          }
+        }
+
+        .img_item {
+
+          .item_icon {
+            width: 30px;
+            height: 30px;
+          }
+
+          .item_title {
+            font-size: 12px;
+            margin-top: -2px;
+          }
+        }
+
+        .item.active {
+          color: @primary-color;
+
+          .item_icon {
+            color: @primary-color;
+          }
+        }
+      }
+
+
+      ul {
+        padding: 0;
+        list-style: none;
+        display: flex;
+      }
+
+      li {
+        margin-right: 1em;
+      }
+    }
+
+    .content {
+      flex: 1;
+    }
+  }
+
+}

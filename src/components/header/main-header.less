@@ -1,0 +1,128 @@
+.conatiner {
+    display: flex;
+    justify-content: flex-start;
+    height: 48px;
+    align-items: center;
+    background-color: #F6F6F6;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+    width: 260px;
+}
+
+.right {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    align-items: center;
+    line-height: 48px;
+    height: 48px;
+    padding-right: 6px;
+}
+
+.window_butttons {
+    height: 100%;
+    width: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .window_button {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        font-size: 10px;
+        line-height: 12px;
+        text-align: center;
+        border-radius: 50%;
+        padding: 0 4px;
+    }
+
+    .window_button_icon {
+        display: none;
+    }
+
+    .window_button_icon_normal {
+        display: inline-block;
+        font-size: 0px;
+    }
+
+}
+
+.window_butttons:hover .window_button_icon {
+    display: inline-block;
+}
+
+.window_butttons:hover .window_button_icon_normal {
+    display: none;
+}
+
+.logo {
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    padding: 0 5px;
+    align-items: center;
+}
+
+.logo_png {
+    width: 40px;
+    height: 40px;
+    line-height: 48px;
+}
+
+.logo_title {
+    flex-grow: 1;
+    font-size: 20px;
+    text-align: left;
+    line-height: 48px;
+    color: #050505;
+    font-weight: bold;
+    margin-left: 6px;
+}
+
+.logo_title:hover {
+    color: #06A7FF;
+}
+
+.tools {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    line-height: 48px;
+    height: 48px;
+    width: 300px;
+    margin-right: 20px;
+}
+
+.tool_button {
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: row;
+}
+
+.tool_button_icon {
+    width: 32px;
+}
+
+.tool_button_title {
+    display: inline-block;
+}
+
+.button {
+    display: inline-block;
+}
+
+.popover {
+    border-radius: 20px;
+    text-align: center;
+}
