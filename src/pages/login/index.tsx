@@ -5,7 +5,7 @@ import { Browser } from '@/components/index';
 
 const APPID = "wxd2ed8df26eea65be";
 
-const REDIRECT_URL = "https://www.idns.link/rrai/wx/login/notify";
+const REDIRECT_URL = "https://www.idns.link/rrai/proxy/wx/login/notify";
 
 export default function LoginPage() {
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function LoginPage() {
   return (
     <Browser src={`https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}&response_type=code&scope=snsapi_login&state=rrai_desktop#wechat_redirect`}
       receiveMessage={(origin, type, data) => {
-
+        console.log(origin, type, data);
       }}></Browser>
   );
 }
