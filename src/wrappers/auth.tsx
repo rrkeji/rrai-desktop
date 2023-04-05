@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'umi'
 
 export default (props) => {
 
-    let isLogin = true;
+    let isLogin = false;
 
     if (isLogin) {
         return <Outlet />;

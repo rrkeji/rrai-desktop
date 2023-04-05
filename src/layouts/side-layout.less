@@ -1,0 +1,31 @@
+@import url('../variable.less');
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .main {
+        flex-grow: 1;
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+
+        .side {
+            width: 250px;
+            background-color: @side-bg-color;
+            border-right: 1px solid #c4c4c4;
+
+            .side_item {
+                .side_item_avatar {
+                    font-size: 24px;
+                }
+            }
+        }
+
+        .content {
+            flex: 1;
+            background-color: @content-bg-color;
+        }
+    }
+}
