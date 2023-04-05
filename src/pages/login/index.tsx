@@ -15,7 +15,13 @@ export default function LoginPage() {
     }, 100);
 
   }, []);
+
+  //https://www.idns.link/rrai/web_proxy/index.html#/wx_login_proxy?key=token&token=sasdfasdfasdf
+
   return (
-    <Browser src={`https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}&response_type=code&scope=snsapi_login&state=rrai_desktop#wechat_redirect`}></Browser>
+    <Browser src={`https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}&response_type=code&scope=snsapi_login&state=rrai_desktop#wechat_redirect`}
+      receiveMessage={(origin, type, data) => {
+
+      }}></Browser>
   );
 }
