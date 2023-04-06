@@ -2,17 +2,20 @@
 
 .container {
     height: 100%;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
 
     .main {
         flex-grow: 1;
-        flex: 1;
         display: flex;
         flex-direction: row;
 
         .side {
             width: 250px;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
             background-color: @side-bg-color;
             border-right: 1px solid #c4c4c4;
 
@@ -24,7 +27,9 @@
         }
 
         .content {
-            flex: 1;
+            height: 100%;
+            overflow: hidden;
+            flex-grow: 1;
             background-color: @content-bg-color;
         }
     }

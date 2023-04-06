@@ -5,7 +5,6 @@ import { Container, useTheme } from '@mui/joy';
 import { CssVarsProvider } from '@mui/joy/styles';
 
 import { Chat } from '@/components/Chat';
-import { NoSSR } from '@/components/util/NoSSR';
 import { isValidOpenAIApiKey, SettingsModal } from '@/components/dialogs/SettingsModal';
 import { useSettingsStore } from '@/lib/store-settings';
 
@@ -33,7 +32,7 @@ export const ChatGPTPage: React.FC<ChatGPTPageProps> = ({ }) => {
 
 
     return (
-        <NoSSR>
+        <div className={styles.container}>
             <CssVarsProvider theme={theme}>
                 <Container maxWidth={centerMode === 'full' ? false : centerMode === 'narrow' ? 'md' : 'xl'} disableGutters sx={{
                     boxShadow: {
@@ -46,7 +45,7 @@ export const ChatGPTPage: React.FC<ChatGPTPageProps> = ({ }) => {
                     <SettingsModal open={settingsShown} onClose={() => setSettingsShown(false)} />
                 </Container>
             </CssVarsProvider>
-        </NoSSR>
+        </div>
     );
 };
 
