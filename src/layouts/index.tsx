@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, Outlet, history, useLocation } from 'umi';
 import classnames from 'classnames';
 import { MainHeader } from '@/components';
+import { getUserConfig } from '@/services/index';
 
 import LOGO_PNG from '@/assets/logo.png';
 
@@ -28,6 +29,16 @@ export default function Layout() {
 
   const [active, setActive] = useState<string>(getPathName(location.pathname));
 
+
+  useEffect(() => {
+    const call = async () => {
+      //
+      let res = await getUserConfig();
+      console.log(res);
+    };
+    call();
+  }, []);
+
   useEffect(() => {
     let pathname = getPathName(location.pathname);
     setActive(pathname)
@@ -45,13 +56,13 @@ export default function Layout() {
         <div data-tauri-drag-region className={styles.navs}>
           <div className={classnames(styles.items)}>
             <div className={classnames(styles.item, styles.img_item, active === 'home' ? styles.active : undefined)} onClick={() => {
-              history.push('/home');
+              history.push('/settings/account');
             }}>
               <img className={classnames(styles.item_icon)} src={LOGO_PNG}></img>
               <div className={classnames(styles.item_title)}>软软AI</div>
             </div>
             <div className={classnames(styles.item, active === 'chat' ? styles.active : undefined)} onClick={() => {
-              history.push('/chat');
+              history.push('/chat/chatgpt');
             }}>
               <div className={classnames(styles.item_icon, 'iconfont icon-jiqiren')}></div>
               <div className={classnames(styles.item_title)}>AI问答</div>
@@ -77,12 +88,14 @@ export default function Layout() {
           </div>
 
           <div className={classnames(styles.items)}>
-            <div className={classnames(styles.item)}>
-              <div className={classnames(styles.item_icon, 'iconfont icon-a-205shezhi')}></div>
+            <div className={classnames(styles.item, active === 'miniprogram' ? styles.active : undefined)} onClick={() => {
+              history.push('/miniprogram');
+            }}>
+              <div className={classnames(styles.item_icon, 'iconfont icon-xiaochengxu')}></div>
               <div className={classnames(styles.item_title)}>小程序</div>
             </div>
             <div className={classnames(styles.item, active === 'settings' ? styles.active : undefined)} onClick={() => {
-              history.push('/settings/upgrade');
+              history.push('/settings/account');
             }}>
               <div className={classnames(styles.item_icon, 'iconfont icon-a-205shezhi')}></div>
               <div className={classnames(styles.item_title)}>设置</div>

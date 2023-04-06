@@ -13,6 +13,12 @@
   "tauri": {
     "allowlist": {
       "all": true,
+      "http": {
+        "scope": [
+          "http://**",
+          "https://**"
+        ]
+      },
       "shell": {
         "all": false,
         "open": true
@@ -27,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "link.idns.rrai.desktop",
       "targets": "all"
     },
     "security": {

@@ -6,13 +6,9 @@ export default {
     ],
     "chat": [
         {
-            "title": "ChatGPT3.5",
+            "title": "ChatGPT",
             "path": "/chat/chatgpt"
         },
-        {
-            "title": "ChatGPT3",
-            "path": "/chat/chatgpt"
-        }
     ],
     "painter": [
         {
@@ -45,6 +41,10 @@ export default {
         }
     ],
     "settings": [
+        {
+            "title": "账号设置",
+            "path": "/settings/account"
+        },
         {
             "title": "通用设置",
             "path": "/settings/settings"

@@ -1,10 +1,12 @@
 import { Navigate, Outlet } from 'umi'
 
-export default (props) => {
+import { isLogin } from '@/utils/index';
 
-    let isLogin = false;
+export default (props: any) => {
 
-    if (isLogin) {
+    let login = isLogin();
+
+    if (login) {
         return <Outlet />;
     } else {
         return <Navigate to="/login" />;

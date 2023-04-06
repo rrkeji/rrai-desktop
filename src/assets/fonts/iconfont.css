@@ -1,17 +1,28 @@
 @font-face {
-  font-family: "iconfont";
-  /* Project id 3988715 */
-  src        : url('iconfont.woff2?t=1680308452328') format('woff2'),
-    url('iconfont.woff?t=1680308452328') format('woff'),
-    url('iconfont.ttf?t=1680308452328') format('truetype');
+  font-family: "iconfont"; /* Project id 3988715 */
+  src: url('iconfont.woff2?t=1680750486557') format('woff2'),
+       url('iconfont.woff?t=1680750486557') format('woff'),
+       url('iconfont.ttf?t=1680750486557') format('truetype');
 }
 
 .iconfont {
-  font-family            : "iconfont" !important;
-  font-size              : 16px;
-  font-style             : normal;
-  -webkit-font-smoothing : antialiased;
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-xiaochengxu:before {
+  content: "\e63c";
+}
+
+.icon-Tools:before {
+  content: "\ed5f";
+}
+
+.icon-model:before {
+  content: "\e867";
 }
 
 .icon-lunyu:before {
@@ -265,3 +276,4 @@
 .icon-jianglijili:before {
   content: "\e647";
 }
+

@@ -10,12 +10,22 @@ export default defineConfig({
   routes: [
     {
       path: '/login',
-      component: 'login',
+      component: '@/pages/login/index',
+      layout: false
+    },
+    {
+      path: '/tklogin',
+      component: '@/pages/login/tklogin',
       layout: false
     },
     {
       path: "/home",
-      component: "home/index"
+      component: "home/index",
+      wrappers: ['@/wrappers/auth'],
+    },
+    {
+      path: "/miniprogram",
+      component: "@/pages/miniprogram/index"
     },
     {
       path: '/',
@@ -24,7 +34,7 @@ export default defineConfig({
       routes: [
         {
           path: "/chat/chatgpt",
-          component: "@/pages/chat/index"
+          component: "@/pages/chat/chatgpt"
         },
         {
           path: "/chat",
@@ -41,6 +51,10 @@ export default defineConfig({
         {
           path: "/painter",
           component: "painter/index"
+        },
+        {
+          path: "/settings/account",
+          component: "@/pages/settings/account/index",
         },
         {
           path: "/settings/settings",

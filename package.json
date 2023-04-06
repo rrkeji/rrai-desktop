@@ -14,14 +14,27 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
+    "@dqbd/tiktoken": "^1.0.3",
+    "@emotion/cache": "^11.10.7",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/joy": "5.0.0-alpha.74",
     "@tauri-apps/api": "^1.2.0",
     "antd": "^5.3.3",
     "classnames": "^2.3.2",
-    "umi": "^4.0.64"
+    "clsx": "^1.2.1",
+    "pdfjs-dist": "^3.5.141",
+    "prismjs": "^1.29.0",
+    "react-markdown": "^8.0.6",
+    "remark-gfm": "^3.0.1",
+    "umi": "^4.0.64",
+    "uuidv4": "^6.2.13",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.2.2",
     "@types/node": "^18.7.10",
+    "@types/prismjs": "^1.26.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "typescript": "^5.0.0"
