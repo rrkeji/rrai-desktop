@@ -32,12 +32,13 @@ export default {
     ],
     "tools": [
         {
-            "title": "小画板",
-            "path": "/chat/chatgpt"
+            "title": "Stable Diffusion一键安装",
+            "path": "/tools/sdinstall"
         },
         {
-            "title": "素材检索",
-            "path": "/chat/chatgpt"
+            "title": "素材检索(Pexels)",
+            "type": "URL",
+            "path": "https://www.pexels.com/zh-cn/"
         }
     ],
     "settings": [

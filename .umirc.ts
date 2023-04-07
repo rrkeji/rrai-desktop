@@ -37,6 +37,10 @@ export default defineConfig({
           component: "@/pages/chat/chatgpt"
         },
         {
+          path: "/browser/:src",
+          component: "@/pages/browser/index"
+        },
+        {
           path: "/chat",
           component: "@/pages/chat/index"
         },
@@ -71,6 +75,10 @@ export default defineConfig({
         {
           path: "/tools",
           component: "tools/index"
+        },
+        {
+          path: "/tools/sdinstall",
+          component: "@/pages/tools/sdinstall/index"
         },
       ],
     },

@@ -11,12 +11,13 @@ export interface SideListItemProps {
     title: string,
     subTitle?: string,
     timestamp?: string,
+    rightBar?: React.ReactNode,
     onClick?: (item: any) => void
 }
 
 export const SideListItem: React.FC<SideListItemProps> = (props) => {
 
-    const { active, className, avatar, subTitle, title, avatarBackground } = props;
+    const { active, className, avatar, subTitle, title, avatarBackground, timestamp, rightBar } = props;
 
     return (
         <div className={classnames(styles.container, className, active ? styles.active : undefined)} onClick={() => {
@@ -33,10 +34,14 @@ export const SideListItem: React.FC<SideListItemProps> = (props) => {
                 </div>
                 {subTitle && subTitle.length > 0 ? <div className={classnames(styles.sub_title)}>{subTitle ? subTitle : ''}</div> : ' '}
             </div>
-            <div className={classnames(styles.right)}>
-                <div className={classnames(styles.time)}></div>
-                <div className={classnames(styles.right_bar)}></div>
-            </div>
+            {
+                timestamp || rightBar ? (
+                    <div className={classnames(styles.right)}>
+                        <div className={classnames(styles.time)}>{timestamp}</div>
+                        <div className={classnames(styles.right_bar)}></div>
+                    </div>
+                ) : ''
+            }
         </div>
     );
 };

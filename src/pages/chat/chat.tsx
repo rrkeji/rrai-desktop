@@ -3,17 +3,12 @@ import * as React from 'react';
 import { Box, Stack, useTheme } from '@mui/joy';
 import { SxProps } from '@mui/joy/styles/types';
 
-import { ApiChatInput } from '../pages/api/chat';
-import { ApiPublishResponse } from '../pages/api/publish';
-import { ApplicationBar } from '@/components/ApplicationBar';
-import { ChatMessageList } from '@/components/ChatMessageList';
-import { Composer } from '@/components/Composer';
+import { ConversationBar } from '@/components/conversation/index';
+import { ChatMessageList } from '@/components/chat/index';
+import { Composer } from '@/components/composer/index';
 import { ConfirmationModal } from '@/components/dialogs/ConfirmationModal';
 import { DMessage, downloadConversationJson, useActiveConfiguration, useChatStore } from '@/lib/store-chats';
-import { PublishedModal } from '@/components/dialogs/PublishedModal';
-import { Link } from '@/components/util/Link';
 import { SystemPurposes } from '@/lib/data';
-import { publishConversation } from '@/lib/publish';
 import { useSettingsStore } from '@/lib/store-settings';
 
 
@@ -36,7 +31,6 @@ function createDMessage(role: DMessage['role'], text: string): DMessage {
  */
 async function _streamAssistantResponseMessage(
   conversationId: string, history: DMessage[],
-  apiKey: string | undefined, apiHost: string | undefined,
   chatModelId: string, modelTemperature: number, modelMaxResponseTokens: number, abortSignal: AbortSignal,
   addMessage: (conversationId: string, message: DMessage) => void,
   editMessage: (conversationId: string, messageId: string, updatedMessage: Partial<DMessage>, touch: boolean) => void,
@@ -49,9 +43,7 @@ async function _streamAssistantResponseMessage(
   addMessage(conversationId, assistantMessage);
   const messageId = assistantMessage.id;
 
-  const payload: ApiChatInput = {
-    ...(apiKey ? { apiKey } : {}),
-    ...(apiHost ? { apiHost } : {}),
+  const payload: any = {
     model: chatModelId,
     messages: history.map(({ role, text }) => ({
       role: role,
@@ -60,6 +52,8 @@ async function _streamAssistantResponseMessage(
     temperature: modelTemperature,
     max_tokens: modelMaxResponseTokens,
   };
+
+  console.log(payload.messages, '====');
 
   try {
 
@@ -104,7 +98,6 @@ async function _streamAssistantResponseMessage(
         editMessage(conversationId, messageId, { text: incrementalText }, false);
       }
     }
-
   } catch (error: any) {
     if (error?.name === 'AbortError') {
       // expected, the user clicked the "stop" button
@@ -122,8 +115,6 @@ async function _streamAssistantResponseMessage(
 export function Chat(props: { onShowSettings: () => void, sx?: SxProps }) {
   // state
   const [clearConfirmationId, setClearConfirmationId] = React.useState<string | null>(null);
-  const [publishConversationId, setPublishConversationId] = React.useState<string | null>(null);
-  const [publishResponse, setPublishResponse] = React.useState<ApiPublishResponse | null>(null);
   const [abortController, setAbortController] = React.useState<AbortController | null>(null);
 
   // external state
@@ -153,9 +144,11 @@ export function Chat(props: { onShowSettings: () => void, sx?: SxProps }) {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const { apiKey, modelTemperature, modelMaxResponseTokens, modelApiHost } = useSettingsStore.getState();
+    const { modelTemperature, modelMaxResponseTokens } = useSettingsStore.getState();
     const { appendMessage, editMessage } = useChatStore.getState();
-    await _streamAssistantResponseMessage(conversationId, history, apiKey, modelApiHost, chatModelId, modelTemperature, modelMaxResponseTokens, controller.signal, appendMessage, editMessage);
+    console.log(history, 'history');
+
+    await _streamAssistantResponseMessage(conversationId, history, chatModelId, modelTemperature, modelMaxResponseTokens, controller.signal, appendMessage, editMessage);
 
     // clear to send, again
     setAbortController(null);
@@ -180,19 +173,6 @@ export function Chat(props: { onShowSettings: () => void, sx?: SxProps }) {
     }
   };
 
-
-  const handlePublishConversation = (conversationId: string | null) =>
-    setPublishConversationId(conversationId || activeConversationId || null);
-
-  const handleConfirmedPublishConversation = async () => {
-    if (publishConversationId) {
-      const conversation = findConversation(publishConversationId);
-      setPublishConversationId(null);
-      if (conversation)
-        setPublishResponse(await publishConversation('paste.gg', conversation, !useSettingsStore.getState().showSystemMessages));
-    }
-  };
-
   const handleClearConversation = (conversationId: string | null) =>
     setClearConfirmationId(conversationId || activeConversationId || null);
 
@@ -205,7 +185,6 @@ export function Chat(props: { onShowSettings: () => void, sx?: SxProps }) {
 
 
   return (
-
     <Stack
       sx={{
         minHeight: '100vh',
@@ -213,14 +192,13 @@ export function Chat(props: { onShowSettings: () => void, sx?: SxProps }) {
         ...(props.sx || {}),
       }}>
 
-      <ApplicationBar
+      <ConversationBar
         onClearConversation={handleClearConversation}
         onDownloadConversationJSON={handleDownloadConversationToJson}
-        onPublishConversation={handlePublishConversation}
         onShowSettings={props.onShowSettings}
         sx={{
           position: 'sticky', top: 0, zIndex: 20,
-          // ...(process.env.NODE_ENV === 'development' ? { background: theme.vars.palette.danger.solidBg } : {}),
+          background: '#E4E4E4',
         }} />
 
       <ChatMessageList
@@ -245,29 +223,11 @@ export function Chat(props: { onShowSettings: () => void, sx?: SxProps }) {
         />
       </Box>
 
-
-      {/* Confirmation for Publishing */}
-      <ConfirmationModal
-        open={!!publishConversationId} onClose={() => setPublishConversationId(null)} onPositive={handleConfirmedPublishConversation}
-        confirmationText={<>
-          Share your conversation anonymously on <Link href='https://paste.gg' target='_blank'>paste.gg</Link>?
-          It will be unlisted and available to share and read for 30 days. Keep in mind, deletion may not be possible.
-          Are you sure you want to proceed?
-        </>} positiveActionText={'Understood, upload to paste.gg'}
-      />
-
-      {/* Show the Published details */}
-      {!!publishResponse && (
-        <PublishedModal open onClose={() => setPublishResponse(null)} response={publishResponse} />
-      )}
-
       {/* Confirmation for Delete */}
       <ConfirmationModal
         open={!!clearConfirmationId} onClose={() => setClearConfirmationId(null)} onPositive={handleConfirmedClearConversation}
         confirmationText={'Are you sure you want to discard all the messages?'} positiveActionText={'Clear conversation'}
       />
-
     </Stack>
-
   );
 }
