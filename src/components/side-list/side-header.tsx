@@ -13,8 +13,8 @@ export interface SideHeaderProps {
 
 export const SideHeader: React.FC<SideHeaderProps> = ({ className }) => {
     return (
-        <div className={classnames(styles.container, className)}>
-            <div className={styles.input}>
+        <div data-tauri-drag-region className={classnames(styles.container, className)}>
+            <div data-tauri-drag-region className={styles.input}>
                 <Input
                     placeholder="搜索"
                     name="keywords"
@@ -28,7 +28,7 @@ export const SideHeader: React.FC<SideHeaderProps> = ({ className }) => {
                     }}
                 />
             </div>
-            <div className={styles.button}>
+            <div data-tauri-drag-region className={styles.button}>
                 <IconButton variant="solid">
                     <PlusOutlined />
                 </IconButton>

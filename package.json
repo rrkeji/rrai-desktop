@@ -25,6 +25,8 @@
     "clsx": "^1.2.1",
     "pdfjs-dist": "^3.5.141",
     "prismjs": "^1.29.0",
+    "prop-types": "^15.8.1",
+    "radium": "^0.26.2",
     "react-markdown": "^8.0.6",
     "remark-gfm": "^3.0.1",
     "umi": "^4.0.64",

@@ -66,7 +66,7 @@ export function ConversationBar({ onClearConversation, onDownloadConversationJSO
 
 
     return <>
-        <Sheet
+        <Sheet data-tauri-drag-region
             variant='solid' color='neutral' invertedColors
             sx={{
                 p: 1,

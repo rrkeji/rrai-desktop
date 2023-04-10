@@ -1,10 +1,11 @@
 
 import { useCallback, useEffect, useState } from 'react';
-
+import { appWindow } from '@tauri-apps/api/window';
 import { Outlet, history, useLocation } from 'umi';
 import classnames from 'classnames';
 import { getUserConfig } from '@/services/index';
-
+import Controls from '@/components/title-bar/controls/index';
+import { windowIsFocused } from '@/components/index';
 import LOGO_PNG from '@/assets/logo.png';
 
 import styles from './index.less';
@@ -29,7 +30,23 @@ export default function Layout() {
 
   const [active, setActive] = useState<string>('');
 
+  const [isWindowFocused, setIsWindowFocused] = useState<boolean>(true);
+
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+
   useEffect(() => {
+    const windowFocus = () => {
+      setIsWindowFocused(true);
+    }
+    const windowBlur = () => {
+      setIsWindowFocused(false);
+    }
+    //
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', windowFocus);
+      window.addEventListener('blur', windowBlur);
+    }
+
     const call = async () => {
       //
       let res = await getUserConfig();
@@ -41,6 +58,14 @@ export default function Layout() {
       setActive(active);
     };
     call();
+
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('focus', windowFocus);
+        window.removeEventListener('blur', windowBlur);
+      }
+    };
   }, []);
 
   //
@@ -48,6 +73,35 @@ export default function Layout() {
     <div className={styles.container}>
       <div data-tauri-drag-region className={styles.navs}>
         <div className={classnames(styles.items)}>
+          <div className={classnames(styles.controls)}>
+            <Controls
+              isFullscreen={isFullscreen}
+              onCloseClick={async () => {
+                await appWindow.close();
+              }}
+              onMinimizeClick={async () => {
+                await appWindow.minimize();
+              }}
+              onMaximizeClick={async () => {
+                if (await appWindow.isMaximized()) {
+                  await appWindow.unmaximize();
+                  setIsFullscreen(false);
+                } else {
+                  await appWindow.maximize();
+                  setIsFullscreen(true);
+                }
+              }}
+              onResizeClick={async () => {
+                if (await appWindow.isMaximized()) {
+                  await appWindow.unmaximize();
+                  setIsFullscreen(false);
+                } else {
+                  await appWindow.maximize();
+                  setIsFullscreen(true);
+                }
+              }}
+              isWindowFocused={isWindowFocused}></Controls>
+          </div>
           <div className={classnames(styles.item, styles.img_item, active === 'home' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'home');
             setActive('home');

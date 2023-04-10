@@ -26,6 +26,7 @@
         "open": true
       }
     },
+    "macOSPrivateApi":true,
     "bundle": {
       "active": true,
       "icon": [
@@ -52,7 +53,8 @@
         "width": 1024,
         "height": 768,
         "fileDropEnabled": true,
-        "decorations": true,
+        "decorations": false,
+        "transparent": true,
         "visible": true
       }
     ]
