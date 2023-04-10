@@ -86,6 +86,7 @@ export function SettingsModal({ open, onClose }: { open: boolean, onClose: () =>
   const handleModelApiHostChange = (e: React.ChangeEvent) => setModelApiHost((e.target as HTMLInputElement).value);
 
   const needsApiKey = !!process.env.REQUIRE_USER_API_KEYS;
+  
   const isValidKey = isValidOpenAIApiKey(apiKey);
 
   const hideOnMobile = { display: { xs: 'none', md: 'flex' } };

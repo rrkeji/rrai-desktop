@@ -11,7 +11,7 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 
-// import { useHistory, useLocation, useParams } from 'umi';
+import { history, useLocation, useParams } from 'umi';
 
 import UDI_PNG from '@/assets/logo_256.png';
 
@@ -94,7 +94,6 @@ export const HeaderToolButton = (props: {
 };
 
 export const HeaderPopover = (props: {}) => {
-  const history: any = useHistory();
 
   return (
     <div className={styles.popover}>
