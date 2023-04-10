@@ -80,6 +80,10 @@ export default defineConfig({
           path: "/tools/sdinstall",
           component: "@/pages/tools/sdinstall/index"
         },
+        {
+          path: "/tools/terminal",
+          component: "@/pages/tools/terminal/index"
+        },
       ],
     },
   ],

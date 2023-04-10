@@ -57,6 +57,7 @@ export default function SideLayout() {
                     items && items.map((item: any, index: number) => {
                         return (
                             <SideListItem
+                                key={index}
                                 className={classnames(styles.side_item)}
                                 active={location.pathname == item.path || (item.type === 'URL' && `/browser/${encodeURIComponent(item.path)}` == location.pathname)}
                                 title={item.title}

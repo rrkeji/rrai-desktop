@@ -23,6 +23,7 @@ futures = "0.3"
 anyhow = "1.0"
 tracing-subscriber = { version = "0.3", features = ["fmt"] }
 tracing = "0.1.15"
+nix = "0.26.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

@@ -1,8 +1,47 @@
+@import url('@/variable.less');
+
 .container {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    .steps {
-        height: 100%;
+    .header {
+        width: 100%;
+        height: 90px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
     }
+
+    .content {
+        width: 100%;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .steps {
+            padding: 0 40px;
+        }
+
+        .step_content_container {
+            box-sizing: border-box;
+            width: 100%;
+            flex-grow: 1;
+            padding: 20px 40px;
+
+            .step_content {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                background-color: @side-bg-color;
+            }
+        }
+
+
+    }
+
 }

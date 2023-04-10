@@ -57,47 +57,73 @@ async function _streamAssistantResponseMessage(
 
   try {
 
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: abortSignal,
-    });
+    const requestWebsocket = (payload, resolve, reject): Promise<any> => {
 
-    if (response.body) {
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder('utf-8');
+      return new Promise((resolve, reject) => {
+        let websocket = new WebSocket('ws://45.207.58.161:3001');
 
-      // loop forever until the read is done, or the abort controller is triggered
-      let incrementalText = '';
-      let parsedFirstPacket = false;
-      while (true) {
-        const { value, done } = await reader.read();
-
-        if (done) break;
-
-        incrementalText += decoder.decode(value);
-
-        // there may be a JSON object at the beginning of the message, which contains the model name (streaming workaround)
-        if (!parsedFirstPacket && incrementalText.startsWith('{')) {
-          const endOfJson = incrementalText.indexOf('}');
-          if (endOfJson > 0) {
-            const json = incrementalText.substring(0, endOfJson + 1);
-            incrementalText = incrementalText.substring(endOfJson + 1);
+        //调用接口
+        let incrementalText = '';
+        //payload.messages[payload.messages.length - 1].content
+        websocket.onopen = (evt) => {
+          console.log(evt);
+          setTimeout(() => {
+            websocket.send(JSON.stringify({
+              cmd: "ChatGPT_Text",
+              args: {
+                "prompt": payload.messages,
+                "temperature": 0
+              }
+            }));
+          }, 2000);
+        };
+        websocket.onclose = function (evt) {
+        };
+        websocket.onmessage = function (res) {
+          let messageStr = res.data;
+          console.log('接收到的数据:', messageStr, typeof (messageStr));
+          if (!messageStr) {
+            console.error("messageStr为空");
+            return;
+          }
+          let messageObj: any = {};
+          try {
+            messageObj = JSON.parse(messageStr);
+          } catch (error) {
+            console.error("解析json失败");
+            return;
+          }
+          if (messageObj.cmd === 'Error') {
+            //错误
+            resolve(messageStr);
+            return;
+          } else if (messageObj.cmd === 'Response' && messageObj.src !== '') {
+            //普通的命令返回
             try {
-              const parsed = JSON.parse(json);
-              editMessage(conversationId, messageId, { modelId: parsed.model }, false);
-              parsedFirstPacket = true;
-            } catch (e) {
-              // error parsing JSON, ignore
-              console.log('Error parsing JSON: ' + e);
+              //调用处理函数
+              resolve(messageObj.message);
+            } catch (error) {
+              console.log(error);
+            }
+          } else if (messageObj.cmd === 'Stream' && messageObj.message !== '') {
+            //Stream
+            try {
+              //调用处理函数
+              incrementalText += messageObj.message;
+              editMessage(conversationId, messageId, { text: incrementalText }, false);
+            } catch (error) {
+              console.log(error);
             }
           }
-        }
+        };
+        websocket.onerror = function (evt) {
+          reject();
+        };
+      });
+    };
 
-        editMessage(conversationId, messageId, { text: incrementalText }, false);
-      }
-    }
+    let res = await requestWebsocket(payload, (res) => { }, (err) => { });
+    console.log(res);
   } catch (error: any) {
     if (error?.name === 'AbortError') {
       // expected, the user clicked the "stop" button
@@ -107,7 +133,6 @@ async function _streamAssistantResponseMessage(
     }
   }
 
-  // finally, stop the typing animation
   editMessage(conversationId, messageId, { typing: false }, false);
 }
 

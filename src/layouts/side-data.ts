@@ -32,14 +32,17 @@ export default {
     ],
     "tools": [
         {
-            "title": "Stable Diffusion一键安装",
+            "title": "Stable Diffusion安装",
             "path": "/tools/sdinstall"
         },
         {
             "title": "素材检索(Pexels)",
             "type": "URL",
             "path": "https://www.pexels.com/zh-cn/"
-        }
+        }, {
+            "title": "终端",
+            "path": "/tools/terminal"
+        },
     ],
     "settings": [
         {
