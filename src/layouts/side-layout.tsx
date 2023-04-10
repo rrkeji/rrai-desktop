@@ -50,6 +50,7 @@ export default function SideLayout() {
     return (
         <>
             <SideList className={styles.side}>
+                <div  data-tauri-drag-region className={styles.height24}></div>
                 {
                     active == 'chat' ? (<SideHeader className={styles.side_header}></SideHeader>) : ''
                 }

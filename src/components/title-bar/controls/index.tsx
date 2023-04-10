@@ -9,16 +9,14 @@ var styles = {
     userSelect: 'none',
     cursor: 'default',
     display: 'flex',
-    width: '61px'
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '60px',
+    height: '20px'
   },
-
-  inset: {
-    marginLeft: '5px'
-  }
 };
 
 type ControlsPropTypes = {
-  inset?: boolean,
   isFullscreen: boolean,
   onCloseClick: () => void,
   onMinimizeClick: () => void,

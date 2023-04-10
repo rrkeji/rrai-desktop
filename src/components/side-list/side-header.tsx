@@ -1,11 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
-import Input from '@mui/joy/Input';
-import IconButton from '@mui/joy/IconButton';
 import { PlusOutlined } from '@ant-design/icons';
-import Stack from '@mui/joy/Stack';
-
+import { Input, Button } from 'antd';
 import styles from './side-header.less';
+
+const { Search } = Input;
 
 export interface SideHeaderProps {
     className?: string
@@ -15,23 +14,14 @@ export const SideHeader: React.FC<SideHeaderProps> = ({ className }) => {
     return (
         <div data-tauri-drag-region className={classnames(styles.container, className)}>
             <div data-tauri-drag-region className={styles.input}>
-                <Input
-                    placeholder="搜索"
-                    name="keywords"
-                    type="text"
-                    autoComplete="on"
-                    defaultValue=""
-                    variant="outlined"
-                    sx={{
-                        width: '180px',
-                        height: '40px'
-                    }}
-                />
+                <Search placeholder="搜索" onSearch={(value: string) => {
+                    console.log(value);
+                }} />
             </div>
             <div data-tauri-drag-region className={styles.button}>
-                <IconButton variant="solid">
+                <Button variant="solid">
                     <PlusOutlined />
-                </IconButton>
+                </Button>
             </div>
         </div>
     );

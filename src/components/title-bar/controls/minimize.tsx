@@ -6,7 +6,7 @@ import Radium from 'radium';
 type MinimizePropTypes = {
   style?: any,
   showIcon: boolean,
-  disabled: boolean,
+  disabled?: boolean,
   isWindowFocused: boolean,
   onClick?: () => void,
 }
