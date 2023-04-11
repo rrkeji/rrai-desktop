@@ -37,5 +37,19 @@
         position: relative;
         flex-grow: 1;
         background-color: @content-bg-color;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .message_list {
+            width: 100%;
+            flex-wrap: 1;
+        }
+
+        .composer {
+            width: 100%;
+            min-height: 100px;
+            max-height: 600px;
+        }
     }
 }

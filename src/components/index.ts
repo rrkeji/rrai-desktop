@@ -5,3 +5,4 @@ export * from './chat/index';
 export * from './composer/index';
 export * from './conversation/index';
 export * from './monitor';
+export * from './message/index';

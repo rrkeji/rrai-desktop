@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { history, useLocation, useParams } from 'umi';
 import classnames from 'classnames';
-import { SideList, SideListItem, SideHeader } from '@/components/index';
+import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade } from '@/components/index';
 import { ConversationBar } from '@/components/conversation/index';
 import { Drawer } from 'antd';
 import { getConversationsByType } from '@/services/conversation-service';
@@ -29,6 +29,9 @@ export const ConversationPage = () => {
   const [conversationId, setConversationId] = useState<string | null>(null);
 
   const [conversationTitle, setConversationTitle] = useState<string | null>(null);
+
+
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   useEffect(() => {
     const call = async () => {
@@ -60,6 +63,16 @@ export const ConversationPage = () => {
       setConversationId(null);
     }
   }, [params.conversationId]);
+
+
+  const handleSendMessage = async (userText: string, conversationId: string | null) => {
+    //
+    // const conversation = findConversation(conversationId || activeConversationId);
+    // if (conversation)
+    //   await runAssistant(conversation.id, [...conversation.messages, createDMessage('user', userText)]);
+  };
+
+  const handleStopGeneration = () => abortController?.abort();
 
   return (
     <>
@@ -103,9 +116,15 @@ export const ConversationPage = () => {
 
 
         <div className={styles.content}>
-          <div >
-
-          </div>
+          <MessageList className={styles.message_list}></MessageList>
+          <ComposerFacade
+            height={300}
+            className={styles.composer}
+            disableSend={!!abortController}
+            conversationType={active!}
+            sendMessage={handleSendMessage}
+            stopGeneration={handleStopGeneration}
+          ></ComposerFacade>
           <Drawer
             width={310}
             placement={"right"}
@@ -119,6 +138,7 @@ export const ConversationPage = () => {
             }}
             getContainer={false}
           >
+
           </Drawer>
         </div>
       </div>
