@@ -324,11 +324,8 @@ export function ChatMessage(props: { message: DMessage, disableSend: boolean, on
 
             {/* Edit / Blocks */}
             {!isEditing ? (
-
                 <Box sx={{ ...cssBlocks, flexGrow: 0, whiteSpace: 'break-spaces' }} onDoubleClick={handleMenuEdit}>
-
                     {fromSystem && wasEdited && <Typography level='body2' color='warning' sx={{ mt: 1, mx: 1.5 }}>modified by user - auto-update disabled</Typography>}
-
                     {parseBlocks(fromSystem, collapsedText).map((block, index) =>
                         block.type === 'code'
                             ? <RenderCode key={'code-' + index} codeBlock={block} sx={cssCode} />
@@ -336,15 +333,10 @@ export function ChatMessage(props: { message: DMessage, disableSend: boolean, on
                                 ? <RenderMarkdown key={'text-md-' + index} textBlock={block} sx={cssText} />
                                 : <RenderText key={'text-' + index} textBlock={block} sx={cssText} />,
                     )}
-
                     {errorMessage && <Alert variant='soft' color='warning' sx={{ mt: 1 }}><Typography>{errorMessage}</Typography></Alert>}
-
                     {isCollapsed && <Button variant='plain' onClick={handleExpand}>... expand ...</Button>}
-
                 </Box>
-
             ) : (
-
                 <Textarea
                     variant='soft' color='warning' autoFocus minRows={1}
                     value={editedText} onChange={handleEditTextChanged} onKeyDown={handleEditKeyPressed} onBlur={handleEditBlur}

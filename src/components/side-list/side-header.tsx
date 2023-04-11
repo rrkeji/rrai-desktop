@@ -7,10 +7,14 @@ import styles from './side-header.less';
 const { Search } = Input;
 
 export interface SideHeaderProps {
-    className?: string
+    className?: string,
+    activeModule: string | null
 }
 
 export const SideHeader: React.FC<SideHeaderProps> = ({ className }) => {
+
+
+
     return (
         <div data-tauri-drag-region className={classnames(styles.container, className)}>
             <div data-tauri-drag-region className={styles.input}>
@@ -19,9 +23,7 @@ export const SideHeader: React.FC<SideHeaderProps> = ({ className }) => {
                 }} />
             </div>
             <div data-tauri-drag-region className={styles.button}>
-                <Button variant="solid">
-                    <PlusOutlined />
-                </Button>
+                <PlusOutlined />
             </div>
         </div>
     );

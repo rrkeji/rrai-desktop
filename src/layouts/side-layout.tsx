@@ -3,10 +3,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, Outlet, history, useLocation } from 'umi';
 import classnames from 'classnames';
 import { SideList, SideListItem, SideHeader } from '@/components/index';
+import { ConversationBar } from '@/components/conversation/index';
+import { Drawer } from 'antd';
+
+import { getLocalValue } from '@/utils';
 
 import styles from './side-layout.less';
+
 import sideData from './side-data';
-import { getLocalValue } from '@/utils';
 
 const getPathName = (url: string): string => {
     console.log(url);
@@ -29,6 +33,10 @@ export default function SideLayout() {
 
     const [items, setItems] = useState<Array<any>>([]);
 
+    const [menuFolded, setMenuFolded] = useState<boolean>(false);
+
+    const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+
     useEffect(() => {
         let active = getLocalValue('rrai_active_menu');
         if (!active) {
@@ -49,35 +57,59 @@ export default function SideLayout() {
 
     return (
         <>
-            <SideList className={styles.side}>
-                <div  data-tauri-drag-region className={styles.height24}></div>
-                {
-                    active == 'chat' ? (<SideHeader className={styles.side_header}></SideHeader>) : ''
-                }
-                {
-                    items && items.map((item: any, index: number) => {
-                        return (
-                            <SideListItem
-                                key={index}
-                                className={classnames(styles.side_item)}
-                                active={location.pathname == item.path || (item.type === 'URL' && `/browser/${encodeURIComponent(item.path)}` == location.pathname)}
-                                title={item.title}
-                                avatar={<div className={classnames(styles.side_item_avatar, "iconfont icon-a-205shezhi")}></div>}
-                                avatarBackground={'#0493F5'}
-                                onClick={() => {
-                                    if (item.type === 'URL') {
-                                        history.push(`/browser/${encodeURIComponent(item.path)}`);
-                                    } else {
-                                        history.push(item.path);
-                                    }
-                                }}
-                            ></SideListItem>
-                        );
-                    })
-                }
-            </SideList>
-            <div className={styles.content}>
-                <Outlet />
+            {
+                menuFolded ? ('') : (
+                    <SideList className={styles.side}>
+                        <div data-tauri-drag-region className={styles.height24}></div>
+                        <SideHeader activeModule={active} className={styles.side_header}></SideHeader>
+                        {
+                            items && items.map((item: any, index: number) => {
+                                return (
+                                    <SideListItem
+                                        key={index}
+                                        className={classnames(styles.side_item)}
+                                        active={location.pathname == item.path || (item.type === 'URL' && `/browser/${encodeURIComponent(item.path)}` == location.pathname)}
+                                        title={item.title}
+                                        avatar={<div className={classnames(styles.side_item_avatar, "iconfont icon-a-205shezhi")}></div>}
+                                        avatarBackground={'#0493F5'}
+                                        onClick={() => {
+                                            if (item.type === 'URL') {
+                                                history.push(`/browser/${encodeURIComponent(item.path)}`);
+                                            } else {
+                                                history.push(item.path);
+                                            }
+                                        }}
+                                    ></SideListItem>
+                                );
+                            })
+                        }
+                    </SideList>
+                )
+            }
+
+            <div className={styles.conversation}>
+                <ConversationBar title={'会话名称'} className={styles.bar} setSettingsShown={() => {
+                    setDrawerOpen(!drawerOpen);
+                }} menuFolded={menuFolded} setMenuFold={() => {
+                    setMenuFolded(!menuFolded);
+                }}></ConversationBar>
+                <div className={styles.content}>
+                    <Outlet />
+                    <Drawer
+                        width={310}
+                        placement={"right"}
+                        closable={false}
+                        onClose={() => {
+                            setDrawerOpen(false);
+                        }}
+                        open={drawerOpen}
+                        maskStyle={{
+                            opacity: 0
+                        }}
+                        getContainer={false}
+                    >
+                    </Drawer>
+                </div>
             </div>
         </>
     );

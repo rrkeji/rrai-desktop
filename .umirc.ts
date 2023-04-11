@@ -28,6 +28,16 @@ export default defineConfig({
       component: "@/pages/miniprogram/index"
     },
     {
+      wrappers: ['@/wrappers/auth'],
+      path: "/conversation/:conversationType",
+      component: "@/pages/conversation/index"
+    },
+    {
+      wrappers: ['@/wrappers/auth'],
+      path: "/conversation/:conversationType/:conversationId",
+      component: "@/pages/conversation/index"
+    },
+    {
       path: '/',
       component: '@/layouts/side-layout',
       wrappers: ['@/wrappers/auth'],

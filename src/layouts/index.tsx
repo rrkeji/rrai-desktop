@@ -105,7 +105,7 @@ export default function Layout() {
           <div className={classnames(styles.item, styles.img_item, active === 'home' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'home');
             setActive('home');
-            history.push('/settings/account');
+            history.push('/conversation/settings');
           }}>
             <img className={classnames(styles.item_icon)} src={LOGO_PNG}></img>
             <div className={classnames(styles.item_title)}>软软AI</div>
@@ -113,7 +113,7 @@ export default function Layout() {
           <div className={classnames(styles.item, active === 'chat' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'chat');
             setActive('chat');
-            history.push('/chat/chatgpt');
+            history.push('/conversation/chat');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-jiqiren')}></div>
             <div className={classnames(styles.item_title)}>AI问答</div>

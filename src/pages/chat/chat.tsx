@@ -217,15 +217,6 @@ export function Chat(props: { onShowSettings: () => void, sx?: SxProps }) {
         ...(props.sx || {}),
       }}>
 
-      <ConversationBar
-        onClearConversation={handleClearConversation}
-        onDownloadConversationJSON={handleDownloadConversationToJson}
-        onShowSettings={props.onShowSettings}
-        sx={{
-          position: 'sticky', top: 0, zIndex: 20,
-          background: '#E4E4E4',
-        }} />
-
       <ChatMessageList
         disableSend={!!abortController} runAssistant={runAssistant}
         sx={{

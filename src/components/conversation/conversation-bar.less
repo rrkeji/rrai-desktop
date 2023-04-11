@@ -1,0 +1,47 @@
+@import url('@/variable.less');
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    min-height: 60px;
+    width: 100%;
+    border-bottom: 1px solid #c4c4c4;
+    background-color: @content-bg-color;
+
+    .button {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .left {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        .left_button {}
+
+        .title {
+            font-size: 16px;
+        }
+    }
+
+    .right {
+        display: flex;
+        margin-right: 10px;
+
+        .right_button {
+            font-size: 26px;
+            font-weight: 800;
+        }
+    }
+}
