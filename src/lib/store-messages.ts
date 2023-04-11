@@ -3,7 +3,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 
 import { ChatModelId, defaultChatModelId, defaultSystemPurposeId, SystemPurposeId } from '@/lib/data';
-
+import { TConversation } from '@/lib/conversation';
 
 /// Message Store
 
@@ -26,51 +26,6 @@ export interface MessageStore {
 
   // utility function
   _editConversation: (conversationId: string, update: Partial<DConversation> | ((conversation: DConversation) => Partial<DConversation>)) => void;
-}
-
-/**
- * Message, sent or received, by humans or bots
- *
- * Other ideas:
- * - attachments?: {type: string; url: string; thumbnailUrl?: string; size?: number}[];
- * - isPinned?: boolean;
- * - reactions?: {type: string; count: number; users: string[]}[];
- * - status: 'sent' | 'delivered' | 'read' | 'failed';
- */
-export interface DMessage {
-  id: string;
-  text: string;
-  sender: 'You' | 'Bot' | string;   // pretty name
-  avatar: string | null;            // null, or image url
-  typing: boolean;
-  role: 'assistant' | 'system' | 'user';
-
-  modelId?: string;                 // only assistant - goes beyond known models
-  purposeId?: SystemPurposeId;      // only assistant/system
-  cacheTokensCount?: number;
-
-  created: number;                  // created timestamp
-  updated: number | null;           // updated timestamp
-}
-
-/**
- * Conversation, a list of messages between humans and bots
- * Future:
- * - sumTokensCount?: number;
- * - draftUserMessage?: { text: string; attachments: any[] };
- * - isMuted: boolean; isArchived: boolean; isStarred: boolean; participants: string[];
- */
-export interface DConversation {
-  id: string;
-  name: string;
-  messages: DMessage[];
-  systemPurposeId: SystemPurposeId;
-  chatModelId: ChatModelId;
-  userTitle?: string;
-  autoTitle?: string;
-  cacheTokensCount?: number;
-  created: number;            // created timestamp
-  updated: number | null;     // updated timestamp
 }
 
 const createConversation = (id: string, name: string, systemPurposeId: SystemPurposeId, chatModelId: ChatModelId): DConversation =>
