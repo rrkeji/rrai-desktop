@@ -5,6 +5,7 @@
 extern crate lazy_static;
 
 mod commands;
+mod plugins;
 
 use std::error::Error;
 use tauri::Manager;
@@ -21,6 +22,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             set_shadow(&window, true).expect("Unsupported platform!");
             Ok(())
         })
+        .plugin(plugins::sqlite::init())
         .invoke_handler(tauri::generate_handler![
             commands::system::cmds_system_process_exec
         ])

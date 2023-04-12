@@ -53,7 +53,24 @@ export const ConversationPage = () => {
     };
 
     call();
-  }, [params.conversationType, active]);
+  }, [params.conversationType]);
+
+  useEffect(() => {
+    const call = async () => {
+      if (active != null) {
+        //根据会话类型获取所有的会话
+        let response: any = await getConversationsByType(active);
+        console.log(response);
+
+        if (response && response.data) {
+          setItems(response.data);
+        } else {
+          setItems([]);
+        }
+      }
+    };
+    call();
+  }, [active]);
 
   //
   useEffect(() => {
@@ -112,9 +129,6 @@ export const ConversationPage = () => {
           }} menuFolded={menuFolded} setMenuFold={() => {
             setMenuFolded(!menuFolded);
           }}></ConversationBar>
-
-
-
         <div className={styles.content}>
           <MessageList className={styles.message_list}></MessageList>
           <ComposerFacade

@@ -39,7 +39,13 @@ export default {
             "title": "素材检索(Pexels)",
             "type": "URL",
             "path": "https://www.pexels.com/zh-cn/"
-        }, {
+        },
+        {
+            "title": "webUI",
+            "type": "URL",
+            "path": "https://localhost:7860/"
+        }, 
+        {
             "title": "终端",
             "path": "/tools/terminal"
         },
