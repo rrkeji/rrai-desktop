@@ -14,6 +14,8 @@ import { useSettingsStore } from '@/lib/store-settings';
  * A list of ChatMessages
  */
 export function ChatMessageList(props: { disableSend: boolean, sx?: SxProps, runAssistant: (conversationId: string, history: DMessage[]) => void }) {
+
+
     // state
     const messagesEndRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -52,6 +54,7 @@ export function ChatMessageList(props: { disableSend: boolean, sx?: SxProps, run
         props.runAssistant(activeConversationId, truncatedHistory);
     };
 
+    console.log(filteredMessages,'----');
 
     return (
         <Box sx={props.sx || {}}>

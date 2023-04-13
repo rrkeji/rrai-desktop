@@ -3,13 +3,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { history, useLocation, useParams } from 'umi';
 import classnames from 'classnames';
 import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade } from '@/components/index';
-import { ConversationBar } from '@/components/conversation/index';
-import { Drawer } from 'antd';
-import { getConversationsByType } from '@/services/conversation-service';
+import { ConversationBar, AddConversation } from '@/components/conversation/index';
+import { Drawer, Modal } from 'antd';
+import { getConversationsByType, createConversation } from '@/services/conversation-service';
 
 import { getLocalValue } from '@/utils';
 
 import styles from './index.less';
+import { ConversationEntity } from '@/databases';
 
 export const ConversationPage = () => {
 
@@ -18,42 +19,23 @@ export const ConversationPage = () => {
   // {conversationType,conversationId}
   const params = useParams<string>();
 
-  const [active, setActive] = useState<string | null>(getLocalValue('rrai_active_menu'));
+  const active = params.conversationType;
 
   const [items, setItems] = useState<Array<any>>([]);
 
   const [menuFolded, setMenuFolded] = useState<boolean>(false);
 
+  const [addShown, setAddShown] = useState<boolean>(false);
+
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   const [conversationId, setConversationId] = useState<string | null>(null);
 
+  const [addValue, setAddValue] = useState<{ category: string, name: string, avatar?: string, args?: any } | null>(null);
+
   const [conversationTitle, setConversationTitle] = useState<string | null>(null);
 
-
   const [abortController, setAbortController] = useState<AbortController | null>(null);
-
-  useEffect(() => {
-    const call = async () => {
-      console.log(params.conversationType);
-      if (params.conversationType && params.conversationType != active) {
-        //根据会话类型获取所有的会话
-        let response: any = await getConversationsByType(params.conversationType);
-        console.log(response);
-
-        if (response && response.data) {
-          setItems(response.data);
-        } else {
-          setItems([]);
-        }
-        setActive(params.conversationType);
-      } else {
-        setActive(null);
-      }
-    };
-
-    call();
-  }, [params.conversationType]);
 
   useEffect(() => {
     const call = async () => {
@@ -70,7 +52,7 @@ export const ConversationPage = () => {
       }
     };
     call();
-  }, [active]);
+  }, []);
 
   //
   useEffect(() => {
@@ -91,13 +73,18 @@ export const ConversationPage = () => {
 
   const handleStopGeneration = () => abortController?.abort();
 
+  console.log(active, params.conversationType);
+
   return (
     <>
       {
         menuFolded ? ('') : (
           <SideList className={styles.side}>
             <div data-tauri-drag-region className={styles.height24}></div>
-            <SideHeader activeModule={active} className={styles.side_header}></SideHeader>
+            <SideHeader activeModule={active!} className={styles.side_header} onAddConversation={async (conversationType) => {
+              //弹出对话框
+              setAddShown(true);
+            }}></SideHeader>
             {
               items && items.map((item: any, index: number) => {
                 return (
@@ -105,12 +92,12 @@ export const ConversationPage = () => {
                     key={index}
                     className={classnames(styles.side_item)}
                     active={item.id === conversationId}
-                    title={item.title}
+                    title={item.name}
                     avatar={<div className={classnames(styles.side_item_avatar, "iconfont icon-a-205shezhi")}></div>}
                     avatarBackground={'#0493F5'}
                     onClick={() => {
                       setConversationId(item.id);
-                      setConversationTitle(item.title);
+                      setConversationTitle(item.name);
                       // history.replace(`/conversation/${active}/${item.id}`);
                       // history.push(`/conversation/${active}/${item.id}`);
                     }}
@@ -154,7 +141,35 @@ export const ConversationPage = () => {
           >
 
           </Drawer>
+
         </div>
+
+        <Modal
+          title="添加"
+          open={addShown}
+          centered={true}
+          maskClosable={false}
+          onOk={async () => {
+            if (addValue == null) {
+              return;
+            }
+            //
+            let res = await createConversation(addValue.category, addValue.name, addValue.avatar, addValue.args);
+            console.log(res);
+
+            setAddShown(false);
+          }}
+          onCancel={() => {
+            setAddShown(false);
+          }}
+          okText="确认"
+          cancelText="取消"
+        >
+          <AddConversation conversationType={active!} value={addValue} onChange={(value) => {
+            setAddValue(value);
+          }}></AddConversation>
+        </Modal>
+
       </div>
     </>
   );

@@ -8,12 +8,11 @@ const { Search } = Input;
 
 export interface SideHeaderProps {
     className?: string,
-    activeModule: string | null
+    activeModule: string,
+    onAddConversation?: (conversationType: string) => Promise<any>
 }
 
-export const SideHeader: React.FC<SideHeaderProps> = ({ className }) => {
-
-
+export const SideHeader: React.FC<SideHeaderProps> = ({ className, activeModule, onAddConversation }) => {
 
     return (
         <div data-tauri-drag-region className={classnames(styles.container, className)}>
@@ -22,9 +21,13 @@ export const SideHeader: React.FC<SideHeaderProps> = ({ className }) => {
                     console.log(value);
                 }} />
             </div>
-            <div data-tauri-drag-region className={styles.button}>
-                <PlusOutlined />
-            </div>
+            {
+                onAddConversation ? (<div data-tauri-drag-region className={styles.button} onClick={async () => {
+                    await onAddConversation(activeModule);
+                }}>
+                    <PlusOutlined />
+                </div>) : ('')
+            }
         </div>
     );
 };

@@ -1,55 +1,93 @@
-import { TConversation } from '@/lib/conversation';
 import { SQLite } from '@/tauri/sqlite/index';
+import { CONVERSATION_DB_NAME, ConversationEntity } from '@/databases/conversation/index';
+import { getUuid } from '@/utils';
 
-export const getConversationsByType = async (conversationType: string): Promise<any> => {
+const db = new SQLite(CONVERSATION_DB_NAME);
 
-    let data = [1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
-        return {
-            id: item + '',
-            title: '会话' + item
-        } as TConversation;
+export const getConversationsByType = async (conversationType: string): Promise<{ total: number, data: Array<ConversationEntity> }> => {
+
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,uid,category,name,avatar,args,created,updated FROM conversation WHERE category=:category order by id", {
+        ":category": conversationType
+    });
+
+    console.log(rows);
+
+    let data = rows.map((item, index) => {
+
+        let conversation: ConversationEntity = {
+            id: item.id,
+            uid: item.uid,
+            category: item.category,
+            name: item.name,
+            avatar: item.avatar,
+            args: JSON.parse(item.args),
+            created: item.created,
+            updated: item.updated,
+        };
+
+        return conversation;
     });
     return {
-        total: 10,
+        total: rows.length,
         data: data
     };
 }
 
-export const test = async () => {
 
-    /** The path will be 'src-tauri/test.db', you can customize the path */
-    const db = await SQLite.open('./test.sqlite')
+export const createConversation = async (conversationType: string, name: string, avatar?: string, options?: any): Promise<string> => {
 
-    /** execute SQL */
-    await db.execute(`
-    CREATE TABLE users (name TEXT, age INTEGER);
-    INSERT INTO users VALUES ('Alice', 42);
-`)
+    let uid = getUuid(false);
+    console.log(conversationType, name, avatar, options);
 
-    /** execute SQL with params */
-    await db.execute('INSERT INTO users VALUES (:name, :age)', {
-        ':name': 'test',
-        ':age': 19
-    })
+    let res = await db.execute(`INSERT INTO conversation (uid,category,name,avatar,args)VALUES (:uid,:category,:name,:avatar,:args)`, {
+        ":uid": uid,
+        ":category": conversationType,
+        ":name": name,
+        ":avatar": avatar || "",
+        ":args": options ? JSON.stringify(options) : "{}",
+    });
 
-    /** batch execution SQL with params */
-    // await db.execute('INSERT INTO users VALUES (?1, ?2)', [
-    //     ['Allen', 20],
-    //     ['Barry', 16],
-    //     ['Cara', 28],
-    // ])
+    console.log(res);
+    return uid;
+}
 
-    /** select count */
-    const rows = await db.queryWithArgs<Array<{ count: number }>>('SELECT COUNT(*) as count FROM users')
+export const updateConversationByUid = async (uid: string, conversationType: string, name: string, avatar?: string, options?: any) => {
+
+    let res = await db.execute(`UPDATE conversation SET category = :category, name = :name, avatar = :avatar, args = :args where uid = :uid`, {
+        ":uid": uid,
+        ":category": conversationType,
+        ":name": name,
+        ":avatar": avatar || "",
+        ":args": options ? JSON.stringify(options) : "{}",
+    });
+
+    console.log(res);
+}
+
+
+export const queryConversationByUid = async (uid: string): Promise<ConversationEntity | null> => {
+
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,uid,category,name,avatar,args,created,updated FROM conversation WHERE uid=:uid order by id", {
+        ":uid": uid
+    });
 
     console.log(rows);
-    /** select with param */
-    // const rows = await db.select<Array<{ name: string }>>('SELECT name FROM users WHERE age > ?', [20])
+    if (rows && rows.length > 0) {
+        let item = rows[0];
 
-    // /** select with params, you can use ? or $1 .. $n */
-    // const rows = await db.select<Array<any>>('SELECT * FROM users LIMIT $1 OFFSET $2', [10, 0])
+        let conversation: ConversationEntity = {
+            id: item.id,
+            uid: item.uid,
+            category: item.category,
+            name: item.name,
+            avatar: item.avatar,
+            args: JSON.parse(item.args),
+            created: item.created,
+            updated: item.updated,
+        };
 
-    /** close sqlite database */
-    const isClosed = await db.close()
-    console.log(isClosed);
-};
+        return conversation;
+    } else {
+        return null;
+    }
+}

@@ -3,13 +3,19 @@ import { useCallback, useEffect, useState } from 'react';
 import { appWindow } from '@tauri-apps/api/window';
 import { Outlet, history, useLocation } from 'umi';
 import classnames from 'classnames';
-import { getUserConfig } from '@/services/index';
 import Controls from '@/components/title-bar/controls/index';
 import { windowIsFocused } from '@/components/index';
 import LOGO_PNG from '@/assets/logo.png';
 
 import styles from './index.less';
 import { getLocalValue, setLocalValue } from '@/utils';
+
+import { init_databases } from '@/databases/index';
+
+
+(async () => {
+  await init_databases();
+})()
 
 
 const getPathName = (url: string): string => {
@@ -49,8 +55,6 @@ export default function Layout() {
 
     const call = async () => {
       //
-      let res = await getUserConfig();
-      console.log(res);
       let active = getLocalValue('rrai_active_menu');
       if (!active) {
         active = 'home';

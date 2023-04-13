@@ -70,6 +70,15 @@ async fn execute_sql(state: State<'_, SqliteMap>, path: String, sql: String) -> 
 }
 
 #[command]
+async fn execute_batch(state: State<'_, SqliteMap>, path: String, sql: String) -> Result<bool> {
+    let mut map = state.0.lock().unwrap();
+    let connection = map.get_mut(&path).ok_or(Error::DatabaseNotOpened(path))?;
+
+    let res = connection.execute_batch(sql.as_str())?;
+    Ok(true)
+}
+
+#[command]
 async fn execute(
     state: State<'_, SqliteMap>,
     path: String,
@@ -157,6 +166,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             query_with_args,
             close,
             execute_sql,
+            execute_batch,
             execute
         ])
         .setup(|app| {
