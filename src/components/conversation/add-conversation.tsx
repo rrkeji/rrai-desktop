@@ -14,12 +14,11 @@ export interface AddConversationProps {
 }
 
 interface _ChatGPTProps {
-    onModelChange: (value: any) => void
+    model: ChatModelId,
+    onModelChange: (value: ChatModelId) => void
 }
 
-const _ChatGPT: React.FC<_ChatGPTProps> = ({ onModelChange }) => {
-
-    const [chatModelId, setChatModelId] = useState<ChatModelId>(defaultChatModelId);
+const _ChatGPT: React.FC<_ChatGPTProps> = ({ model, onModelChange }) => {
 
     const [systemPurposeId, setSystemPurposeId] = useState<SystemPurposeId>(defaultSystemPurposeId);
 
@@ -31,9 +30,9 @@ const _ChatGPT: React.FC<_ChatGPTProps> = ({ onModelChange }) => {
                 <Typography level='body3' color='neutral' sx={{ mb: 2 }}>
                     模型选择：
                 </Typography>
-                <StyledDropdown items={ChatModels} value={chatModelId} onChange={(event: any, value: ChatModelId | null) => {
+                <StyledDropdown items={ChatModels} value={model} onChange={(event: any, value: ChatModelId | null) => {
                     if (value) {
-                        setChatModelId(value);
+                        onModelChange(value);
                     }
                 }} />
             </Box>
@@ -59,10 +58,14 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
 
     const [name, setName] = useState<string>('');
 
+    const [args, setArgs] = useState<any>({});
+
 
     const content = (conversationType: string) => {
         if (conversationType === 'chat') {
-            return <_ChatGPT></_ChatGPT>;
+            return <_ChatGPT model={args['model']} onModelChange={(value) => {
+                setArgs({ ...args, model: value });
+            }}></_ChatGPT>;
         }
         return <_ChatGPT></_ChatGPT>;
     };
@@ -75,8 +78,8 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
                 <Button
                     variant={'solid'}
                     color={'primary'}
-                    onClick={() => {
-
+                    onClick={async () => {
+                        await onSave(val);
                     }}
                     sx={{
                         fontWeight: 500,
@@ -90,7 +93,7 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
                     variant={'soft'}
                     color={'neutral'}
                     onClick={() => {
-
+                        onCannel();
                     }}
                     sx={{
                         background: theme.vars.palette.background.level1,
