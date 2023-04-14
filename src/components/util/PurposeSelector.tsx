@@ -3,37 +3,25 @@ import * as React from 'react';
 import { AspectRatio, Box, Button, Grid, Stack, Textarea, Typography, useTheme } from '@mui/joy';
 
 import { useActiveConfiguration } from '@/lib/store-chats';
-import { SystemPurposeId, SystemPurposes } from '@/lib/data';
+import { SystemPurposeId, SystemPurposes } from '@/databases/data/index';
 
 
-/**
- * Purpose selector for the current chat. Clicking on any item activates it for the current chat.
- */
-export function PurposeSelector() {
+export interface PurposeSelectorProps {
+  systemPurposeId: SystemPurposeId;
+  handlePurposeChange: (purpose: SystemPurposeId | null) => void;
+  handleCustomSystemMessageChange: (v: React.ChangeEvent<HTMLTextAreaElement>) => void
+}
+
+export const PurposeSelector: React.FC<PurposeSelectorProps> = ({ systemPurposeId, handlePurposeChange, handleCustomSystemMessageChange }) => {
   // external state
   const theme = useTheme();
-  const { setSystemPurposeId, systemPurposeId } = useActiveConfiguration();
-
-  const handlePurposeChange = (purpose: SystemPurposeId | null) => {
-    if (purpose)
-      setSystemPurposeId(purpose);
-  };
-
-  const handleCustomSystemMessageChange = (v: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    // TODO: persist this change? Right now it's reset every time.
-    //       maybe we shall have a "save" button just save on a state to persist between sessions
-    SystemPurposes['Custom'].systemMessage = v.target.value;
-  };
 
   return (
-    <Stack direction='column' sx={{ justifyContent: 'center', alignItems: 'center', mx: 2, minHeight: '60vh' }}>
-
+    <Stack direction='column' sx={{ justifyContent: 'flex-start', alignItems: 'center', mx: 2, minHeight: '450px' }}>
       <Box>
-
         <Typography level='body3' color='neutral' sx={{ mb: 2 }}>
-          AI purpose
+          AI目标
         </Typography>
-
         <Grid container spacing={1}>
           {Object.keys(SystemPurposes).map(spId => (
             <Grid key={spId} xs={4} lg={3} xl={2}>
@@ -69,26 +57,22 @@ export function PurposeSelector() {
             </Grid>
           ))}
         </Grid>
-
         <Typography level='body2' sx={{ mt: 2 }}>
           {SystemPurposes[systemPurposeId].description}
         </Typography>
-
         {systemPurposeId === 'Custom' && (
           <>
-            <Textarea variant='soft' autoFocus placeholder={'Enter your custom system message here...'}
-                      minRows={3}
-                      defaultValue={SystemPurposes['Custom'].systemMessage} onChange={handleCustomSystemMessageChange}
-                      sx={{
-                        mt: 1,
-                        fontSize: '16px',
-                        lineHeight: 1.75,
-                      }} />
+            <Textarea variant='soft' autoFocus placeholder={'输入您的自定义消息'}
+              minRows={3}
+              defaultValue={SystemPurposes['Custom'].systemMessage} onChange={handleCustomSystemMessageChange}
+              sx={{
+                mt: 1,
+                fontSize: '16px',
+                lineHeight: 1.75,
+              }} />
           </>
         )}
-
       </Box>
-
     </Stack>
   );
 }

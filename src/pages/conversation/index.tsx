@@ -145,11 +145,16 @@ export const ConversationPage = () => {
         </div>
 
         <Modal
-          title="添加"
+          title=""
           open={addShown}
           centered={true}
           maskClosable={false}
-          onOk={async () => {
+          onCancel={() => {
+            setAddShown(false);
+          }}
+          footer={null}
+        >
+          <AddConversation conversationType={active!} onSave={async () => {
             if (addValue == null) {
               return;
             }
@@ -158,15 +163,8 @@ export const ConversationPage = () => {
             console.log(res);
 
             setAddShown(false);
-          }}
-          onCancel={() => {
+          }} onCannel={() => {
             setAddShown(false);
-          }}
-          okText="确认"
-          cancelText="取消"
-        >
-          <AddConversation conversationType={active!} value={addValue} onChange={(value) => {
-            setAddValue(value);
           }}></AddConversation>
         </Modal>
 

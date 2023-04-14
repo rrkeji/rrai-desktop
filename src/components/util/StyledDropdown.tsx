@@ -17,11 +17,6 @@ export const StyledDropdown = <TValue extends string>(props: { value: TValue, it
       value={props.value} onChange={props.onChange}
       indicator={<CaretDownOutlined />}
       slotProps={{
-        root: {
-          sx: {
-            backgroundColor: 'transparent',
-          },
-        },
         listbox: {
           variant: 'plain', color: 'neutral', size: 'lg',
           disablePortal: false,
