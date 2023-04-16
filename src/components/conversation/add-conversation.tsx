@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { PurposeSelector } from '@/components/util/PurposeSelector';
 import { Input, Select, Row, Col } from 'antd';
-import { defaultChatModelId, ChatModels, ChatModelId, defaultSystemPurposeId, SystemPurposeId } from '@/databases/data/index'
+import { defaultChatModelId, ChatModels, ChatModelId, defaultSystemPurposeId, SystemPurposeId, SystemPurposes } from '@/databases/data/index'
 import { Box, Button, Grid, Stack, Textarea, Typography, useTheme } from '@mui/joy';
 import { StyledDropdown } from '@/components/util/StyledDropdown';
 import styles from './add-conversation.less';
@@ -15,14 +15,13 @@ export interface AddConversationProps {
 
 interface _ChatGPTProps {
     model: ChatModelId,
-    onModelChange: (value: ChatModelId) => void
+    systemPurposeId: SystemPurposeId,
+    onModelChange: (value: ChatModelId) => void,
+    onCustomMessageChange: (value: string) => void,
+    onSystemPurposeIdChange: (value: SystemPurposeId) => void,
 }
 
-const _ChatGPT: React.FC<_ChatGPTProps> = ({ model, onModelChange }) => {
-
-    const [systemPurposeId, setSystemPurposeId] = useState<SystemPurposeId>(defaultSystemPurposeId);
-
-    const [customMessage, setCustomMessage] = useState<string>('');
+const _ChatGPT: React.FC<_ChatGPTProps> = ({ model, onModelChange, onCustomMessageChange, systemPurposeId, onSystemPurposeIdChange }) => {
 
     return (
         <div>
@@ -38,12 +37,12 @@ const _ChatGPT: React.FC<_ChatGPTProps> = ({ model, onModelChange }) => {
             </Box>
             <PurposeSelector systemPurposeId={systemPurposeId} handlePurposeChange={(purpose: SystemPurposeId | null) => {
                 if (purpose) {
-                    setSystemPurposeId(purpose);
+                    onSystemPurposeIdChange(purpose);
                 }
             }}
                 handleCustomSystemMessageChange={(event) => {
                     console.log(event.target.value);
-                    setCustomMessage(event.target.value)
+                    onCustomMessageChange(event.target.value)
                 }}
             />
         </div>
@@ -51,23 +50,44 @@ const _ChatGPT: React.FC<_ChatGPTProps> = ({ model, onModelChange }) => {
 }
 
 
+const getDefaultArgs = (conversationType: string) => {
+    if (conversationType == 'chat') {
+        return {
+            model: defaultChatModelId,
+            purposeId: defaultSystemPurposeId,
+            customMessage: ''
+        };
+    }
+    return {};
+};
+
+
 export const AddConversation: React.FC<AddConversationProps> = ({ conversationType, onSave, onCannel }) => {
+
     const theme = useTheme();
 
-    const [val, setVal] = useState<any>(null);
-
-    const [name, setName] = useState<string>('');
-
-    const [args, setArgs] = useState<any>({});
-
+    const [args, setArgs] = useState<any>(getDefaultArgs(conversationType));
 
     const content = (conversationType: string) => {
         if (conversationType === 'chat') {
-            return <_ChatGPT model={args['model']} onModelChange={(value) => {
-                setArgs({ ...args, model: value });
-            }}></_ChatGPT>;
+            return (
+                <_ChatGPT
+                    model={args['model']}
+                    onModelChange={(value) => {
+                        setArgs({ ...args, model: value });
+                    }}
+                    onCustomMessageChange={(customMessage: string) => {
+                        setArgs({ ...args, customMessage: customMessage });
+                    }}
+                    systemPurposeId={args['purposeId']}
+                    onSystemPurposeIdChange={(systemPurposeId: SystemPurposeId) => {
+                        setArgs({ ...args, purposeId: systemPurposeId });
+                    }}
+
+                ></_ChatGPT>
+            );
         }
-        return <_ChatGPT></_ChatGPT>;
+        return <></>;
     };
 
 
@@ -79,7 +99,18 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
                     variant={'solid'}
                     color={'primary'}
                     onClick={async () => {
-                        await onSave(val);
+                        //组装数据
+                        let conversation = {};
+                        if (conversationType === 'chat') {
+                            //
+                            conversation = {
+                                avatar: `[symbol](${SystemPurposes[args['purposeId'] as SystemPurposeId]?.symbol})`,
+                                name: `${SystemPurposes[args['purposeId'] as SystemPurposeId]?.title}`,
+                                category: conversationType,
+                                args: args
+                            };
+                        }
+                        await onSave(conversation);
                     }}
                     sx={{
                         fontWeight: 500,

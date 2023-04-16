@@ -11,7 +11,7 @@ export interface ConversationEntity {
 }
 
 
-export interface TMessage {
+export interface MessageEntity {
     id: number;
     senderType: 'You' | 'Bot' | 'Person' | 'system';
     senderId: string;
