@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { getMessageByConversationId } from '@/services/message-service';
 import { MessageEntity } from '@/databases/conversation/index';
-import { MessageBlock } from './blocks/index';
+import { Message } from './message';
 
 import classnames from 'classnames';
 
@@ -11,10 +11,12 @@ export interface MessageListProps {
     className?: string;
     conversationType: string;
     conversationId: string;
-    conversationName: string;
+    beforeNode: ReactNode;
+    afterNode: ReactNode;
+    version: number;
 }
 
-export const MessageList: React.FC<MessageListProps> = ({ className, conversationType, conversationId, conversationName }) => {
+export const MessageList: React.FC<MessageListProps> = ({ className, beforeNode, conversationType, conversationId, afterNode, version }) => {
 
 
     const [messages, setMessages] = useState<Array<MessageEntity>>([]);
@@ -31,17 +33,19 @@ export const MessageList: React.FC<MessageListProps> = ({ className, conversatio
             await refresh();
         }
         call();
-    }, [conversationType, conversationId]);
+    }, [conversationType, conversationId, version]);
     //
     return (
         <div className={classnames(styles.container, className)}>
+            {beforeNode}
             {
                 messages && messages.map((message, index) => {
                     return (
-                        <MessageBlock key={index} message={message}></MessageBlock>
+                        <Message key={index} message={message}></Message>
                     );
                 })
             }
+            {afterNode}
         </div>
     );
 };

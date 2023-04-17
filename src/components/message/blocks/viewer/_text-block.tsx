@@ -9,8 +9,8 @@ import styles from './_text-block.less';
 export const _TextBlock: React.FC<BlockViewerProps> = ({ className, avatar, avatarMenu, message, appendMessage }) => {
 
     return (
-        <div className={classnames(styles.container)}>
-
+        <div className={classnames(styles.container, className)}>
+            {message.text}
         </div>
     );
 };

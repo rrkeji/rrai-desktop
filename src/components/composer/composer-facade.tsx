@@ -11,14 +11,14 @@ export interface ComposerFacadeProps {
     height?: number;
     disableSend?: boolean;
     conversationType?: string;
-    conversationId?: string;
+    conversationId: string;
     sendMessage?: (userText: string, conversationId: string) => Promise<any>;
     stopGeneration?: () => void;
 }
 
 export const ComposerFacade: React.FC<ComposerFacadeProps> = ({ className, height, disableSend, conversationId, conversationType, sendMessage, stopGeneration }) => {
 
-    const [message, setMessage] = useState<string>('');
+    const [message, setMessage] = useState<string>('狗熊的习性？');
 
     //
     return (
@@ -37,6 +37,7 @@ export const ComposerFacade: React.FC<ComposerFacadeProps> = ({ className, heigh
                     ) : (
                         <div className={classnames(styles.send, "iconfont icon-send")} onClick={() => {
                             //handleSendClicked
+                            sendMessage && sendMessage(message, conversationId);
                         }}></div>
                     )
                 }

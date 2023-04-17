@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { history, useLocation, useParams } from 'umi';
 import classnames from 'classnames';
 import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade } from '@/components/index';
-import { ConversationBar, AddConversation } from '@/components/conversation/index';
+import { ConversationBar, AddConversation, ConversationViewer } from '@/components/conversation/index';
 import { Drawer, Modal } from 'antd';
 import { getConversationsByType, createConversation } from '@/services/conversation-service';
 import { createChatMessage } from '@/services/message-service';
@@ -11,13 +11,12 @@ import { createChatMessage } from '@/services/message-service';
 import { getLocalValue } from '@/utils';
 
 import styles from './index.less';
-import { ConversationEntity } from '@/databases';
+import { ConversationEntity, MessageEntity } from '@/databases';
 
 export const ConversationPage = () => {
 
   const location = useLocation();
 
-  // {conversationType,conversationId}
   const params = useParams<string>();
 
   const conversationType = params.conversationType;
@@ -28,14 +27,11 @@ export const ConversationPage = () => {
 
   const [addShown, setAddShown] = useState<boolean>(false);
 
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-
   const [conversationId, setConversationId] = useState<string | null>(null);
 
-  const [conversationTitle, setConversationTitle] = useState<string | null>(null);
-
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
-
+  if (!conversationType) {
+    return <>conversationType为空!</>
+  }
 
   const refresh = async () => {
     if (conversationType != null) {
@@ -53,7 +49,6 @@ export const ConversationPage = () => {
 
   useEffect(() => {
     const call = async () => {
-
       refresh();
     };
     call();
@@ -67,16 +62,6 @@ export const ConversationPage = () => {
       setConversationId(null);
     }
   }, [params.conversationId]);
-
-
-  const handleSendMessage = async (userText: string, conversationId: string | null) => {
-    //
-    // const conversation = findConversation(conversationId || activeConversationId);
-    // if (conversation)
-    //   await runAssistant(conversation.id, [...conversation.messages, createDMessage('user', userText)]);
-  };
-
-  const handleStopGeneration = () => abortController?.abort();
 
   console.log(conversationType, params.conversationType);
 
@@ -102,7 +87,6 @@ export const ConversationPage = () => {
                     avatarBackground={conversationType == 'chat' ? '#dedede' : '#0493F5'}
                     onClick={() => {
                       setConversationId(item.uid);
-                      setConversationTitle(item.name);
                       // history.replace(`/conversation/${conversationType}/${item.id}`);
                       // history.push(`/conversation/${conversationType}/${item.id}`);
                     }}
@@ -113,77 +97,46 @@ export const ConversationPage = () => {
           </SideList>
         )
       }
-      <div className={styles.conversation}>
-        <ConversationBar
-          title={conversationTitle == null ? '' : conversationTitle} className={styles.bar}
-          setSettingsShown={() => {
-            setDrawerOpen(!drawerOpen);
-          }} menuFolded={menuFolded} setMenuFold={() => {
-            setMenuFolded(!menuFolded);
-          }}></ConversationBar>
-        <div className={styles.content}>
-          <MessageList className={styles.message_list}
-            conversationId={conversationId!} conversationType={conversationType} conversationName={conversationTitle!}></MessageList>
-          <ComposerFacade
-            height={300}
-            className={styles.composer}
-            disableSend={!!abortController}
-            conversationType={conversationType!}
-            conversationId={conversationId!}
-            sendMessage={handleSendMessage}
-            stopGeneration={handleStopGeneration}
-          ></ComposerFacade>
-          <Drawer
-            width={310}
-            placement={"right"}
-            closable={false}
-            onClose={() => {
-              setDrawerOpen(false);
-            }}
-            open={drawerOpen}
-            maskStyle={{
-              opacity: 0
-            }}
-            getContainer={false}
-          >
+      {
+        conversationId ? (
+          <ConversationViewer className={styles.conversation} conversationId={conversationId} conversationType={conversationType}
+            menuFolded={menuFolded} setMenuFolded={setMenuFolded}></ConversationViewer>
+        ) : (
+          <></>
+        )
+      }
 
-          </Drawer>
+      {/* 添加会话 */}
+      <Modal
+        title=""
+        open={addShown}
+        centered={true}
+        maskClosable={false}
+        onCancel={() => {
+          setAddShown(false);
+        }}
+        footer={null}
+      >
+        <AddConversation conversationType={conversationType!} onSave={async (addValue: { category: string, name: string, avatar?: string, args?: any } | null) => {
+          if (addValue == null) {
+            return;
+          }
+          //
+          let res = await createConversation(addValue.category, addValue.name, addValue.avatar, addValue.args);
 
-        </div>
-        {/* 添加会话 */}
-        <Modal
-          title=""
-          open={addShown}
-          centered={true}
-          maskClosable={false}
-          onCancel={() => {
+          if (res && res.length > 0) {
+            //发送系统消息
+            await createChatMessage(res, conversationType, 'system');
+            await refresh();
+            setConversationId(res);
             setAddShown(false);
-          }}
-          footer={null}
-        >
-          <AddConversation conversationType={conversationType!} onSave={async (addValue: { category: string, name: string, avatar?: string, args?: any } | null) => {
-            if (addValue == null) {
-              return;
-            }
-            //
-            let res = await createConversation(addValue.category, addValue.name, addValue.avatar, addValue.args);
-
-            if (res && res.length > 0) {
-              //发送系统消息
-              await createChatMessage(res, conversationType, 'system');
-              await refresh();
-              setConversationId(res);
-              setConversationTitle(addValue.name);
-              setAddShown(false);
-            } else {
-              //添加失败
-            }
-          }} onCannel={() => {
-            setAddShown(false);
-          }}></AddConversation>
-        </Modal>
-
-      </div>
+          } else {
+            //添加失败
+          }
+        }} onCannel={() => {
+          setAddShown(false);
+        }}></AddConversation>
+      </Modal>
     </>
   );
 }
