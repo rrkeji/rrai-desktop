@@ -1,1 +1,2 @@
-export * from './block-facade';
+export * from './types';
+export * from './viewer/index';

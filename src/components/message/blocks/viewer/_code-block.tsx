@@ -3,16 +3,16 @@ import classnames from 'classnames';
 import { MessageEntity } from '@/databases/conversation/index';
 import { BlockViewerProps } from '../types';
 
-import styles from './_text-block.less';
+import styles from './_code-block.less';
 
 
-export const _TextBlock: React.FC<BlockViewerProps> = ({ className, avatar, avatarMenu, data, appendMessage }) => {
+export const _CodeBlock: React.FC<BlockViewerProps> = ({ className, avatar, avatarMenu, data, appendMessage }) => {
 
     return (
         <div className={classnames(styles.container, className)}>
-            {data.content}
+            <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
         </div>
     );
 };
 
-export default _TextBlock;
+export default _CodeBlock;
