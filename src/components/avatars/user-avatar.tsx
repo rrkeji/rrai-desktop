@@ -7,11 +7,12 @@ import styles from './user-avatar.less';
 
 export interface UserAvatarProps {
     className?: string;
+    onClick?: (event: any) => void
 }
 
-export const UserAvatar: React.FC<UserAvatarProps> = ({ className }) => {
+export const UserAvatar: React.FC<UserAvatarProps> = ({ className, onClick }) => {
     return (
-        <div className={classnames(styles.container, className)}>
+        <div className={classnames(styles.container, className)} onClick={onClick}>
             <img className={classnames(styles.image)} src={LOGO_PNG}></img>
         </div>
     );

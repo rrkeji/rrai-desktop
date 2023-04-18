@@ -7,7 +7,7 @@ import { ConversationBar, AddConversation } from '@/components/conversation/inde
 import { Drawer, Modal } from 'antd';
 import { getConversationsByType, createConversation, queryConversationByUid } from '@/services/conversation-service';
 import { createChatMessage, getMessageByConversationId } from '@/services/message-service';
-
+import { ConversationSettings } from './conversation-settings';
 import { getLocalValue } from '@/utils';
 
 import styles from './conversation-viewer.less';
@@ -247,7 +247,7 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
                     }}
                     getContainer={false}
                 >
-
+                    <ConversationSettings conversation={conversation}></ConversationSettings>
                 </Drawer>
 
             </div>

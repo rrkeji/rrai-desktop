@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { AspectRatio, Box, Button, Grid, Stack, Textarea, Typography, useTheme } from '@mui/joy';
 
-import { useActiveConfiguration } from '@/lib/store-chats';
 import { SystemPurposeId, SystemPurposes } from '@/databases/data/index';
 
 

@@ -43,28 +43,8 @@ export default defineConfig({
       wrappers: ['@/wrappers/auth'],
       routes: [
         {
-          path: "/chat/chatgpt",
-          component: "@/pages/chat/chatgpt"
-        },
-        {
           path: "/browser/:src",
           component: "@/pages/browser/index"
-        },
-        {
-          path: "/chat",
-          component: "@/pages/chat/index"
-        },
-        {
-          path: "/models",
-          component: "models/index"
-        },
-        {
-          path: "/prompts",
-          component: "prompts/index"
-        },
-        {
-          path: "/painter",
-          component: "painter/index"
         },
         {
           path: "/settings/account",

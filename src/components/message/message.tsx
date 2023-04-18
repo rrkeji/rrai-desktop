@@ -1,8 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import classnames from 'classnames';
 import { MessageEntity } from '@/databases/conversation/index';
-import { UserAvatar } from '@/components/avatars/index';
-import { BlockData, _TextBlock, _CodeBlock } from '@/components/message/blocks/index';
+import { UserAvatar, AssistantAvatar, SystemAvatar } from '@/components/avatars/index';
+import { BlockData, UnionBlockProps, UnionEditorBlock, UnionBlock, copyToClipboard } from '@/components/message/blocks/index';
+import { DownOutlined, CopyOutlined, EditOutlined, PlaySquareOutlined, DeleteOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { updateMessageTextById, deleteMessageById } from '@/services/message-service';
+
+import type { MenuProps } from 'antd';
+import { Dropdown, Space, Modal } from 'antd';
 
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
@@ -14,17 +19,21 @@ import 'prismjs/components/prism-markdown';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-typescript';
 
+const { confirm } = Modal;
+
 import styles from './message.less';
 
 export interface MessageProps {
     className?: string;
     editable?: boolean;
-    isEditing?: boolean;
     appending?: boolean;
     message: MessageEntity;
+    onMessageChange?: () => Promise<any>;
 }
 
-export const Message: React.FC<MessageProps> = ({ className, editable, isEditing, message, appending }) => {
+export const Message: React.FC<MessageProps> = ({ className, editable, message, appending, onMessageChange }) => {
+
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const fromAssistant = message.botRole === 'assistant';
     const fromSystem = message.botRole === 'system';
@@ -40,66 +49,94 @@ export const Message: React.FC<MessageProps> = ({ className, editable, isEditing
         }
     }
 
-    if (fromSystem) {
-        return (
-            <UnionBlock data={{ type: "text", content: collapsedText }} className={styles.system_message}></UnionBlock>
-        );
-    }
+    const avatarElement = getAvatarMenu(message.botRole, message.senderType === 'You', editable === undefined ? false : editable,
+        (e) => {
+            //copy
+            copyToClipboard(message.text);
+        },
+        (e) => {
+            //edit
+            setIsEditing(!isEditing);
+        },
+        (e) => {
+            //run
+        },
+        async (e) => {
+            //delete
+            //确认框
+            confirm({
+                title: '确定删除?',
+                icon: <ExclamationCircleFilled />,
+                content: '删除后无法恢复，也可以尝试编辑内容!',
+                onOk: async () => {
+                    await deleteMessageById(message.id);
+                    //刷新
+                    onMessageChange && onMessageChange();
+                },
+                onCancel: () => {
+                    console.log('Cancel');
+                },
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消'
+            });
+        });
 
-    if (isEditing) {
-        //编辑
-        return (
-            <div className={classnames(styles.container)}>
-                <UserAvatar className={classnames(styles.avatar)}></UserAvatar>
-                <div>
-                    { }
-                </div>
-            </div>
-        );
-    } else {
-        //只读
-        return (
-            <div className={classnames(
-                styles.container,
-                message.botRole === 'user' ? styles.user_message : (message.botRole === 'assistant' ? styles.assistant_message : styles.system_message), className
-            )}
-                style={{ flexDirection: !fromAssistant ? 'row-reverse' : 'row' }}>
 
-                <UserAvatar className={classnames(styles.avatar)}></UserAvatar>
+    //只读
+    return (
+        <div className={classnames(
+            styles.container,
+            message.botRole === 'user' ? styles.user_message : (message.botRole === 'assistant' ? styles.assistant_message : styles.system_message), className
+        )}
+            style={{ flexDirection: !fromAssistant ? 'row-reverse' : 'row' }}>
 
-                <div className={classnames(styles.message)}>
-                    {
+            {/* 头像 */}
+            {
+                message.botRole === 'user' ? (
+                    <Dropdown menu={{ items: avatarElement }} trigger={['click']}>
+                        <UserAvatar className={classnames(styles.avatar)} onClick={(e) => e.preventDefault()}></UserAvatar>
+                    </Dropdown>
+                ) : (message.botRole === 'assistant' ? (
+                    <Dropdown menu={{ items: avatarElement }} trigger={['click']}>
+                        <AssistantAvatar className={classnames(styles.avatar, styles.assistant_avatar)} onClick={(e) => e.preventDefault()}
+                            modelId={message.modelId}></AssistantAvatar>
+                    </Dropdown>
+
+                ) : (
+                    <Dropdown menu={{ items: avatarElement }} trigger={['click']}>
+                        <SystemAvatar className={classnames(styles.avatar, styles.system_avatar)} onClick={(e) => e.preventDefault()}
+                            purposeId={message.purposeId}></SystemAvatar>
+                    </Dropdown>
+                ))
+            }
+
+            <div className={classnames(styles.message)} onDoubleClick={() => {
+                editable && setIsEditing(!isEditing);
+            }}>
+                {
+                    isEditing ? (
+                        <UnionEditorBlock key={0} data={{ type: "text", content: collapsedText }}
+                            onEditCompleted={async (text: string) => {
+                                console.log(text, '=====');
+                                if (text !== message.text && text?.trim()) {
+                                    //保存编辑后的文本
+                                    let res = await updateMessageTextById(message.id, text);
+                                    //
+                                    onMessageChange && onMessageChange();
+                                }
+                                setIsEditing(false);
+                            }}></UnionEditorBlock>
+                    ) : (
                         parseBlocks(fromSystem, collapsedText).map((block, index) =>
                             <UnionBlock key={index} data={block}></UnionBlock>
                         )
-                    }
-                </div>
+                    )
+                }
             </div>
-        );
-    }
+        </div>
+    );
 };
-
-export interface UnionBlockProps {
-    className?: string;
-    data: BlockData;
-}
-
-
-export const UnionBlock: React.FC<UnionBlockProps> = ({ data, className }) => {
-
-    if (data.type === 'code') {
-        return (
-            <_CodeBlock className={classnames(className, styles.code_message)}
-                data={data}></_CodeBlock>
-        );
-    } else if (data.type === 'text') {
-        return (
-            <_TextBlock
-                data={data}></_TextBlock>
-        );
-    }
-    return <></>
-}
 
 
 
@@ -184,5 +221,81 @@ export const inferCodeLanguage = (markdownLanguage: string, code: string): strin
     if (code.startsWith('using ')) return 'csharp';
     return null;
 };
+
+
+
+const getAvatarMenu = (role: 'user' | 'assistant' | 'system', isMe: boolean, editable: boolean,
+    onCopy: (e: any) => void, onEdit: (e: any) => void,
+    onRunAgain: (e: any) => void, onDelete: (e: any) => void): MenuProps['items'] => {
+
+    if (role === 'system') {
+        return [
+            {
+                key: '1',
+                label: (
+                    <div className={styles.avatar_menu_item}>
+                        复制
+                    </div>
+                ),
+                icon: <CopyOutlined style={{ fontSize: '20px' }} />,
+                onClick: onCopy
+            }
+        ] as MenuProps['items'];
+    }
+
+    const avatarMenu: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <div className={styles.avatar_menu_item}>
+                    复制
+                </div>
+            ),
+            icon: <CopyOutlined style={{ fontSize: '20px' }} />,
+            onClick: onCopy
+        },
+        {
+            key: '2',
+            label: (
+                <div className={styles.avatar_menu_item}>
+                    编辑
+                </div>
+            ),
+            disabled: !editable,
+            icon: <EditOutlined style={{ fontSize: '20px' }} />,
+            onClick: onEdit
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: '3',
+            label: (
+                <div className={styles.avatar_menu_item}>
+                    再次运行
+                </div>
+            ),
+            disabled: role !== 'user',
+            icon: <PlaySquareOutlined style={{ fontSize: '20px' }} />,
+            onClick: onRunAgain
+        },
+        {
+            key: '4',
+            danger: true,
+            label: (
+                <div className={styles.avatar_menu_item}>
+                    删除
+                </div>
+            ),
+            icon: <DeleteOutlined style={{ fontSize: '20px' }} />,
+            onClick: onDelete
+        },
+    ];
+
+    return avatarMenu;
+}
+
+
+
 
 export default Message;

@@ -1,3 +1,5 @@
+@import url('@/variable.less');
+
 .container {
     display: flex;
     flex-direction: row;
@@ -7,16 +9,31 @@
         height: 60px;
         min-height: 60px;
         min-width: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .assistant_avatar {
+        width: 80px;
+        height: 80px;
+        min-height: 80px;
+        min-width: 80px;
+        background-color: @side-bg-color;
+        border-radius: 4px;
+    }
+
+    .system_avatar {
+        width: 80px;
+        height: 80px;
+        min-height: 80px;
+        min-width: 80px;
+        background-color: @side-bg-color;
+        border-radius: 4px;
     }
 
     .message {
         flex-grow: 1;
-
-        .code_message {
-            background-color: #F7F7F8;
-            padding: 15px 15px;
-            border-radius: 8px;
-        }
     }
 }
 
@@ -36,4 +53,10 @@
     background-color: #FFFFFF;
     min-height: 80px;
     padding: 10px 10px;
+}
+
+.avatar_menu_item {
+    min-width: 180px;
+    line-height: 40px;
+    font-size: 16px;
 }

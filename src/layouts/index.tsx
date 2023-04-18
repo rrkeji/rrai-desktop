@@ -17,19 +17,6 @@ import { init_databases } from '@/databases/index';
   await init_databases();
 })()
 
-
-const getPathName = (url: string): string => {
-  console.log(url);
-  let temp = url.substring(1);
-  if (temp.indexOf("/") > 0) {
-    let pathname = temp.substring(0, temp.indexOf("/"));
-    console.log(pathname);
-    return pathname;
-  } else {
-    return temp;
-  }
-};
-
 export default function Layout() {
 
   const location = useLocation();
@@ -125,7 +112,7 @@ export default function Layout() {
           <div className={classnames(styles.item, active === 'painter' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'painter');
             setActive('painter');
-            history.push('/painter');
+            history.push('/conversation/painter');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-huihua')}></div>
             <div className={classnames(styles.item_title)}>AI绘画</div>
@@ -133,7 +120,7 @@ export default function Layout() {
           <div className={classnames(styles.item, active === 'prompts' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'prompts');
             setActive('prompts');
-            history.push('/prompts');
+            history.push('/conversation/prompts');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>

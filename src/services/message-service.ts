@@ -67,19 +67,22 @@ export const createMessage = async (conversationUid: string, conversationType: s
     return true;
 }
 
-export const updateMessageByUid = async (uid: string, conversationType: string, name: string, avatar?: string, options?: any) => {
+export const updateMessageTextById = async (id: number, text: string) => {
 
-    let res = await db.execute(`UPDATE messages SET category = :category, name = :name, avatar = :avatar, args = :args where uid = :uid`, {
-        ":uid": uid,
-        ":category": conversationType,
-        ":name": name,
-        ":avatar": avatar || "",
-        ":args": options ? JSON.stringify(options) : "{}",
+    let res = await db.execute(`UPDATE messages SET text = :text where id = :id`, {
+        ":id": id,
+        ":text": text,
     });
-
     console.log(res);
 }
 
+export const deleteMessageById = async (id: number) => {
+
+    let res = await db.execute(`delete from messages where id = :id`, {
+        ":id": id,
+    });
+    console.log(res);
+}
 
 export const queryMessageById = async (id: number): Promise<MessageEntity | null> => {
 

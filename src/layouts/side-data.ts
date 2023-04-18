@@ -4,32 +4,9 @@ export default {
             "title": "软软"
         }
     ],
-    "chat": [
-        {
-            "title": "ChatGPT",
-            "path": "/chat/chatgpt"
-        },
-    ],
-    "painter": [
-        {
-            "title": "AI绘画",
-            "path": "/chat/chatgpt"
-        },
-        {
-            "title": "AI抠图",
-            "path": "/chat/chatgpt"
-        }
-    ],
-    "prompts": [
-        {
-            "title": "AI绘画",
-            "path": "/chat/chatgpt"
-        },
-        {
-            "title": "AI问答",
-            "path": "/chat/chatgpt"
-        }
-    ],
+    "chat": [],
+    "painter": [],
+    "prompts": [],
     "tools": [
         {
             "title": "Stable Diffusion安装",
@@ -44,7 +21,7 @@ export default {
             "title": "webUI",
             "type": "URL",
             "path": "https://localhost:7860/"
-        }, 
+        },
         {
             "title": "终端",
             "path": "/tools/terminal"

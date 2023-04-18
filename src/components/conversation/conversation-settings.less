@@ -1,0 +1,30 @@
+@import url('@/variable.less');
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+    .item {
+        display: flex;
+        flex-direction: row;
+
+        justify-content: space-between;
+        align-items: center;
+
+        .logo {
+            height: 90px;
+            width: 90px;
+            border-radius: 8px;
+            background-color: @content-bg-color;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+        }
+    }
+
+    .center {
+        justify-content: center;
+    }
+}

@@ -2,16 +2,18 @@ import React, { ReactNode } from 'react';
 import classnames from 'classnames';
 import { MessageEntity } from '@/databases/conversation/index';
 import { BlockViewerProps } from '../types';
+import { Typography } from '@mui/joy';
+
 
 import styles from './_text-block.less';
 
 
-export const _TextBlock: React.FC<BlockViewerProps> = ({ className, avatar, avatarMenu, data, appendMessage }) => {
+export const _TextBlock: React.FC<BlockViewerProps> = ({ className, data, sx }) => {
 
     return (
-        <div className={classnames(styles.container, className)}>
+        <Typography className={classnames(styles.container, className)} component='span' sx={{ ...(sx || {}), mx: 1.5, overflowWrap: 'anywhere' }}>
             {data.content}
-        </div>
+        </Typography>
     );
 };
 

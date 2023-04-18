@@ -1,6 +1,6 @@
 import { encoding_for_model, get_encoding, Tiktoken } from '@dqbd/tiktoken';
 
-import { ChatModelId, defaultChatModelId } from '@/lib/data';
+import { ChatModelId, defaultChatModelId } from '@/databases/data/index';
 
 
 /**

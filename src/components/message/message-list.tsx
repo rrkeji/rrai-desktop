@@ -41,12 +41,15 @@ export const MessageList: React.FC<MessageListProps> = ({ className, beforeNode,
             {
                 messages && messages.map((message, index) => {
                     return (
-                        <Message key={index} message={message}></Message>
+                        <Message key={index} message={message} editable={message.botRole !== 'system'} onMessageChange={async () => {
+                            //
+                            await refresh();
+                        }}></Message>
                     );
                 })
             }
             {afterNode}
-        </div>
+        </div >
     );
 };
 

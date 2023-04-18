@@ -18,7 +18,7 @@ export interface ComposerFacadeProps {
 
 export const ComposerFacade: React.FC<ComposerFacadeProps> = ({ className, height, disableSend, conversationId, conversationType, sendMessage, stopGeneration }) => {
 
-    const [message, setMessage] = useState<string>('狗熊的习性？');
+    const [message, setMessage] = useState<string>('');
 
     //
     return (

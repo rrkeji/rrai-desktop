@@ -3,15 +3,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { history, useLocation, useParams } from 'umi';
 import classnames from 'classnames';
 import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade } from '@/components/index';
-import { ConversationBar, AddConversation, ConversationViewer } from '@/components/conversation/index';
+import { ConversationBar, AddConversation, ConversationViewer, EmptyConversation } from '@/components/conversation/index';
 import { Drawer, Modal } from 'antd';
 import { getConversationsByType, createConversation } from '@/services/conversation-service';
 import { createChatMessage } from '@/services/message-service';
 
-import { getLocalValue } from '@/utils';
+import { getLocalValue, setLocalValue } from '@/utils';
 
 import styles from './index.less';
-import { ConversationEntity, MessageEntity } from '@/databases';
 
 export const ConversationPage = () => {
 
@@ -33,30 +32,37 @@ export const ConversationPage = () => {
     return <>conversationType为空!</>
   }
 
-  const refresh = async () => {
-    if (conversationType != null) {
-      //根据会话类型获取所有的会话
-      let response: any = await getConversationsByType(conversationType);
-      console.log(response);
+  const refresh = async (conversationType: string) => {
+    //根据会话类型获取所有的会话
+    let response: any = await getConversationsByType(conversationType);
+    console.log(response);
 
-      if (response && response.data) {
-        setItems(response.data);
+    if (response && response.data && response.data.length > 0) {
+      //所有的会话
+      let conversationId = getLocalValue(`${conversationType}_conversationId`);
+      if (conversationId) {
+        setConversationId(conversationId);
       } else {
-        setItems([]);
+        setConversationId(response.data[0].uid);
       }
+      setItems(response.data);
+    } else {
+      setItems([]);
+      setConversationId(null);
     }
   };
 
   useEffect(() => {
     const call = async () => {
-      refresh();
+      refresh(conversationType);
     };
     call();
-  }, []);
+  }, [conversationType]);
 
   //
   useEffect(() => {
     if (params.conversationId) {
+      setLocalValue(`${conversationType}_conversationId`, params.conversationId);
       setConversationId(params.conversationId);
     } else {
       setConversationId(null);
@@ -86,9 +92,8 @@ export const ConversationPage = () => {
                     avatar={<ConversationIcon conversationType={conversationType} item={item} className={classnames(styles.side_item_avatar)}></ConversationIcon>}
                     avatarBackground={conversationType == 'chat' ? '#dedede' : '#0493F5'}
                     onClick={() => {
+                      setLocalValue(`${conversationType}_conversationId`, item.uid);
                       setConversationId(item.uid);
-                      // history.replace(`/conversation/${conversationType}/${item.id}`);
-                      // history.push(`/conversation/${conversationType}/${item.id}`);
                     }}
                   ></SideListItem>
                 );
@@ -102,7 +107,7 @@ export const ConversationPage = () => {
           <ConversationViewer className={styles.conversation} conversationId={conversationId} conversationType={conversationType}
             menuFolded={menuFolded} setMenuFolded={setMenuFolded}></ConversationViewer>
         ) : (
-          <></>
+          <EmptyConversation className={styles.conversation}></EmptyConversation>
         )
       }
 
