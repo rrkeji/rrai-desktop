@@ -16,6 +16,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         .init();
     tracing::info!("RRAI 启动...");
 
+    let (mut rx, mut child) = tauri::api::process::Command::new_sidecar("ipfs")
+        .expect("failed to create `ipfs` binary command")
+        .args(["daemon"])
+        .spawn()
+        .expect("Failed to spawn sidecar");
+
+    tauri::async_runtime::spawn(async move {
+        // read events such as stdout
+        while let Some(event) = rx.recv().await {
+            if let tauri::api::process::CommandEvent::Stdout(line) = event {
+                tracing::debug!("IPFS:{}", line);
+            }
+        }
+    });
+
     tauri::Builder::default()
         .setup(move |app| {
             let window = app.get_window("main").unwrap();

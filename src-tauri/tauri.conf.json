@@ -23,10 +23,20 @@
       },
       "shell": {
         "all": false,
-        "open": true
+        "sidecar": true,
+        "open": true,
+        "scope": [
+          {
+            "name": "binaries/ipfs",
+            "sidecar": true,
+            "args": [
+              "daemon"
+            ]
+          }
+        ]
       }
     },
-    "macOSPrivateApi":true,
+    "macOSPrivateApi": true,
     "bundle": {
       "active": true,
       "icon": [
@@ -35,6 +45,9 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
+      ],
+      "externalBin": [
+        "binaries/ipfs"
       ],
       "identifier": "link.idns.rrai.desktop",
       "targets": "all"
