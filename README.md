@@ -40,3 +40,25 @@ https://github.com/ipfs/kubo/blob/master/docs/experimental-features.md#private-n
 http://49.232.102.140:8080/ipfs/QmZ6aAhGhwWTCHcVxyS9naDjHc5pveCMmHn3pjHfgvLQQq
 
 QmZ6aAhGhwWTCHcVxyS9naDjHc5pveCMmHn3pjHfgvLQQq
+
+
+    "tools": [
+        {
+            "title": "Stable Diffusion安装",
+            "path": "/tools/sdinstall"
+        },
+        {
+            "title": "素材检索(Pexels)",
+            "type": "URL",
+            "path": "https://www.pexels.com/zh-cn/"
+        },
+        {
+            "title": "webUI",
+            "type": "URL",
+            "path": "https://localhost:7860/"
+        },
+        {
+            "title": "终端",
+            "path": "/tools/terminal"
+        },
+    ],

@@ -11,7 +11,7 @@ export interface MiniProgramPageProps {
 
 export const MiniProgramPage: React.FC<MiniProgramPageProps> = ({ }) => {
   return (
-    <div className={classnames(styles.container)}>
+    <div data-tauri-drag-region className={classnames(styles.container)}>
       <div className={classnames(styles.list_item)}>
         <img className={classnames(styles.logo)} src={RRAI_MINIPROGRAM_PNG}></img>
         <div>软软AI微信小程序</div>

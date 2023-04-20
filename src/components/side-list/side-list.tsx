@@ -9,7 +9,7 @@ export type SideListProps = PropsWithChildren<{
 
 export const SideList: React.FC<SideListProps> = ({ className, children }) => {
     return (
-        <div className={classnames(styles.container, className)}>
+        <div data-tauri-drag-region className={classnames(styles.container, className)}>
             {children}
         </div>
     );

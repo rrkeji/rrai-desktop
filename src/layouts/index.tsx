@@ -93,11 +93,7 @@ export default function Layout() {
               }}
               isWindowFocused={isWindowFocused}></Controls>
           </div>
-          <div className={classnames(styles.item, styles.img_item, active === 'home' ? styles.active : undefined)} onClick={() => {
-            setLocalValue('rrai_active_menu', 'home');
-            setActive('home');
-            history.push('/conversation/settings');
-          }}>
+          <div className={classnames(styles.item, styles.img_item, active === 'home' ? styles.active : undefined)}>
             <img className={classnames(styles.item_icon)} src={LOGO_PNG}></img>
             <div className={classnames(styles.item_title)}>软软AI</div>
           </div>
@@ -125,14 +121,14 @@ export default function Layout() {
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>
           </div>
-          <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
+          {/* <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'tools');
             setActive('tools');
             history.push('/tools/sdinstall');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-Tools')}></div>
             <div className={classnames(styles.item_title)}>工具箱</div>
-          </div>
+          </div> */}
         </div>
 
         <div className={classnames(styles.items)}>
@@ -154,7 +150,7 @@ export default function Layout() {
           </div>
         </div>
       </div>
-      <div className={styles.content}>
+      <div data-tauri-drag-region className={styles.content}>
         <Outlet />
       </div>
     </div>

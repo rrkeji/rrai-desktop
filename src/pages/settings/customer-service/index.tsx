@@ -3,11 +3,11 @@ import classnames from 'classnames';
 
 import styles from './index.less';
 
-export interface SettingsAccountPageProps {
+export interface CustomerServicePageProps {
 
 }
 
-export const SettingsAccountPage: React.FC<SettingsAccountPageProps> = ({ }) => {
+export const CustomerServicePage: React.FC<CustomerServicePageProps> = ({ }) => {
 
     //
     return (
@@ -19,4 +19,4 @@ export const SettingsAccountPage: React.FC<SettingsAccountPageProps> = ({ }) => 
     );
 };
 
-export default SettingsAccountPage;
+export default CustomerServicePage;

@@ -56,11 +56,13 @@ export default function LoginPage() {
   if (toLogin) {
     //https://www.idns.link/rrai/web_proxy/index.html#/wx_login_proxy?key=token&token=sasdfasdfasdf
     let redirectUrl = `${BASE_REDIRECT_URL}`;
-    let origin = window.location.origin;
+    // let origin = window.location.origin;
+    let origin = 'tauri://localhost';
     let localUrl = origin + '/#/tklogin';
     let state = `${encodeURIComponent(localUrl)}`;
-    let src = `https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=snsapi_login&state=${state}#wechat_redirect`;
-    console.log(src);
+    //${state}#wechat_redirect
+    let src = `https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=snsapi_login&state=`;
+    alert(src);
     window.location.href = src;
     return (
       <div className={styles.container}>

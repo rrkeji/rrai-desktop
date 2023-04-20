@@ -78,6 +78,7 @@ export default defineConfig({
     },
   ],
   npmClient: 'pnpm',
+  esbuildMinifyIIFE: true,
   links: [
     { rel: 'icon', href: '/public/favicon.ico' },
   ],
