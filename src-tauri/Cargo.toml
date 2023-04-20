@@ -33,6 +33,7 @@ futures = "0.3"
 nix = "0.26.2"
 window-shadows = "0.2.1"
 rusqlite = "0.29.0"
+home = "0.5.4"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

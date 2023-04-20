@@ -63,6 +63,10 @@ export default defineConfig({
           component: "@/pages/settings/helper/index",
         },
         {
+          path: "/settings/customerservice",
+          component: "@/pages/settings/customer-service/index",
+        },
+        {
           path: "/tools",
           component: "tools/index"
         },

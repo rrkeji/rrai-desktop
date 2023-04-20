@@ -35,7 +35,14 @@ struct SqliteMap(Mutex<HashMap<String, Connection>>);
 
 #[command]
 async fn open(state: State<'_, SqliteMap>, path: String) -> Result<bool> {
-    let connection = Connection::open(&path)?;
+    //到当前用户的目录的.rrai路径
+    let mut storage_path = crate::utils::rrai_home_path()?.join("sqlite");
+    storage_path.push(path.clone());
+
+    let prefix = storage_path.parent().unwrap_or(storage_path.as_path());
+    std::fs::create_dir_all(prefix).map_err(|err| anyhow::anyhow!(err))?;
+
+    let connection = Connection::open(&storage_path)?;
     state.0.lock().unwrap().insert(path.clone(), connection);
     Ok(true)
 }

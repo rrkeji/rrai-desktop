@@ -6,6 +6,7 @@ extern crate lazy_static;
 
 mod commands;
 mod plugins;
+mod utils;
 
 use std::error::Error;
 use tauri::Manager;

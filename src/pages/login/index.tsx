@@ -56,14 +56,20 @@ export default function LoginPage() {
   if (toLogin) {
     //https://www.idns.link/rrai/web_proxy/index.html#/wx_login_proxy?key=token&token=sasdfasdfasdf
     let redirectUrl = `${BASE_REDIRECT_URL}`;
-    // let origin = window.location.origin;
-    let origin = 'tauri://localhost';
-    let localUrl = origin + '/#/tklogin';
-    let state = `${encodeURIComponent(localUrl)}`;
-    //${state}#wechat_redirect
-    let src = `https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=snsapi_login&state=`;
-    alert(src);
+    let origin = window.location.origin;
+    let src = '';
+    if (origin.indexOf('http') == 0) {
+      //DEBUG
+      let localUrl = origin + '/#/tklogin';
+      let state = `${encodeURIComponent(localUrl)}`;
+      src = `https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=snsapi_login&state=${state}#wechat_redirect`;
+    } else {
+      src = `https://open.weixin.qq.com/connect/qrconnect?appid=${APPID}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=snsapi_login&state=`;
+    }
+    //
+    console.log(src);
     window.location.href = src;
+
     return (
       <div className={styles.container}>
         <Spin tip="跳转到微信" size="large">
