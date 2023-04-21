@@ -29,7 +29,7 @@ async function resolvePublish() {
   tauriJson.package.version = nextVersion;
 
   // 发布更新前先写更新日志
-  const nextTag = `v${nextVersion}`;
+  const nextTag = `V${nextVersion}`;
   await resolveUpdateLog(nextTag);
 
   await fs.writeFile(

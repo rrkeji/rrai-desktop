@@ -20,7 +20,7 @@ async function resolveUpdater() {
     page: 1,
   });
 
-  const tag = tags.find((t) => t.name.startsWith("v"));
+  const tag = tags.find((t) => t.name.startsWith("V"));
 
   console.log(tag);
 
