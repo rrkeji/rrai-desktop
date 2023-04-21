@@ -12,18 +12,18 @@ export default {
     "painter": [],
     "prompts": [],
     "settings": [
-        {
-            "title": "账号设置",
-            "path": "/settings/account"
-        },
-        {
-            "title": "客服",
-            "path": "/settings/customerservice"
-        },
-        {
-            "title": "升级",
-            "path": "/settings/upgrade"
-        },
+        // {
+        //     "title": "账号设置",
+        //     "path": "/settings/account"
+        // },
+        // {
+        //     "title": "客服",
+        //     "path": "/settings/customerservice"
+        // },
+        // {
+        //     "title": "升级",
+        //     "path": "/settings/upgrade"
+        // },
         {
             "type": "Divider",
         },

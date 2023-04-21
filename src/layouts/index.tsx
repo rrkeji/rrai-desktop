@@ -4,7 +4,6 @@ import { appWindow } from '@tauri-apps/api/window';
 import { Outlet, history, useLocation } from 'umi';
 import classnames from 'classnames';
 import Controls from '@/components/title-bar/controls/index';
-import { windowIsFocused } from '@/components/index';
 import LOGO_PNG from '@/assets/logo.png';
 
 import styles from './index.less';
@@ -112,7 +111,7 @@ export default function Layout() {
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-huihua')}></div>
             <div className={classnames(styles.item_title)}>AI绘画</div>
-          </div>
+          </div>*/}
           <div className={classnames(styles.item, active === 'prompts' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'prompts');
             setActive('prompts');
@@ -120,7 +119,7 @@ export default function Layout() {
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>
-          </div> */}
+          </div>
           {/* <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'tools');
             setActive('tools');
