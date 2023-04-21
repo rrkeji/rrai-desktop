@@ -64,6 +64,8 @@
         "resizable": true,
         "title": "软软AI",
         "width": 1330,
+        "minWidth": 900,
+        "minHeight": 600,
         "height": 1020,
         "fileDropEnabled": true,
         "decorations": false,

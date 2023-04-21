@@ -32,7 +32,7 @@ export const ConversationPage = () => {
     return <>conversationType为空!</>
   }
 
-  const refresh = async (conversationType: string) => {
+  const refresh = async (conversationType: string, reset: boolean) => {
     //根据会话类型获取所有的会话
     let response: any = await getConversationsByType(conversationType);
     console.log(response);
@@ -40,9 +40,10 @@ export const ConversationPage = () => {
     if (response && response.data && response.data.length > 0) {
       //所有的会话
       let conversationId = getLocalValue(`${conversationType}_conversationId`);
-      if (conversationId) {
+      if (!reset && conversationId) {
         setConversationId(conversationId);
       } else {
+        setLocalValue(`${conversationType}_conversationId`, response.data[0].uid);
         setConversationId(response.data[0].uid);
       }
       setItems(response.data);
@@ -54,7 +55,7 @@ export const ConversationPage = () => {
 
   useEffect(() => {
     const call = async () => {
-      refresh(conversationType);
+      refresh(conversationType, false);
     };
     call();
   }, [conversationType]);
@@ -75,37 +76,45 @@ export const ConversationPage = () => {
     <>
       {
         menuFolded ? ('') : (
-          <SideList className={styles.side}>
+          <div className={styles.left}>
             <div data-tauri-drag-region className={styles.height24}></div>
             <SideHeader activeModule={conversationType!} className={styles.side_header} onAddConversation={async (conversationType) => {
               //弹出对话框
               setAddShown(true);
             }}></SideHeader>
-            {
-              items && items.map((item: any, index: number) => {
-                return (
-                  <SideListItem
-                    key={index}
-                    className={classnames(styles.side_item)}
-                    active={item.uid === conversationId}
-                    title={item.name}
-                    avatar={<ConversationIcon conversationType={conversationType} item={item} className={classnames(styles.side_item_avatar)}></ConversationIcon>}
-                    avatarBackground={conversationType == 'chat' ? '#dedede' : '#0493F5'}
-                    onClick={() => {
-                      setLocalValue(`${conversationType}_conversationId`, item.uid);
-                      setConversationId(item.uid);
-                    }}
-                  ></SideListItem>
-                );
-              })
-            }
-          </SideList>
+            <SideList className={styles.side}>
+              {
+                items && items.map((item: any, index: number) => {
+                  return (
+                    <SideListItem
+                      key={index}
+                      className={classnames(styles.side_item)}
+                      active={item.uid === conversationId}
+                      title={item.name}
+                      avatar={<ConversationIcon conversationType={conversationType} item={item} className={classnames(styles.side_item_avatar)}></ConversationIcon>}
+                      avatarBackground={conversationType == 'chat' ? '#dedede' : '#0493F5'}
+                      timestamp={item.created.split(' ')[0]}
+                      rightBar={
+                        <div>{item.args['model']}</div>
+                      }
+                      onClick={() => {
+                        setLocalValue(`${conversationType}_conversationId`, item.uid);
+                        setConversationId(item.uid);
+                      }}
+                    ></SideListItem>
+                  );
+                })
+              }
+            </SideList>
+          </div>
         )
       }
       {
         conversationId ? (
           <ConversationViewer className={styles.conversation} conversationId={conversationId} conversationType={conversationType}
-            menuFolded={menuFolded} setMenuFolded={setMenuFolded}></ConversationViewer>
+            menuFolded={menuFolded} setMenuFolded={setMenuFolded} refreshConversationList={async (reset) => {
+              await refresh(conversationType, reset);
+            }}></ConversationViewer>
         ) : (
           <EmptyConversation className={styles.conversation}></EmptyConversation>
         )
@@ -132,7 +141,7 @@ export const ConversationPage = () => {
           if (res && res.length > 0) {
             //发送系统消息
             await createChatMessage(res, conversationType, 'system');
-            await refresh();
+            await refresh(conversationType);
             setConversationId(res);
             setAddShown(false);
           } else {

@@ -4,7 +4,7 @@ import { history, useLocation, useParams } from 'umi';
 import classnames from 'classnames';
 import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade, Message } from '@/components/index';
 import { ConversationBar, AddConversation } from '@/components/conversation/index';
-import { Drawer, Modal } from 'antd';
+import { Drawer, Spin } from 'antd';
 import { getConversationsByType, createConversation, queryConversationByUid } from '@/services/conversation-service';
 import { createChatMessage, getMessageByConversationId } from '@/services/message-service';
 import { ConversationSettings } from './conversation-settings';
@@ -19,9 +19,10 @@ export interface ConversationViewerProps {
     conversationType: string;
     menuFolded?: boolean;
     setMenuFolded?: (menuFolded: boolean) => void;
+    refreshConversationList: (reset: boolean) => Promise<any>;
 }
 
-export const ConversationViewer: React.FC<ConversationViewerProps> = ({ className, conversationId, conversationType, menuFolded, setMenuFolded }) => {
+export const ConversationViewer: React.FC<ConversationViewerProps> = ({ className, conversationId, conversationType, menuFolded, setMenuFolded, refreshConversationList }) => {
 
     const [messageVersion, setMessageVersion] = useState<number>(1);
 
@@ -57,6 +58,8 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
 
     const handleSendMessage = async (userText: string, conversationId: string) => {
         console.log(userText, conversationId);
+        setWriting(false);
+        setWritingMessage(null);
         //
         if (conversationType == 'chat') {
             let newMessageId = await createChatMessage(conversationId, conversationType, 'user', userText);
@@ -198,6 +201,14 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
 
     const handleStopGeneration = () => abortController?.abort();
 
+    if (conversation == null) {
+        return (
+            <div className={classnames(styles.loading, className)}>
+                <Spin />
+            </div>
+        );
+    }
+
     return (
         <div className={classnames(styles.container, className)}>
 
@@ -213,6 +224,7 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
                 {/* 消息列表 */}
                 <MessageList
                     className={styles.message_list}
+                    systemMessageShown={conversation?.args['SystemMessageShown']}
                     conversationId={conversationId!}
                     conversationType={conversationType}
                     beforeNode={''}
@@ -247,9 +259,12 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
                     }}
                     getContainer={false}
                 >
-                    <ConversationSettings conversation={conversation}></ConversationSettings>
+                    <ConversationSettings conversation={conversation} refreshConversation={async () => {
+                        await refreshConversation(conversationId);
+                    }} refreshMessages={async () => {
+                        setMessageVersion(new Date().getTime());
+                    }} refreshConversationList={refreshConversationList}></ConversationSettings>
                 </Drawer>
-
             </div>
         </div>
     );

@@ -10,6 +10,7 @@
     "postinstall": "umi setup",
     "setup": "umi setup",
     "start": "npm run dev",
+    "tauribuild": "tauri build",
     "tauri": "tauri"
   },
   "dependencies": {

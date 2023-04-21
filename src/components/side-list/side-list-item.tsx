@@ -38,7 +38,7 @@ export const SideListItem: React.FC<SideListItemProps> = (props) => {
                 timestamp || rightBar ? (
                     <div className={classnames(styles.right)}>
                         <div className={classnames(styles.time)}>{timestamp}</div>
-                        <div className={classnames(styles.right_bar)}></div>
+                        <div className={classnames(styles.right_bar)}>{rightBar}</div>
                     </div>
                 ) : ''
             }

@@ -7,6 +7,7 @@
     align-items: center;
     height: 60px;
     min-height: 60px;
+    min-width: 600px;
     width: 100%;
     border-bottom: 1px solid #c4c4c4;
     background-color: @content-bg-color;
@@ -32,6 +33,10 @@
 
         .title {
             font-size: 16px;
+            max-width: 600px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 

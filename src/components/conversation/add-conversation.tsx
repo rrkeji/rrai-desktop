@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { PurposeSelector } from '@/components/util/PurposeSelector';
-import { Input, Select, Row, Col } from 'antd';
+import { message } from 'antd';
 import { defaultChatModelId, ChatModels, ChatModelId, defaultSystemPurposeId, SystemPurposeId, SystemPurposes } from '@/databases/data/index'
 import { Box, Button, Grid, Stack, Textarea, Typography, useTheme } from '@mui/joy';
 import { StyledDropdown } from '@/components/util/StyledDropdown';
@@ -14,18 +14,30 @@ export interface AddConversationProps {
 }
 
 interface _ChatGPTProps {
-    model: ChatModelId,
-    systemPurposeId: SystemPurposeId,
-    onModelChange: (value: ChatModelId) => void,
-    onCustomMessageChange: (value: string) => void,
-    onSystemPurposeIdChange: (value: SystemPurposeId) => void,
+    model: ChatModelId;
+    name: string;
+    systemPurposeId: SystemPurposeId;
+    onModelChange: (value: ChatModelId) => void;
+    onCustomMessageChange: (value: string) => void;
+    onSystemPurposeIdChange: (value: SystemPurposeId) => void;
+    onNameChange: (value: string) => void;
 }
 
-const _ChatGPT: React.FC<_ChatGPTProps> = ({ model, onModelChange, onCustomMessageChange, systemPurposeId, onSystemPurposeIdChange }) => {
+const _ChatGPT: React.FC<_ChatGPTProps> = ({ name, model, onModelChange, onCustomMessageChange, systemPurposeId, onSystemPurposeIdChange, onNameChange }) => {
+
+    const handleEditTextChanged = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onNameChange(e.target.value);
+    }
 
     return (
         <div>
-            <Box>
+            <Box sx={{ marginTop: '10px' }}>
+                <Typography level='body3' color='neutral' sx={{ mb: 2 }}>
+                    会话名称：
+                </Typography>
+                <Textarea maxRows={2} value={name} onChange={handleEditTextChanged}></Textarea>
+            </Box>
+            <Box sx={{ marginTop: '10px' }}>
                 <Typography level='body3' color='neutral' sx={{ mb: 2 }}>
                     模型选择：
                 </Typography>
@@ -35,11 +47,12 @@ const _ChatGPT: React.FC<_ChatGPTProps> = ({ model, onModelChange, onCustomMessa
                     }
                 }} />
             </Box>
-            <PurposeSelector systemPurposeId={systemPurposeId} handlePurposeChange={(purpose: SystemPurposeId | null) => {
-                if (purpose) {
-                    onSystemPurposeIdChange(purpose);
-                }
-            }}
+            <PurposeSelector sx={{ marginTop: '10px' }}
+                systemPurposeId={systemPurposeId} handlePurposeChange={(purpose: SystemPurposeId | null) => {
+                    if (purpose) {
+                        onSystemPurposeIdChange(purpose);
+                    }
+                }}
                 handleCustomSystemMessageChange={(event) => {
                     console.log(event.target.value);
                     onCustomMessageChange(event.target.value)
@@ -64,7 +77,11 @@ const getDefaultArgs = (conversationType: string) => {
 
 export const AddConversation: React.FC<AddConversationProps> = ({ conversationType, onSave, onCannel }) => {
 
+    const [messageApi, contextHolder] = message.useMessage();
+
     const theme = useTheme();
+
+    const [name, setName] = useState<string>('');
 
     const [args, setArgs] = useState<any>(getDefaultArgs(conversationType));
 
@@ -72,6 +89,7 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
         if (conversationType === 'chat') {
             return (
                 <_ChatGPT
+                    name={name}
                     model={args['model']}
                     onModelChange={(value) => {
                         setArgs({ ...args, model: value });
@@ -81,7 +99,11 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
                     }}
                     systemPurposeId={args['purposeId']}
                     onSystemPurposeIdChange={(systemPurposeId: SystemPurposeId) => {
+
                         setArgs({ ...args, purposeId: systemPurposeId });
+                    }}
+                    onNameChange={(name) => {
+                        setName(name)
                     }}
 
                 ></_ChatGPT>
@@ -93,6 +115,7 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
 
     return (
         <div className={classnames(styles.container)}>
+            {contextHolder}
             {content(conversationType)}
             <Stack direction='row' sx={{ justifyContent: 'flex-start', alignItems: 'center', mx: 2, gap: { xs: 2, lg: 3 }, }}>
                 <Button
@@ -102,10 +125,22 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
                         //组装数据
                         let conversation = {};
                         if (conversationType === 'chat') {
+
+                            let cname: string = name;
+                            if (!cname || cname.trim() == '') {
+                                cname = `${SystemPurposes[args['purposeId'] as SystemPurposeId]?.title}`;
+                            }
+                            if (cname.length > 64) {
+                                messageApi.open({
+                                    type: 'error',
+                                    content: '会话名称过长~',
+                                });
+                                return;
+                            }
                             //
                             conversation = {
                                 avatar: `[symbol](${SystemPurposes[args['purposeId'] as SystemPurposeId]?.symbol})`,
-                                name: `${SystemPurposes[args['purposeId'] as SystemPurposeId]?.title}`,
+                                name: cname,
                                 category: conversationType,
                                 args: args
                             };

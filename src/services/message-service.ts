@@ -161,3 +161,26 @@ export const createChatMessage = async (conversationUid: string, conversationTyp
 
     return await createMessage(conversationUid, conversationType, senderType, senderId, botRole, modelId, modelOptions, text, typing, purposeId, avatar);
 }
+
+
+export const deleteMessagesByConversationUid = async (uid: string): Promise<boolean> => {
+
+
+    //删除会话下所有的消息
+    let res1 = await db.execute("delete from messages where conversation_uid = :uid", {
+        ":uid": uid
+    });
+
+    return true;
+}
+
+
+export const clearMessagesByConversationUid = async (uid: string): Promise<boolean> => {
+
+    //删除会话下所有的消息
+    let res1 = await db.execute("delete from messages where conversation_uid = :uid and bot_role != 'system' ", {
+        ":uid": uid
+    });
+
+    return true;
+}

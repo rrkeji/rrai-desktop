@@ -105,7 +105,7 @@ export default function Layout() {
             <div className={classnames(styles.item_icon, 'iconfont icon-jiqiren')}></div>
             <div className={classnames(styles.item_title)}>AI问答</div>
           </div>
-          <div className={classnames(styles.item, active === 'painter' ? styles.active : undefined)} onClick={() => {
+          {/* <div className={classnames(styles.item, active === 'painter' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'painter');
             setActive('painter');
             history.push('/conversation/painter');
@@ -120,7 +120,7 @@ export default function Layout() {
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>
-          </div>
+          </div> */}
           {/* <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'tools');
             setActive('tools');

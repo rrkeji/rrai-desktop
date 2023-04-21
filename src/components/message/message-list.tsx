@@ -13,10 +13,11 @@ export interface MessageListProps {
     conversationId: string;
     beforeNode: ReactNode;
     afterNode: ReactNode;
+    systemMessageShown: boolean;
     version: number;
 }
 
-export const MessageList: React.FC<MessageListProps> = ({ className, beforeNode, conversationType, conversationId, afterNode, version }) => {
+export const MessageList: React.FC<MessageListProps> = ({ className, systemMessageShown, beforeNode, conversationType, conversationId, afterNode, version }) => {
 
 
     const [messages, setMessages] = useState<Array<MessageEntity>>([]);
@@ -39,7 +40,7 @@ export const MessageList: React.FC<MessageListProps> = ({ className, beforeNode,
         <div className={classnames(styles.container, className)}>
             {beforeNode}
             {
-                messages && messages.map((message, index) => {
+                messages && messages.filter((message, index) => message.botRole !== 'system' || systemMessageShown).map((message, index) => {
                     return (
                         <Message key={index} message={message} editable={message.botRole !== 'system'} onMessageChange={async () => {
                             //

@@ -21,6 +21,10 @@ export default {
             "path": "/settings/customerservice"
         },
         {
+            "title": "升级",
+            "path": "/settings/upgrade"
+        },
+        {
             "type": "Divider",
         },
         {
