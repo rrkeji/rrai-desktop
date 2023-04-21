@@ -56,7 +56,15 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+        "https://github.com/rrkeji/rrai-desktop/releases/download/updater/update.json"
+      ],
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNBQjFEMEIyRTkzQTQzNjIKUldSaVF6cnBzdEN4T3BJZUR2RHVrUnFzcG9BTzEyOTM3VWlSQ3grRmI3OHFSQlBLK1NBaWdKbWcK",
+      "windows": {
+        "installMode": "passive"
+      }
     },
     "windows": [
       {
