@@ -16,10 +16,10 @@
 
 ### 技术栈
 
-> Tauri 一个类似Electron的Rust语言实现的框架。
-> React 
-> Antd
-> Sqlite
+- Tauri 一个类似Electron的Rust语言实现的框架。
+- React 
+- Antd
+- Sqlite
 
 ### 示例截图
 - 微信登录
