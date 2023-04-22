@@ -50,7 +50,12 @@
         "binaries/ipfs"
       ],
       "identifier": "link.idns.rrai.desktop",
-      "targets": "all"
+      "targets": "all",
+      "windows": {
+        "wix": {
+          "language": "zh-CN"
+        }
+      }
     },
     "security": {
       "csp": null
