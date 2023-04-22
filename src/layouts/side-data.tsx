@@ -24,6 +24,11 @@ export default {
         //     "title": "升级",
         //     "path": "/settings/upgrade"
         // },
+        // {
+        //     "title": "官网",
+        //     "type": "URL",
+        //     "path": "https://rrai.idns.link"
+        // },
         {
             "type": "Divider",
         },

@@ -141,7 +141,7 @@ export const ConversationPage = () => {
           if (res && res.length > 0) {
             //发送系统消息
             await createChatMessage(res, conversationType, 'system');
-            await refresh(conversationType);
+            await refresh(conversationType, false);
             setConversationId(res);
             setAddShown(false);
           } else {
