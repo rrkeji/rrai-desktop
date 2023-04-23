@@ -37,6 +37,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             Ok(())
         })
         .plugin(plugins::sqlite::init())
+        .plugin(rrai_desktop_sdk::plugins::sqlite::init())
         .invoke_handler(tauri::generate_handler![
             commands::system::cmds_system_process_exec
         ])

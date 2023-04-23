@@ -2673,6 +2673,7 @@ dependencies = [
  "lazy_static",
  "nix",
  "rocket",
+ "rrai-desktop-sdk",
  "rusqlite",
  "serde",
  "serde_json",
@@ -2682,6 +2683,29 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "window-shadows",
+]
+
+[[package]]
+name = "rrai-desktop-sdk"
+version = "0.1.0"
+source = "git+https://www.github.com/rrkeji/rrai-desktop-sdk#cde1572c0042b70c5ff04d3248a45d1d36d3ddf6"
+dependencies = [
+ "rrai-desktop-sdk-common",
+ "tauri-plugin-rrai-ipfs",
+ "tauri-plugin-rrai-sqlite",
+ "tauri-plugin-rrai-substrate",
+]
+
+[[package]]
+name = "rrai-desktop-sdk-common"
+version = "0.1.0"
+source = "git+https://www.github.com/rrkeji/rrai-desktop-sdk#cde1572c0042b70c5ff04d3248a45d1d36d3ddf6"
+dependencies = [
+ "anyhow",
+ "home",
+ "thiserror",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
@@ -3343,6 +3367,38 @@ dependencies = [
  "syn 1.0.109",
  "tauri-codegen",
  "tauri-utils",
+]
+
+[[package]]
+name = "tauri-plugin-rrai-ipfs"
+version = "0.0.1"
+source = "git+https://www.github.com/rrkeji/rrai-desktop-sdk#cde1572c0042b70c5ff04d3248a45d1d36d3ddf6"
+dependencies = [
+ "tauri",
+]
+
+[[package]]
+name = "tauri-plugin-rrai-sqlite"
+version = "0.0.1"
+source = "git+https://www.github.com/rrkeji/rrai-desktop-sdk#cde1572c0042b70c5ff04d3248a45d1d36d3ddf6"
+dependencies = [
+ "anyhow",
+ "rrai-desktop-sdk-common",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tauri",
+ "thiserror",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "tauri-plugin-rrai-substrate"
+version = "0.0.1"
+source = "git+https://www.github.com/rrkeji/rrai-desktop-sdk#cde1572c0042b70c5ff04d3248a45d1d36d3ddf6"
+dependencies = [
+ "tauri",
 ]
 
 [[package]]
