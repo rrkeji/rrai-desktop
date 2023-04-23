@@ -115,7 +115,7 @@ export default function Layout() {
           <div className={classnames(styles.item, active === 'prompts' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'prompts');
             setActive('prompts');
-            history.push('/conversation/prompts');
+            history.push('/prompts/civitai');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>

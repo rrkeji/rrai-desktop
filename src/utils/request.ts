@@ -34,6 +34,8 @@ export const get = async (request: RequestOption): Promise<any> => {
 
 export const post = async (request: RequestOption): Promise<any> => {
 
+    console.log(request);
+
     if (request.dataType === 'application/json') {
         return http.fetch(request.url, {
             headers: {
@@ -48,7 +50,7 @@ export const post = async (request: RequestOption): Promise<any> => {
                 ...request.headers
             },
             method: 'POST',
-            query: http.Body.form(request.data != null ? request.data : {})
+            body: http.Body.form(request.data != null ? request.data : {})
         });
     }
 

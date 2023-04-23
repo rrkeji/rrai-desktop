@@ -5,3 +5,5 @@ export * from './composer/index';
 export * from './conversation/index';
 export * from './monitor';
 export * from './message/index';
+export * from './images/index';
+export * from './prompts/index';

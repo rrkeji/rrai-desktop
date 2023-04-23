@@ -38,6 +38,11 @@ export default defineConfig({
       component: "@/pages/conversation/index"
     },
     {
+      wrappers: ['@/wrappers/auth'],
+      path: "/prompts/civitai",
+      component: "@/pages/prompts/index"
+    },
+    {
       path: '/',
       component: '@/layouts/side-layout',
       wrappers: ['@/wrappers/auth'],
