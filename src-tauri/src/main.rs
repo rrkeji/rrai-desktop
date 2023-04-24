@@ -36,8 +36,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             Ok(())
         })
-        .plugin(plugins::sqlite::init())
+        .plugin(rrai_desktop_sdk::plugins::appbox::init())
+        .plugin(rrai_desktop_sdk::plugins::idns::init())
         .plugin(rrai_desktop_sdk::plugins::sqlite::init())
+        .plugin(rrai_desktop_sdk::plugins::ipfs::init())
+        .plugin(rrai_desktop_sdk::plugins::substrate::init())
         .invoke_handler(tauri::generate_handler![
             commands::system::cmds_system_process_exec
         ])

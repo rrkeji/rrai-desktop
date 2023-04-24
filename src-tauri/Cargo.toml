@@ -10,12 +10,12 @@ version = "0.0.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = {version = "1.2", features = []}
+tauri-build = { version = "1.2", features = [] }
 
 [dependencies]
-serde = {version = "1.0", features = ["derive"]}
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tauri = {version = "1.2", features = ["api-all", "macos-private-api", "process-command-api", "updater"]}
+tauri = { version = "1.2", features = ["api-all", "macos-private-api", "process-command-api", "updater"] }
 
 #result
 anyhow = "1.0"
@@ -23,7 +23,7 @@ thiserror = "1.0.40"
 
 # logger
 tracing = "0.1.15"
-tracing-subscriber = {version = "0.3", features = ["fmt"]}
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
 
 bytes = "1.1.0"
 futures = "0.3"
@@ -32,11 +32,11 @@ lazy_static = "1.4.0"
 async-trait = "0.1.68"
 home = "0.5.4"
 nix = "0.26.2"
-rocket = "0.4.11"
-rusqlite = {version = "0.29.0", features = ["bundled"]}
 window-shadows = "0.2.1"
 
-rrai-desktop-sdk = {version = "*", git = "https://www.github.com/rrkeji/rrai-desktop-sdk", branch = "master"}
+# rrai-desktop-sdk = {version = "*", git = "https://www.github.com/rrkeji/rrai-desktop-sdk", branch = "master"}
+rrai-desktop-sdk = { version = "*", path = "../../rrai-desktop-sdk" }
+# 
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
