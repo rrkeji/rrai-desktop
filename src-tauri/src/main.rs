@@ -22,7 +22,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     //启动服务管理
     tauri::async_runtime::spawn(async move {
         //
-        let _ = services::MAIN_SERVICE_MANAGER.launch().await;
+        // let _ = services::MAIN_SERVICE_MANAGER.launch().await;
     });
 
     tauri::Builder::default()

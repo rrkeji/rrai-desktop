@@ -93,7 +93,7 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
             const requestWebsocket = (payload: any): Promise<any> => {
 
                 return new Promise((resolve, reject) => {
-                    let websocket = new WebSocket('ws://45.207.58.161:3001');
+                    let websocket = new WebSocket('wss://wsschat.idns.link/desktop/');
 
                     //调用接口
                     let incrementalText = '';

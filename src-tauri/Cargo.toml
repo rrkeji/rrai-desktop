@@ -34,8 +34,8 @@ home = "0.5.4"
 nix = "0.26.2"
 window-shadows = "0.2.1"
 
-# rrai-desktop-sdk = {version = "*", git = "https://www.github.com/rrkeji/rrai-desktop-sdk", branch = "master"}
-rrai-desktop-sdk = { version = "*", path = "../../rrai-desktop-sdk" }
+rrai-desktop-sdk = {version = "*", git = "https://www.github.com/rrkeji/rrai-desktop-sdk", branch = "master"}
+# rrai-desktop-sdk = { version = "*", path = "../../rrai-desktop-sdk" }
 # 
 
 [features]
