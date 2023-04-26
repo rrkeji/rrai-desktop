@@ -104,14 +104,14 @@ export default function Layout() {
             <div className={classnames(styles.item_icon, 'iconfont icon-jiqiren')}></div>
             <div className={classnames(styles.item_title)}>AI问答</div>
           </div>
-          {/* <div className={classnames(styles.item, active === 'painter' ? styles.active : undefined)} onClick={() => {
+          <div className={classnames(styles.item, active === 'painter' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'painter');
             setActive('painter');
-            history.push('/conversation/painter');
+            history.push('/painter');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-huihua')}></div>
             <div className={classnames(styles.item_title)}>AI绘画</div>
-          </div>*/}
+          </div>
           <div className={classnames(styles.item, active === 'prompts' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'prompts');
             setActive('prompts');
@@ -120,22 +120,15 @@ export default function Layout() {
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>
           </div>
-          <div className={classnames(styles.item, active === 'storage' ? styles.active : undefined)} onClick={() => {
-            setLocalValue('rrai_active_menu', 'storage');
-            setActive('storage');
-            history.push('/storage');
-          }}>
-            <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
-            <div className={classnames(styles.item_title)}>软盘</div>
-          </div>
-          {/* <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
+
+          <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'tools');
             setActive('tools');
             history.push('/tools/sdinstall');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-Tools')}></div>
             <div className={classnames(styles.item_title)}>工具箱</div>
-          </div> */}
+          </div>
         </div>
 
         <div className={classnames(styles.items)}>
@@ -146,6 +139,22 @@ export default function Layout() {
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-xiaochengxu')}></div>
             <div className={classnames(styles.item_title)}>小程序</div>
+          </div>
+          <div className={classnames(styles.item, active === 'containers' ? styles.active : undefined)} onClick={() => {
+            setLocalValue('rrai_active_menu', 'containers');
+            setActive('containers');
+            history.push('/containers');
+          }}>
+            <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
+            <div className={classnames(styles.item_title)}>算力</div>
+          </div>
+          <div className={classnames(styles.item, active === 'storage' ? styles.active : undefined)} onClick={() => {
+            setLocalValue('rrai_active_menu', 'storage');
+            setActive('storage');
+            history.push('/storage');
+          }}>
+            <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
+            <div className={classnames(styles.item_title)}>软盘</div>
           </div>
           <div className={classnames(styles.item, active === 'settings' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'settings');

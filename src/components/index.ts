@@ -7,3 +7,5 @@ export * from './monitor';
 export * from './message/index';
 export * from './images/index';
 export * from './prompts/index';
+export * from './painter/index';
+export * from './loading/index';

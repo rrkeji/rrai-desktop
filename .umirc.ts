@@ -48,6 +48,16 @@ export default defineConfig({
       component: "@/pages/storage/index"
     },
     {
+      wrappers: ['@/wrappers/auth'],
+      path: "/painter",
+      component: "@/pages/painter/index"
+    },
+    {
+      wrappers: ['@/wrappers/auth'],
+      path: "/containers",
+      component: "@/pages/containers/index"
+    },
+    {
       path: '/',
       component: '@/layouts/side-layout',
       wrappers: ['@/wrappers/auth'],
