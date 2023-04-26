@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+  .breadcrumb {
+    text-align: left;
+    padding: 2px 2px;
+    background-color: #ffffff;
+
+    :global {
+      .ant-btn {
+        padding: 0 0;
+        line-height: 24px;
+      }
+
+      .ant-breadcrumb-separator {
+        margin: 0 2px;
+      }
+    }
+  }
+}

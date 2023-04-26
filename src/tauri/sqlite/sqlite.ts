@@ -14,11 +14,11 @@ export class SQLite {
     }
 
     async close(): Promise<boolean> {
-        return invoke('plugin:rrai-sqlite|close', { path: this.path })
+        return await invoke('plugin:rrai-sqlite|close', { path: this.path })
     }
 
     async execute(sql: string, values?: Record<string, any>): Promise<boolean> {
-        return values ? invoke('plugin:rrai-sqlite|execute', { path: this.path, sql, args: values }) : invoke('plugin:sqlite|execute_sql', { path: this.path, sql })
+        return values ?await invoke('plugin:rrai-sqlite|execute', { path: this.path, sql, args: values }) : await invoke('plugin:sqlite|execute_sql', { path: this.path, sql })
     }
 
     async queryWithArgs<T>(sql: string, values?: Record<string, any>): Promise<T> {

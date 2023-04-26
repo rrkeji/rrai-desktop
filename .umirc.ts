@@ -43,6 +43,11 @@ export default defineConfig({
       component: "@/pages/prompts/index"
     },
     {
+      wrappers: ['@/wrappers/auth'],
+      path: "/storage",
+      component: "@/pages/storage/index"
+    },
+    {
       path: '/',
       component: '@/layouts/side-layout',
       wrappers: ['@/wrappers/auth'],

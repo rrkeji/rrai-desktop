@@ -120,6 +120,14 @@ export default function Layout() {
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>
           </div>
+          <div className={classnames(styles.item, active === 'storage' ? styles.active : undefined)} onClick={() => {
+            setLocalValue('rrai_active_menu', 'storage');
+            setActive('storage');
+            history.push('/storage');
+          }}>
+            <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
+            <div className={classnames(styles.item_title)}>软盘</div>
+          </div>
           {/* <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'tools');
             setActive('tools');
