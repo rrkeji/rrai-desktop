@@ -21,6 +21,7 @@ pub struct IpfsService {}
 #[async_trait]
 impl EnableManagedService for IpfsService {
     async fn start(&self) {
+        //判断是否存在配置文件
         //
         let (mut rx, mut child) = tauri::api::process::Command::new_sidecar("ipfs")
             .expect("failed to create `ipfs` binary command")
