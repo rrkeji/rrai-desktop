@@ -63,28 +63,37 @@ export const createDir = async (
 }
 
 export const addContent = async (data: Uint8Array): Promise<string | null> => {
-    return null;
+
+    let res = await invoke('plugin:rrai-storage|ipfs_add_content', {
+        'data': Array.from(data),
+    });
+    console.log(res);
+    return res;
 }
 
 export const getContent = async (cid: string): Promise<Uint8Array | null> => {
-    return null;
+    let res = await invoke('plugin:rrai-storage|ipfs_get_content', {
+        'cid': cid,
+    });
+    console.log(res);
+    return res;
 }
 
 
 
 export class FileEntity {
     id: number = 0;
-    parentId: number = 0;
+    parent_id: number = 0;
     cid: string = '';
-    isPin: boolean = false;
-    fileName: string = '';
-    fileHash: string = '';
-    fileType: string = '';
+    is_pin: boolean = false;
+    file_name: string = '';
+    file_hash: string = '';
+    file_type: string = '';
     category: string = '';
     avatar: string = '';
-    isDir: boolean = false;
-    createdAt: number = 0;
-    updatedAt: number = 0;
+    is_dir: boolean = false;
+    created_at: number = 0;
+    updated_at: number = 0;
 
     constructor() {
     }
@@ -94,22 +103,22 @@ export class FileEntity {
     }
 
     setParentId(v: number) {
-        this.parentId = v;
+        this.parent_id = v;
     }
     setCid(v: string) {
         this.cid = v;
     }
     setIsPin(v: boolean) {
-        this.isPin = v;
+        this.is_pin = v;
     }
     setFileName(v: string) {
-        this.fileName = v;
+        this.file_name = v;
     }
     setFileHash(v: string) {
-        this.fileHash = v;
+        this.file_hash = v;
     }
     setFileType(v: string) {
-        this.fileType = v;
+        this.file_type = v;
     }
     setCategory(v: string) {
         this.category = v;
@@ -118,12 +127,12 @@ export class FileEntity {
         this.avatar = v;
     }
     setIsDir(v: boolean) {
-        this.isDir = v;
+        this.is_dir = v;
     }
     setCreatedAt(v: number) {
-        this.createdAt = v;
+        this.created_at = v;
     }
     setUpdatedAt(v: number) {
-        this.updatedAt = v;
+        this.updated_at = v;
     }
 }

@@ -9,3 +9,4 @@ export * from './images/index';
 export * from './prompts/index';
 export * from './painter/index';
 export * from './loading/index';
+export * from './buttons/index';

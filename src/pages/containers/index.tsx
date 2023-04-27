@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
-import { DrawingBoard } from '@/components/painter/index';
+import { ArrowDownOutlined, ArrowUpOutlined, MoreOutlined, FireOutlined, CheckOutlined, TransactionOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Statistic, Typography } from 'antd';
+import { AbilityButtons } from '@/components/buttons/index';
 
 import styles from './index.less';
+
+const { Title } = Typography;
 
 export interface ContainersPageProps {
 
@@ -13,16 +17,93 @@ export const ContainersPage: React.FC<ContainersPageProps> = ({ }) => {
     const [menuFolded, setMenuFolded] = useState<boolean>(false);
 
     return (
-        <>
-            {
-                menuFolded ? ('') : (
-                    <div className={styles.left}>
-                        <div data-tauri-drag-region className={styles.height24}></div>
-                        <DrawingBoard className={styles.side}></DrawingBoard>
-                    </div>
-                )
-            }
-        </>
+        <div data-tauri-drag-region className={classnames(styles.container)}>
+            <div data-tauri-drag-region className={styles.height24}></div>
+
+            <div className={classnames(styles.top)}>
+                <Row gutter={[10, 10]}>
+                    <Col span={24}>
+                        <Card bordered={false} title="我的能力"
+                            extra={<MoreOutlined className={styles.infor_icon} />}>
+                            <AbilityButtons></AbilityButtons>
+                        </Card>
+                    </Col>
+
+                    <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                        <Card bordered={false} >
+                            <Statistic
+                                title={
+                                    <div className={classnames(styles.statistic_title)}>
+                                        <div>正在执行</div>
+                                        <InfoCircleOutlined className={styles.infor_icon} />
+                                    </div>
+                                }
+                                value={11}
+                                precision={0}
+                                valueStyle={{ color: '#cf1322' }}
+                                prefix={<FireOutlined />}
+                                suffix={''}
+                            />
+                        </Card>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                        <Card bordered={false}>
+                            <Statistic
+                                title={
+                                    <div className={classnames(styles.statistic_title)}>
+                                        <div>已经完成</div>
+                                        <InfoCircleOutlined className={styles.infor_icon} />
+                                    </div>
+                                }
+                                value={999}
+                                precision={0}
+                                valueStyle={{ color: '#3f8600' }}
+                                prefix={<CheckOutlined />}
+                                suffix=""
+                            />
+                        </Card>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                        <Card bordered={false}>
+                            <Statistic
+                                title={
+                                    <div className={classnames(styles.statistic_title)}>
+                                        <div>盈利</div>
+                                        <InfoCircleOutlined className={styles.infor_icon} />
+                                    </div>
+                                }
+                                value={9.3}
+                                precision={2}
+                                valueStyle={{ color: '#cf1322' }}
+                                prefix={<TransactionOutlined />}
+                                suffix=""
+                            />
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+
+            <div className={classnames(styles.bottom)}>
+                <Row gutter={10}>
+                    <Col span={12}>
+                        <Card bordered={false} className={classnames(styles.local)}
+                            title={"周边算力"}
+                            extra={<InfoCircleOutlined className={styles.infor_icon} />}
+                        >
+
+                        </Card>
+                    </Col>
+                    <Col span={12}>
+                        <Card bordered={false} className={classnames(styles.local)}
+                            title={"全球算力"}
+                            extra={<InfoCircleOutlined className={styles.infor_icon} />}
+                        >
+
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+        </div>
     );
 };
 

@@ -16,7 +16,6 @@ import styles from './index.less';
 
 export interface StorageHeaderBarProps {
   className?: string,
-  title: string,
   setSettingsShown?: () => void,
   menuFolded?: boolean,
   setMenuFold?: () => void,
@@ -37,6 +36,7 @@ export const StorageHeaderBar: React.FC<StorageHeaderBarProps> = ({
   onRefresh,
   menuFolded,
   setMenuFold,
+  setSettingsShown,
 }) => {
   return (
     <div data-tauri-drag-region className={classnames(styles.container, className)}>
@@ -52,54 +52,37 @@ export const StorageHeaderBar: React.FC<StorageHeaderBarProps> = ({
             </div>
           )
         }
-
-        <Upload {...uploadProps}>
-          <div className={classnames(styles.item, styles.upload)}>
-            <UploadOutlined className={classnames(styles.icon)} />
-            上传
-          </div>
-        </Upload>
-        <div
-          className={classnames(styles.item, styles.mkdir)}
-          onClick={onMkdir}
-        >
-          <FolderAddOutlined className={classnames(styles.icon)} />
-          新建文件夹
-        </div>
       </div>
       <div className={styles.right}>
-        <div className={classnames(styles.item)}>
-          <div
-            className={classnames(
-              styles.layout,
-              styles.list_layout,
-              layout === 'list' ? styles.selected : undefined,
-            )}
-            onClick={() => {
-              onLayoutChange('list');
-            }}
-          >
-            <UnorderedListOutlined className={classnames(styles.icon)} />
+        <Upload {...uploadProps}>
+          <div className={classnames(styles.button, styles.right_button)} onClick={() => { }}>
+            <UploadOutlined />
           </div>
-          <div
-            className={classnames(
-              styles.layout,
-              styles.grid_layout,
-              layout === 'grid' ? styles.selected : undefined,
-            )}
-            onClick={() => {
-              onLayoutChange('grid');
-            }}
-          >
-            <AppstoreOutlined className={classnames(styles.icon)} />
+        </Upload>
+        <div className={classnames(styles.button, styles.right_button)} onClick={onMkdir}>
+          <FolderAddOutlined />
+        </div>
+
+        <div className={classnames(styles.button, styles.right_button,
+          layout === 'list' ? styles.selected : undefined,)} onClick={() => {
+            onLayoutChange('list');
+          }}>
+          <AppstoreOutlined />
+        </div>
+        <div className={classnames(styles.button, styles.right_button,
+          layout === 'grid' ? styles.selected : undefined,)} onClick={() => {
+            onLayoutChange('grid');
+          }}>
+          <AppstoreOutlined />
+        </div>
+        <div className={classnames(styles.button, styles.right_button)} onClick={onRefresh}>
+          <ReloadOutlined />
+        </div>
+        {
+          setSettingsShown && <div className={classnames(styles.button, styles.right_button)} onClick={setSettingsShown}>
+            <EllipsisOutlined />
           </div>
-        </div>
-        <div
-          className={classnames(styles.item, styles.refresh)}
-          onClick={onRefresh}
-        >
-          <ReloadOutlined className={classnames(styles.icon)} />
-        </div>
+        }
       </div>
     </div>
   );
