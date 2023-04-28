@@ -2,7 +2,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 
 import { history, useLocation, useParams } from 'umi';
 import classnames from 'classnames';
-import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade, Message } from '@/components/index';
+import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade, Message, PainterConversationViewer } from '@/components/index';
 import { ConversationBar, AddConversation } from '@/components/conversation/index';
 import { Drawer, Spin } from 'antd';
 import { getConversationsByType, createConversation, queryConversationByUid } from '@/services/conversation-service';
@@ -221,30 +221,41 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
                 }}></ConversationBar>
 
             <div className={styles.content}>
-                {/* 消息列表 */}
-                <MessageList
-                    className={styles.message_list}
-                    systemMessageShown={conversation?.args['SystemMessageShown']}
-                    conversationId={conversationId!}
-                    conversationType={conversationType}
-                    beforeNode={''}
-                    afterNode={
-                        writing && writingMessage ? (
-                            <Message message={writingMessage} appending={true}></Message>
-                        ) : ('')
-                    }
-                    version={messageVersion}
-                ></MessageList>
+                {
+                    conversationType === 'painter' && (
+                        <PainterConversationViewer conversationId={conversationId!}></PainterConversationViewer>
+                    )
+                }
+                {
+                    conversationType === 'chat' && (
+                        <>
+                            {/* 消息列表 */}
+                            <MessageList
+                                className={styles.message_list}
+                                systemMessageShown={conversation?.args['SystemMessageShown']}
+                                conversationId={conversationId!}
+                                conversationType={conversationType}
+                                beforeNode={''}
+                                afterNode={
+                                    writing && writingMessage ? (
+                                        <Message message={writingMessage} appending={true}></Message>
+                                    ) : ('')
+                                }
+                                version={messageVersion}
+                            ></MessageList>
 
-                <ComposerFacade
-                    height={300}
-                    className={styles.composer}
-                    disableSend={!!abortController}
-                    conversationType={conversationType!}
-                    conversationId={conversationId!}
-                    sendMessage={handleSendMessage}
-                    stopGeneration={handleStopGeneration}
-                ></ComposerFacade>
+                            <ComposerFacade
+                                height={300}
+                                className={styles.composer}
+                                disableSend={!!abortController}
+                                conversationType={conversationType!}
+                                conversationId={conversationId!}
+                                sendMessage={handleSendMessage}
+                                stopGeneration={handleStopGeneration}
+                            ></ComposerFacade>
+                        </>
+                    )
+                }
 
                 <Drawer
                     width={310}

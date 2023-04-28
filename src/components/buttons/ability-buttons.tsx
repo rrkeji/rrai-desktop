@@ -12,7 +12,12 @@ export interface AbilityButtonsProps {
 const items = [
     {
         icon: <InsuranceOutlined />,
-        title: 'SD1.5'
+        title: 'SD1.5',
+        active: true,
+    }, {
+        icon: <InsuranceOutlined />,
+        title: 'SD1.5',
+        active: false,
     }
 ];
 
@@ -23,7 +28,7 @@ export const AbilityButtons: React.FC<AbilityButtonsProps> = ({ className, itemC
             {
                 items && items.map((item, index) => {
                     return (
-                        <div className={classnames(styles.item, itemClassName)}>
+                        <div key={index} className={classnames(styles.item, itemClassName, item.active && styles.active)}>
                             <div className={classnames(styles.icon)}>{item.icon}</div>
                             <div className={classnames(styles.title)}>{item.title}</div>
                         </div>

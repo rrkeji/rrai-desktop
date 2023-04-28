@@ -107,7 +107,7 @@ export default function Layout() {
           <div className={classnames(styles.item, active === 'painter' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'painter');
             setActive('painter');
-            history.push('/painter');
+            history.push('/conversation/painter');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-huihua')}></div>
             <div className={classnames(styles.item_title)}>AI绘画</div>

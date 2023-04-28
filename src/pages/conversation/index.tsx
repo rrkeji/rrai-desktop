@@ -92,10 +92,10 @@ export const ConversationPage = () => {
                       active={item.uid === conversationId}
                       title={item.name}
                       avatar={<ConversationIcon conversationType={conversationType} item={item} className={classnames(styles.side_item_avatar)}></ConversationIcon>}
-                      avatarBackground={conversationType == 'chat' ? '#dedede' : '#0493F5'}
+                      avatarBackground={avatarBackgroundColor(conversationType)}
                       timestamp={item.created.split(' ')[0]}
                       rightBar={
-                        <div>{item.args['model']}</div>
+                        <div>{listRightBottom(item, conversationType)}</div>
                       }
                       onClick={() => {
                         setLocalValue(`${conversationType}_conversationId`, item.uid);
@@ -185,6 +185,25 @@ const ConversationIcon: React.FC<ConversationIconProps> = ({ className, item, co
   return (
     <div className={classnames(className, 'iconfont icon-a-205shezhi')}></div>
   );
+}
+
+const avatarBackgroundColor = (conversationType: string) => {
+  if (conversationType === 'chat') {
+    return '#dedede';
+  } else if (conversationType === 'painter') {
+    return '#dedede';
+  }
+  return '#0493F5';
+};
+
+const listRightBottom = (item: any, conversationType: string) => {
+
+  if (conversationType === 'chat') {
+    return item.args['model'];
+  } else if (conversationType === 'painter') {
+    return item.args['painterType'];
+  }
+  return '';
 }
 
 

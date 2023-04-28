@@ -5,13 +5,9 @@ import { message } from 'antd';
 import { defaultChatModelId, ChatModels, ChatModelId, defaultSystemPurposeId, SystemPurposeId, SystemPurposes } from '@/databases/data/index'
 import { Box, Button, Grid, Stack, Textarea, Typography, useTheme } from '@mui/joy';
 import { StyledDropdown } from '@/components/util/StyledDropdown';
-import styles from './add-conversation.less';
+import { AddPainterConversation, getPainterDefaultArgs } from '@/components/painter/index';
 
-export interface AddConversationProps {
-    conversationType: string,
-    onSave: (value: any) => Promise<any>,
-    onCannel: () => void,
-}
+import styles from './add-conversation.less';
 
 interface _ChatGPTProps {
     model: ChatModelId;
@@ -62,6 +58,11 @@ const _ChatGPT: React.FC<_ChatGPTProps> = ({ name, model, onModelChange, onCusto
     );
 }
 
+export interface AddConversationProps {
+    conversationType: string,
+    onSave: (value: any) => Promise<any>,
+    onCannel: () => void,
+}
 
 const getDefaultArgs = (conversationType: string) => {
     if (conversationType == 'chat') {
@@ -70,6 +71,8 @@ const getDefaultArgs = (conversationType: string) => {
             purposeId: defaultSystemPurposeId,
             customMessage: ''
         };
+    } else if (conversationType === 'painter') {
+        return getPainterDefaultArgs();
     }
     return {};
 };
@@ -108,6 +111,20 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
 
                 ></_ChatGPT>
             );
+        } else if (conversationType === 'painter') {
+            return (
+                <AddPainterConversation
+                    name={name}
+                    args={args}
+                    onArgsChange={(args) => {
+                        setArgs(args);
+                    }}
+                    onNameChange={(name) => {
+                        setName(name)
+                    }}
+
+                ></AddPainterConversation>
+            );
         }
         return <></>;
     };
@@ -144,6 +161,25 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
                                 category: conversationType,
                                 args: args
                             };
+                        } else if (conversationType === 'painter') {
+                            let cname: string = name;
+                            if (!cname || cname.trim() == '') {
+                                cname = `绘画`;
+                            }
+                            if (cname.length > 64) {
+                                messageApi.open({
+                                    type: 'error',
+                                    content: '会话名称过长~',
+                                });
+                                return;
+                            }
+                            //
+                            conversation = {
+                                avatar: `[symbol](👩‍💻)`,
+                                name: cname,
+                                category: conversationType,
+                                args: args
+                            };
                         }
                         await onSave(conversation);
                     }}
@@ -176,3 +212,4 @@ export const AddConversation: React.FC<AddConversationProps> = ({ conversationTy
 };
 
 export default AddConversation;
+

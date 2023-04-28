@@ -3041,7 +3041,6 @@ dependencies = [
  "bytes",
  "futures",
  "home",
- "http",
  "ipfs-api-backend-hyper",
  "lazy_static",
  "rusqlite",

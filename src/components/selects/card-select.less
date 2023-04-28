@@ -10,29 +10,32 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        background-color: #F7F7F8;
+        border-radius: 8px;
 
-        width: 90px;
-        height: 90px;
+        width: 100px;
+        height: 100px;
 
         .icon {
             font-size: 50px;
-            color: #DEDEDE;
         }
 
         .title {
             margin-top: -10px;
             font-size: 14px;
-            color: #DEDEDE;
+            color: @form-input-color;
         }
     }
 
-    .item.active {
-        .icon {
-            color: @success-color;
-        }
+    .item:hover {
+        background-color: #D8D8DF;
+    }
+
+    .item.selected {
+        background-color: @active-bg-color;
 
         .title {
-            color: @success-color;
+            color: #FFFFFF;
         }
     }
 }
