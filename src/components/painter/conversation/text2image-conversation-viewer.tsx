@@ -2,6 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import { ConversationEntity, MessageEntity } from '@/databases';
 import { DrawingBoard } from '../draw-board/index';
+import { ImagesViewer } from '../image-viewer/index';
 
 import styles from './text2image-conversation-viewer.less';
 
@@ -15,8 +16,8 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     return (
         <div className={classnames(styles.container, className)}>
-            <DrawingBoard></DrawingBoard>
-            Text2ImagePainterConversationViewer
+            <DrawingBoard className={classnames(styles.board)}></DrawingBoard>
+            <ImagesViewer className={classnames(styles.content)}></ImagesViewer>
         </div>
     );
 };

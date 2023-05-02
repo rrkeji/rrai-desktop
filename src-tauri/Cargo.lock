@@ -1693,6 +1693,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "hyper-tls"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d6183ddfa99b85da61a140bea0efc93fdf56ceaa041b37d553518030827f9905"
+dependencies = [
+ "bytes",
+ "hyper",
+ "native-tls",
+ "tokio",
+ "tokio-native-tls",
+]
+
+[[package]]
 name = "ico"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2999,6 +3012,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "rrai-cloud-client"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "base64 0.21.0",
+ "bytes",
+ "hyper",
+ "hyper-tls",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "urlencoding",
+]
+
+[[package]]
 name = "rrai-desktop"
 version = "0.0.0"
 dependencies = [
@@ -3024,6 +3054,7 @@ dependencies = [
 name = "rrai-desktop-sdk"
 version = "0.1.0"
 dependencies = [
+ "rrai-cloud-client",
  "rrai-desktop-sdk-common",
  "tauri-plugin-rrai-appbox",
  "tauri-plugin-rrai-idns",
@@ -4032,6 +4063,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-native-tls"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bbae76ab933c85776efabc971569dd6119c580d8f5d448769dec1764bf796ef2"
+dependencies = [
+ "native-tls",
+ "tokio",
+]
+
+[[package]]
 name = "tokio-rustls"
 version = "0.23.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4254,6 +4295,12 @@ dependencies = [
  "percent-encoding",
  "serde",
 ]
+
+[[package]]
+name = "urlencoding"
+version = "2.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e8db7427f936968176eaa7cdf81b7f98b980b18495ec28f1b5791ac3bfe3eea9"
 
 [[package]]
 name = "utf-8"

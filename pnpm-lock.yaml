@@ -40,12 +40,18 @@ dependencies:
   prop-types:
     specifier: ^15.8.1
     version: 15.8.1
+  pure-react-carousel:
+    specifier: ^1.30.1
+    version: 1.30.1
   radium:
     specifier: ^0.26.2
     version: 0.26.2
   react-markdown:
     specifier: ^8.0.6
     version: 8.0.6(@types/react@18.0.0)
+  react-use-dimensions:
+    specifier: ^1.2.1
+    version: 1.2.1(@types/react@18.0.0)(typescript@5.0.2)
   remark-gfm:
     specifier: ^3.0.1
     version: 3.0.1
@@ -3979,6 +3985,15 @@ packages:
     dev: false
     optional: true
 
+  /deep-freeze@0.0.1:
+    resolution: {integrity: sha512-Z+z8HiAvsGwmjqlphnHW5oz6yWlOwu6EQfFTjmeTWlDeda3FS2yv3jhq35TX/ewmsnqB+RX2IdsIOyjJCQN5tg==}
+    dev: false
+
+  /deepmerge@2.2.1:
+    resolution: {integrity: sha512-R9hc1Xa/NOBi9WRVUWg19rl1UB7Tt4kuPd+thNJgFZoxXsTz7ncaPaeIm+40oSGuP33DfMb4sZt1QIGiJzC4EA==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
     engines: {node: '>=0.10.0'}
@@ -4175,6 +4190,12 @@ packages:
   /entities@4.4.0:
     resolution: {integrity: sha512-oYp7156SP8LkeGD0GF85ad1X9Ai79WtRsZ2gxJqtBuzH+98YUV6jkHEKlZkMbcrjJjIVJNIDP/3WL9wQkoPbWA==}
     engines: {node: '>=0.12'}
+    dev: false
+
+  /equals@1.0.5:
+    resolution: {integrity: sha512-wI15a6ZoaaXPv+55+Vh2Kqn3+efKRv8QPtcGTjW5xmanMnQzESdAt566jevtMZyt3W/jwLDTzXpMph5ECDJ2zg==}
+    dependencies:
+      jkroso-type: 1.1.1
     dev: false
 
   /errno@0.1.8:
@@ -5443,6 +5464,10 @@ packages:
       jest-util: 29.5.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
+    dev: false
+
+  /jkroso-type@1.1.1:
+    resolution: {integrity: sha512-zZgay+fPG6PgMUrpyFADmQmvLo39+AZa7Gc5pZhev2RhDxwANEq2etwD8d0e6rTg5NkwOIlQmaEmns3draC6Ng==}
     dev: false
 
   /js-tokens@4.0.0:
@@ -7466,6 +7491,19 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
+  /pure-react-carousel@1.30.1:
+    resolution: {integrity: sha512-B1qi62hZk0OFqRR4cTjtgIeOn/Ls5wo+HsLtrXT4jVf5et8ldBHSt+6LsYRJN86Or8dm+XbnJNEHy6WDJ0/DQw==}
+    peerDependencies:
+      react: 15.x || 16.x || 17.x || 18.x
+      react-dom: 15.x || 16.x || 17.x || 18.x
+    dependencies:
+      '@babel/runtime': 7.21.0
+      deep-freeze: 0.0.1
+      deepmerge: 2.2.1
+      equals: 1.0.5
+      prop-types: 15.8.1
+    dev: false
+
   /qrcode.react@3.1.0:
     resolution: {integrity: sha512-oyF+Urr3oAMUG/OiOuONL3HXM+53wvuH3mtIWQrYmsXoAq0DkvZp2RYUWFSMFtbdOpuS++9v+WAkzNVkMlNW6Q==}
     peerDependencies:
@@ -8113,6 +8151,17 @@ packages:
     dependencies:
       history: 5.3.0
       react: 18.1.0
+    dev: false
+
+  /react-use-dimensions@1.2.1(@types/react@18.0.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-XL+Rup9Hosxx3Ap9xpyQMbVwuUa4BSqiOjfBb2zDuGs4uv2FesFV+m8Z/huRx2BNptMd9ARPqFuSNA62zhCozg==}
+    peerDependencies:
+      '@types/react': ^16.8.20
+      react: ^16.8.x
+      typescript: ^3.5.2
+    dependencies:
+      '@types/react': 18.0.0
+      typescript: 5.0.2
     dev: false
 
   /react@18.1.0:
