@@ -11,7 +11,7 @@ export interface ExpertBoardProps {
 export const ExpertBoard: React.FC<ExpertBoardProps> = ({ }) => {
     return (
         <div className={classnames(styles.container)}>
-            ExpertBoard
+            敬请期待
         </div>
     );
 };

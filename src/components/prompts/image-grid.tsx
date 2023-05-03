@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import { civitaiQueryImages, MetaEntity } from '@/services/civitai-service';
-import { Gallery } from "../images/index";
+import { civitaiQueryImages } from '@/services/civitai-service';
+import { lexicaArtQueryImages } from '@/services/lexica-service';
+import { PromptImageEntity, ResponseEntity, MetaEntity } from '@/services/types';
+import useDimensions from 'react-use-dimensions';
+
+import PhotoAlbum from "@/components/react-photo-album/index";
+import { PhotoProvider, PhotoView } from '@/components/react-photo-view/index';
+
 import styles from './image-grid.less';
 
 export interface ImageGridProps {
 
 }
 
-// createdAt: "2023-02-20T17:16:18.886Z"
-// hash: "U6DvD,D%00^+00xu%MV?}=IV?c-p00%2x]Na"
-// height: 1152
-// id: 127497
-// meta: {ENSD: "31337", Size: "512x768", seed: 3118275117, Model: "chilloutmix_NiPrunedFp32Fix", steps: 25, …}
-// nsfw: true
-// postId: 86634
-// stats: {cryCount: 30, laughCount: 843, likeCount: 1282, dislikeCount: 73, heartCount: 190, …}
-// url: "https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/27e77f3a-29c4-4cab-bcde-dd9eab587000/width=768/27e77f3a-29c4-4cab-bcde-dd9eab587000.jp…"
-// username: "41e"
-// width: 768
-
 export const PromptsImageGrid: React.FC<ImageGridProps> = ({ }) => {
 
-    const [items, setItems] = useState<Array<any>>([]);
+    const [ref, { x, y, width, height }] = useDimensions();
+
+    const [items, setItems] = useState<Array<PromptImageEntity>>([]);
 
     const [meta, setMeta] = useState<MetaEntity>({
         currentPage: 0,
@@ -34,7 +30,7 @@ export const PromptsImageGrid: React.FC<ImageGridProps> = ({ }) => {
 
     const refresh = async () => {
 
-        let res = await civitaiQueryImages({}, '');
+        let res = await lexicaArtQueryImages({}, '');
         console.log(res);
         setItems(res.items);
         setMeta(res.metadata);
@@ -44,25 +40,49 @@ export const PromptsImageGrid: React.FC<ImageGridProps> = ({ }) => {
         refresh();
     }, []);
 
-
     return (
-        <div className={classnames(styles.container)}>
-            <Gallery images={items.map((item, index) => {
-
-                return {
-                    src: item.url,
-                    width: item.width,
-                    height: item.height,
-                };
-            })} />
-            {/* {
-                items && items.map((item, index) => {
-
-                    return (
-                        <img src={item.url} width={item.width} height={item.height}></img>
-                    );
-                })
-            } */}
+        <div className={classnames(styles.container)} ref={ref}>
+            {/* <PhotoProvider>
+                <div className={classnames(styles.image_list)}>
+                    {
+                        items && items.map((item, index) => {
+                            return (
+                                <PhotoView width={item.width * 0.2} height={item.height * 0.2} key={index} src={`https://image.lexica.art/sm2/${item.id}`}>
+                                    <img alt="img2" width={item.width * 0.2} height={item.height * 0.2} src={`https://image.lexica.art/sm2/${item.id}`} />
+                                </PhotoView>
+                            );
+                        })
+                    }
+                </div>
+            </PhotoProvider> */}
+            <PhotoProvider>
+                <div className={classnames(styles.image_list)}>
+                    <PhotoAlbum layout={"masonry"} photos={items.map((item, index) => {
+                        return {
+                            ...item,
+                            src: `https://image.lexica.art/sm2/${item.id}`,
+                            width: item.width * 0.1,
+                            height: item.height * 0.1,
+                        };
+                    })}
+                        renderPhoto={(options) => {
+                            console.log(options);
+                            const { imageProps, layout, layoutOptions, photo, renderDefaultPhoto, wrapperStyle } = options;
+                            const { src, alt, srcSet, sizes, style: unwrappedStyle, ...rest } = imageProps;
+                            return (
+                                <PhotoView src={src}>
+                                    <img
+                                        alt={alt}
+                                        {...(srcSet ? { srcSet, sizes } : null)}
+                                        src={src}
+                                        style={unwrappedStyle}
+                                        {...rest}
+                                    />
+                                </PhotoView>
+                            );
+                        }} />
+                </div>
+            </PhotoProvider>
         </div>
     );
 };
