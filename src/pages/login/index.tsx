@@ -9,7 +9,7 @@ import styles from './index.less';
 
 const APPID = "wxd2ed8df26eea65be";
 
-const BASE_REDIRECT_URL = "https://www.idns.link/rrai/proxy/wx/login/notify";
+const BASE_REDIRECT_URL = "https://rrai.idns.link/api/wx/login/notify";
 
 export default function LoginPage() {
 

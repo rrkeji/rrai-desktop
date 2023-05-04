@@ -4,7 +4,8 @@ import { request } from '@/utils/request';
 export const authGetInforByToken = async (token: string): Promise<any> => {
 
     let infor = await request({
-        url: "https://www.idns.link/rrai/proxy/auth/get_infor_by_token", headers: {
+        url: "https://rrai.idns.link/api/auth/get_infor_by_token",
+        headers: {
             'Authorization': token
         }
     });
