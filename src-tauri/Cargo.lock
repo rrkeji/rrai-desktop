@@ -3047,6 +3047,7 @@ dependencies = [
  "thiserror",
  "tracing",
  "tracing-subscriber",
+ "url",
  "window-shadows",
 ]
 

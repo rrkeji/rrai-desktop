@@ -11,6 +11,7 @@ mod utils;
 
 use std::error::Error;
 use tauri::Manager;
+use url::Url;
 use window_shadows::set_shadow;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -44,6 +45,20 @@ fn main() -> Result<(), Box<dyn Error>> {
         .invoke_handler(tauri::generate_handler![
             commands::system::cmds_system_process_exec
         ])
+        .register_uri_scheme_protocol("rrapp", |_app, req| {
+            let url: Url = req.uri().parse().unwrap();
+            tracing::debug!("{}=={}", url,url.host_str().unwrap());
+            tracing::debug!("req:{:?}", req);
+
+            let mut buf = Vec::new();
+
+            tauri::http::ResponseBuilder::new()
+                .header("Origin", "*")
+                .mimetype("image/svg+xml")
+                .header("Content-Length", buf.len())
+                .status(200)
+                .body(buf)
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
