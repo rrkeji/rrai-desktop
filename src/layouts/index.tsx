@@ -112,10 +112,10 @@ export default function Layout() {
             <div className={classnames(styles.item_icon, 'iconfont icon-huihua')}></div>
             <div className={classnames(styles.item_title)}>AI绘画</div>
           </div>
-          <div className={classnames(styles.item, active === 'prompts' ? styles.active : undefined)} onClick={() => {
-            setLocalValue('rrai_active_menu', 'prompts');
-            setActive('prompts');
-            history.push('/prompts/civitai');
+          <div className={classnames(styles.item, active === 'discovery' ? styles.active : undefined)} onClick={() => {
+            setLocalValue('rrai_active_menu', 'discovery');
+            setActive('discovery');
+            history.push('/conversation/rrapp?search=discovery');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>
@@ -124,7 +124,7 @@ export default function Layout() {
           <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'tools');
             setActive('tools');
-            history.push('/tools/sdinstall');
+            history.push('/conversation/rrapp?search=tools');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-Tools')}></div>
             <div className={classnames(styles.item_title)}>工具箱</div>

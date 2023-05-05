@@ -49,11 +49,6 @@ export default defineConfig({
     },
     {
       wrappers: ['@/wrappers/auth'],
-      path: "/painter",
-      component: "@/pages/painter/index"
-    },
-    {
-      wrappers: ['@/wrappers/auth'],
       path: "/containers",
       component: "@/pages/containers/index"
     },

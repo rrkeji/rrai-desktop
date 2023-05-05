@@ -6,6 +6,7 @@ import { authGetInforByToken } from '@/services/index';
 import { getToken, setToken, isLogin } from '@/utils/index';
 
 import styles from './tklogin.less';
+import { setContextValue } from "@/tauri";
 
 const APPID = "wxd2ed8df26eea65be";
 
@@ -43,6 +44,7 @@ export default function LoginPage() {
     }
     setLoading(false);
     setToken(token);
+    setContextValue("rrai_token", token);
     history.push('/login');
   }, [location.search]);
 

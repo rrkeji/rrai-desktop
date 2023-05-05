@@ -6,6 +6,7 @@ import { authGetInforByToken } from '@/services/index';
 import { getToken, setToken, isLogin, setLocalValue } from '@/utils/index';
 
 import styles from './index.less';
+import { setContextValue } from "@/tauri";
 
 const APPID = "wxd2ed8df26eea65be";
 
@@ -33,6 +34,8 @@ export default function LoginPage() {
       let res = await authGetInforByToken(token);
       console.log(res);
       if (res && res.openid) {
+        setContextValue("rrai_token", token);
+
         setLocalValue("rrai_web_openid", res.openid);
         setLocalValue("rrai_unionid", res.unionid);
         setLocalValue("rrai_web_appid", res.appid);

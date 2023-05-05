@@ -12,7 +12,7 @@ import { getLocalValue, setLocalValue } from '@/utils';
 
 import styles from './index.less';
 
-export const ConversationPage = () => {
+export const RrappPage = () => {
 
   const location = useLocation();
 
@@ -31,8 +31,6 @@ export const ConversationPage = () => {
   if (!conversationType) {
     return <>conversationType为空!</>
   }
-
-  console.log(params, location.search);
 
   const refresh = async (conversationType: string, reset: boolean) => {
     //根据会话类型获取所有的会话
@@ -209,4 +207,4 @@ const listRightBottom = (item: any, conversationType: string) => {
 }
 
 
-export default ConversationPage;
+export default RrappPage;
