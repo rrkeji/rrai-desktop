@@ -44,6 +44,11 @@ export default defineConfig({
     },
     {
       wrappers: ['@/wrappers/auth'],
+      path: "/rrapp/:datasetId/:id",
+      component: "@/pages/rrapp/index"
+    },
+    {
+      wrappers: ['@/wrappers/auth'],
       path: "/storage",
       component: "@/pages/storage/index"
     },

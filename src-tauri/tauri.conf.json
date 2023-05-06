@@ -34,6 +34,12 @@
             ]
           }
         ]
+      },
+      "protocol": {
+        "all": true
+      },
+      "window": {
+        "all": true
       }
     },
     "macOSPrivateApi": true,
@@ -58,6 +64,21 @@
       }
     },
     "security": {
+      "dangerousRemoteDomainIpcAccess": [
+        {
+          "scheme": "rrapp",
+          "enableTauriAPI": true,
+          "domain": "QmRVirBmrRYcp43e9wfBgwKz6m1sEXaoKvL2gkyGcHnEDE",
+          "plugins": [
+            "rrai-sqlite",
+            "rrai-storage"
+          ],
+          "windows": [
+            "main",
+            "rrapp"
+          ]
+        }
+      ],
       "csp": null
     },
     "updater": {
@@ -73,6 +94,7 @@
     },
     "windows": [
       {
+        "label": "main",
         "fullscreen": false,
         "resizable": true,
         "title": "软软AI",
@@ -84,6 +106,20 @@
         "decorations": false,
         "transparent": true,
         "visible": true
+      },
+      {
+        "label": "rrapp",
+        "fullscreen": false,
+        "resizable": true,
+        "title": "软软AI",
+        "width": 1330,
+        "minWidth": 900,
+        "minHeight": 600,
+        "height": 1020,
+        "fileDropEnabled": true,
+        "decorations": false,
+        "transparent": true,
+        "visible": false
       }
     ]
   }

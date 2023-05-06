@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import classnames from 'classnames';
+import { WebviewWindow } from '@tauri-apps/api/window';
 
 import styles from './browser.less';
 
@@ -31,8 +32,18 @@ export const Browser: React.FC<BrowserProps> = ({ className, src, receiveMessage
         };
     }, []);
 
+    let windows = WebviewWindow.getByLabel('rrapp');
+    if (windows) {
+        windows.show();
+    } else {
+        windows = new WebviewWindow(src, {
+            url: src
+        });
+        windows.show();
+    }
+
     return (
-        <iframe className={classnames(styles.container, className)} src={src}>
+        <iframe className={classnames(styles.container, className)} src={''}>
         </iframe>
     );
 };
