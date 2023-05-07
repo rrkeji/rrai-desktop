@@ -68,7 +68,7 @@
         {
           "scheme": "rrapp",
           "enableTauriAPI": true,
-          "domain": "QmRVirBmrRYcp43e9wfBgwKz6m1sEXaoKvL2gkyGcHnEDE",
+          "domain": "localhost",
           "plugins": [
             "rrai-sqlite",
             "rrai-storage"
@@ -109,6 +109,7 @@
       },
       {
         "label": "rrapp",
+        "url": "rrapp://localhost/?cid=QmQ4BmfU9NA467PYySrVgrtYeftf255uAnXqTRWhTpcaHM",
         "fullscreen": false,
         "resizable": true,
         "title": "软软AI",
@@ -119,7 +120,7 @@
         "fileDropEnabled": true,
         "decorations": false,
         "transparent": true,
-        "visible": false
+        "visible": true
       }
     ]
   }

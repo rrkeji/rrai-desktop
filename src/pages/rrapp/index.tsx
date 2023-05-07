@@ -29,7 +29,8 @@ export const RrappPage = () => {
     let res = await queryDatasetRowById(datasetId, parseInt(id));
 
     if (res && res.row_cid) {
-      let rrappCid: string = res.row_cid;
+      // let rrappCid: string = res.row_cid;
+      let rrappCid: string = 'QmQ4BmfU9NA467PYySrVgrtYeftf255uAnXqTRWhTpcaHM';
 
       // let down_res = await rrappDownload(rrappCid);
       console.log(rrappCid);

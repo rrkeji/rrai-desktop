@@ -32,18 +32,14 @@ export const Browser: React.FC<BrowserProps> = ({ className, src, receiveMessage
         };
     }, []);
 
-    let windows = WebviewWindow.getByLabel('rrapp');
-    if (windows) {
-        windows.show();
-    } else {
-        windows = new WebviewWindow(src, {
-            url: src
-        });
-        windows.show();
-    }
+    // let windows = WebviewWindow.getByLabel('rrapp');
+    // if (windows) {
+    //     windows.show();
+    // } else {
+    // }
 
     return (
-        <iframe className={classnames(styles.container, className)} src={''}>
+        <iframe className={classnames(styles.container, className)} src={"rrapp://QmQ4BmfU9NA467PYySrVgrtYeftf255uAnXqTRWhTpcaHM/"}>
         </iframe>
     );
 };
