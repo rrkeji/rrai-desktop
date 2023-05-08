@@ -39,7 +39,7 @@ export const Browser: React.FC<BrowserProps> = ({ className, src, receiveMessage
     // }
 
     return (
-        <iframe className={classnames(styles.container, className)} src={"rrapp://QmQ4BmfU9NA467PYySrVgrtYeftf255uAnXqTRWhTpcaHM/"}>
+        <iframe className={classnames(styles.container, className)} src={src}>
         </iframe>
     );
 };
