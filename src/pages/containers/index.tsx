@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import { ArrowDownOutlined, ArrowUpOutlined, MoreOutlined, FireOutlined, CheckOutlined, TransactionOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Statistic, Typography } from 'antd';
+import { Card, Col, Row, Button, Statistic, Typography } from 'antd';
 import { AbilityButtons } from '@/components/buttons/index';
 
 import styles from './index.less';
+import { autoScan, listAbilities } from '@/tauri/abilities/abilities';
 
 const { Title } = Typography;
 
@@ -26,6 +27,17 @@ export const ContainersPage: React.FC<ContainersPageProps> = ({ }) => {
                         <Card bordered={false} title="我的能力"
                             extra={<MoreOutlined className={styles.infor_icon} />}>
                             <AbilityButtons></AbilityButtons>
+                        </Card>
+                    </Col>
+
+                    <Col span={24}>
+                        <Card bordered={false} title="我的能力"
+                            extra={<MoreOutlined className={styles.infor_icon} />}>
+                            <Button onClick={async () => {
+                                await autoScan();
+                                let res = await listAbilities();
+                                console.log(res);
+                            }}>扫码</Button>
                         </Card>
                     </Col>
 
