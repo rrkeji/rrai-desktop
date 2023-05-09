@@ -39,6 +39,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         })
         .plugin(rrai_desktop_sdk::plugins::storage::init())
         .plugin(rrai_desktop_sdk::plugins::appbox::init())
+        .plugin(rrai_desktop_sdk::plugins::ability::init())
         .plugin(rrai_desktop_sdk::plugins::idns::init())
         .plugin(rrai_desktop_sdk::plugins::sqlite::init())
         .plugin(rrai_desktop_sdk::plugins::substrate::init())

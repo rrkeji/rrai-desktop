@@ -3385,6 +3385,7 @@ version = "0.1.0"
 dependencies = [
  "rrai-cloud-client",
  "rrai-desktop-sdk-common",
+ "tauri-plugin-rrai-ability",
  "tauri-plugin-rrai-appbox",
  "tauri-plugin-rrai-idns",
  "tauri-plugin-rrai-sqlite",
@@ -4152,6 +4153,27 @@ dependencies = [
  "syn 1.0.109",
  "tauri-codegen",
  "tauri-utils",
+]
+
+[[package]]
+name = "tauri-plugin-rrai-ability"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bytes",
+ "futures",
+ "futures-util",
+ "mime",
+ "mime_guess",
+ "rrai-desktop-sdk-common",
+ "serde",
+ "serde_json",
+ "tauri",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "url",
 ]
 
 [[package]]

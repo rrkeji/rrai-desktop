@@ -115,7 +115,7 @@ export default function Layout() {
           <div className={classnames(styles.item, active === 'discovery' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'discovery');
             setActive('discovery');
-            history.push('/conversation/rrapp?search=discovery');
+            history.push('/prompts/index');
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
             <div className={classnames(styles.item_title)}>发现</div>
@@ -128,14 +128,6 @@ export default function Layout() {
           }}>
             <div className={classnames(styles.item_icon, 'iconfont icon-Tools')}></div>
             <div className={classnames(styles.item_title)}>工具箱</div>
-          </div>
-          <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
-            setLocalValue('rrai_active_menu', 'tools');
-            setActive('tools');
-            history.push('/rrapp/2aaeaf42069048d99c88d440cc2fddf0/1');
-          }}>
-            <div className={classnames(styles.item_icon, 'iconfont icon-Tools')}></div>
-            <div className={classnames(styles.item_title)}>应用A</div>
           </div>
         </div>
 

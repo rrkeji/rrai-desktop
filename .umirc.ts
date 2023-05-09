@@ -39,7 +39,7 @@ export default defineConfig({
     },
     {
       wrappers: ['@/wrappers/auth'],
-      path: "/prompts/civitai",
+      path: "/prompts/index",
       component: "@/pages/prompts/index"
     },
     {

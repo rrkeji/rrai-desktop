@@ -30,7 +30,7 @@ export const FreedomBoard: React.FC<FreedomBoardProps> = ({ }) => {
                     <TextArea rows={10}></TextArea>
                 </Col>
                 <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>方向描述</label>
+                    <label className={classnames(styles.label)}>反向描述</label>
                     <TextArea rows={5}></TextArea>
                 </Col>
                 <Col span={24} className={classnames(styles.item)}>

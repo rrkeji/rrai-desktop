@@ -11,10 +11,10 @@ import { PhotoProvider, PhotoView } from '@/components/react-photo-view/index';
 import styles from './image-grid.less';
 
 export interface ImageGridProps {
-
+    className?: string;
 }
 
-export const PromptsImageGrid: React.FC<ImageGridProps> = ({ }) => {
+export const PromptsImageGrid: React.FC<ImageGridProps> = ({ className }) => {
 
     const [ref, { x, y, width, height }] = useDimensions();
 
@@ -41,7 +41,7 @@ export const PromptsImageGrid: React.FC<ImageGridProps> = ({ }) => {
     }, []);
 
     return (
-        <div className={classnames(styles.container)} ref={ref}>
+        <div className={classnames(styles.container, className)} ref={ref}>
             {/* <PhotoProvider>
                 <div className={classnames(styles.image_list)}>
                     {
