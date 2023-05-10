@@ -9,9 +9,9 @@ export const autoScan = async (): Promise<boolean> => {
 }
 
 
-export const listAbilities = async (): Promise<boolean> => {
+export const listAbilities = async (): Promise<Array<any>> => {
 
     let res = await invoke('plugin:rrai-ability|list_abilities', {});
     console.log(res);
-    return res as boolean;
+    return res;
 }

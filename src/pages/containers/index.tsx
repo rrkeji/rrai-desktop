@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
-import { ArrowDownOutlined, ArrowUpOutlined, MoreOutlined, FireOutlined, CheckOutlined, TransactionOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, FieldTimeOutlined, MoreOutlined, FireOutlined, CheckOutlined, TransactionOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Button, Statistic, Typography } from 'antd';
-import { AbilityButtons } from '@/components/buttons/index';
+
+import { AbilitiesList } from '@/components/ability/index';
 
 import styles from './index.less';
 import { autoScan, listAbilities } from '@/tauri/abilities/abilities';
@@ -17,6 +18,8 @@ export const ContainersPage: React.FC<ContainersPageProps> = ({ }) => {
 
     const [menuFolded, setMenuFolded] = useState<boolean>(false);
 
+    const [abilitiesVersion, setAbilitiesVersion] = useState<number>(new Date().getTime());
+
     return (
         <div data-tauri-drag-region className={classnames(styles.container)}>
             <div data-tauri-drag-region className={styles.height24}></div>
@@ -25,19 +28,18 @@ export const ContainersPage: React.FC<ContainersPageProps> = ({ }) => {
                 <Row gutter={[10, 10]}>
                     <Col span={24}>
                         <Card bordered={false} title="我的能力"
-                            extra={<MoreOutlined className={styles.infor_icon} />}>
-                            <AbilityButtons></AbilityButtons>
-                        </Card>
-                    </Col>
-
-                    <Col span={24}>
-                        <Card bordered={false} title="我的能力"
-                            extra={<MoreOutlined className={styles.infor_icon} />}>
-                            <Button onClick={async () => {
-                                await autoScan();
-                                let res = await listAbilities();
-                                console.log(res);
-                            }}>扫码</Button>
+                            extra={
+                                <div className={classnames(styles.icons)}>
+                                    <FieldTimeOutlined
+                                        className={classnames(styles.icon, styles.infor_icon)}
+                                        onClick={async () => {
+                                            await autoScan();
+                                            setAbilitiesVersion(new Date().getTime());
+                                        }} />
+                                    <MoreOutlined className={classnames(styles.icon, styles.infor_icon)} />
+                                </div>
+                            }>
+                            <AbilitiesList v={abilitiesVersion}></AbilitiesList>
                         </Card>
                     </Col>
 

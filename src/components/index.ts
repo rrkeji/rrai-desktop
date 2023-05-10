@@ -11,3 +11,4 @@ export * from './painter/index';
 export * from './loading/index';
 export * from './buttons/index';
 export * from './selects/index';
+export * from './ability/index';
