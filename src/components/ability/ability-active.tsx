@@ -3,7 +3,8 @@ import classnames from 'classnames';
 import { AbilitySettings } from './ability-settings';
 import { Card, Button, Col, Row, Typography, Divider } from 'antd';
 import { abilityScan } from '@/tauri/abilities/index';
-
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import styles from './ability-active.less';
 
 const { Title, Paragraph, Text } = Typography;
@@ -33,7 +34,11 @@ export const AbilityActive: React.FC<AbilityActiveProps> = ({ className, ability
                 <Col span={24}>
                     <Title level={5}>能力激活说明</Title>
                     <Paragraph ellipsis={ellipsis}>
-                        暂时可以使用互联网进行搜索，或者询问AI
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            ```typescript
+                            import 
+                            ```
+                        </ReactMarkdown>
                     </Paragraph>
                 </Col>
             </Row>
