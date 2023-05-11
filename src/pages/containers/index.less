@@ -9,7 +9,8 @@
 
     background-color: @side-bg-color;
     border-right: 1px solid #c4c4c4;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     .height24 {
         height: 15px;
@@ -49,8 +50,14 @@
             flex-direction: row;
             justify-content: center;
             align-items: center;
+            border-radius: 6px;
 
             color: #444444;
+        }
+
+        .icon:hover {
+            background-color: @primary-bg-color;
+            color: #FFFFFF;
         }
     }
 

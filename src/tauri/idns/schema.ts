@@ -5,7 +5,7 @@ export const schemaByModel = async (modelId: string, version: number): Promise<a
 
     let res = await invoke('plugin:rrai-idns|schema_by_model', { modelId: modelId, version: version });
     console.log(res);
-    return res;
+    return JSON.parse(res);
 }
 
 

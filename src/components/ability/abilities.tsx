@@ -8,9 +8,10 @@ export interface AbilitiesListProps {
     className?: string;
     itemClassName?: string;
     v?: number;
+    itemClick?: (ability: any) => void
 }
 
-export const AbilitiesList: React.FC<AbilitiesListProps> = ({ className, itemClassName, v }) => {
+export const AbilitiesList: React.FC<AbilitiesListProps> = ({ className, itemClassName, v, itemClick }) => {
 
     const [abilities, setAbilities] = useState<Array<any>>([]);
 
@@ -29,9 +30,19 @@ export const AbilitiesList: React.FC<AbilitiesListProps> = ({ className, itemCla
             {
                 abilities && abilities.map((item, index) => {
                     return (
-                        <div key={index} className={classnames(styles.item, itemClassName, item.is_available === 1 && styles.active)}>
+                        <div key={index} className={classnames(styles.item, itemClassName, item.is_available === 1 && styles.active)}
+                            onClick={() => {
+                                itemClick && itemClick(item);
+                            }}>
                             <AbilityIcon icon={item.icon}></AbilityIcon>
                             <div className={classnames(styles.title)}>{item.ability}</div>
+                            {
+                                item.is_available !== 1 && (
+                                    <div className={classnames(styles.mask_bg)}></div>
+                                )
+                            }
+                            <div className={classnames(styles.tag_bg, item.is_available === 1 && styles.active)}></div>
+                            <div className={classnames(styles.tag, item.is_available === 1 && styles.active)}>{item.is_available === 1 ? '已激活' : '未激活'}</div>
                         </div>
                     );
                 })

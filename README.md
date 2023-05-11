@@ -2,6 +2,9 @@
 软软 AI 桌面版程序
 
 软软 AI 网站[https://rrai.idns.link](https://rrai.idns.link)
+
+掘金上开发过程摘记 [https://juejin.cn/column/7229606662288916539](https://juejin.cn/column/7229606662288916539)
+
 ## 软软 AI 桌面版
 微信小程序有一些限制，再加上一些工作还是在 PC 上完成，所以写一个桌面版。
 

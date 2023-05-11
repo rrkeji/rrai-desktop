@@ -3,7 +3,7 @@
 .container {
     display: flex;
     flex-direction: row;
-
+    flex-wrap: wrap;
 
     .item {
         display: flex;
@@ -13,8 +13,45 @@
         border: 1px solid #DEDEDE;
         border-radius: 10px;
 
-        width: 90px;
-        height: 90px;
+        width: 180px;
+        height: 180px;
+        margin: 6px 6px;
+
+        position: relative;
+        z-index: 5;
+
+        .tag_bg {
+            position: absolute;
+            right: -26px;
+            top: -44px;
+            transform: rotate(-45deg);
+            width: 36px;
+            height: 36px;
+            border-top: 36px solid transparent;
+            border-bottom: 36px solid transparent;
+            border-left: 36px solid #DEDEDE;
+            box-sizing: content-box;
+        }
+
+        .tag {
+            position: absolute;
+            transform: rotate(45deg);
+            color: #fff;
+            width: 100px;
+            height: 62px;
+            line-height: 44px;
+            top: 0px;
+            right: -20px;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .tag_bg.active {
+            border-left: 36px solid #FF5858;
+        }
+
+        .tag.active {}
+
 
         .icon {
             width: 60px;
@@ -37,6 +74,15 @@
             line-height: 30px;
             font-size: 14px;
             color: #DEDEDE;
+        }
+
+        .mask_bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #777777;
+            opacity: 0.6;
+            border-radius: 10px;
         }
     }
 
