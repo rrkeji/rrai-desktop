@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import { AbilitySettings } from './ability-settings';
-import { Card, Col, Row, Typography, Divider } from 'antd';
+import { Card, Button, Col, Row, Typography, Divider } from 'antd';
+import { abilityScan } from '@/tauri/abilities/index';
 
 import styles from './ability-active.less';
 
@@ -18,8 +19,16 @@ export const AbilityActive: React.FC<AbilityActiveProps> = ({ className, ability
 
     return (
         <div className={classnames(styles.container, className)}>
-
             <Divider />
+            <Row>
+                <Col span={24} className={classnames(styles.buttons)} >
+                    <Button disabled={ability.is_available === 1} type="primary" danger
+                        onClick={async () => {
+                            //激活
+                            let res = await abilityScan(ability.ability);
+                        }}>激活</Button>
+                </Col>
+            </Row>
             <Row>
                 <Col span={24}>
                     <Title level={5}>能力激活说明</Title>

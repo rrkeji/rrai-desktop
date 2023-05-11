@@ -5,6 +5,7 @@ import { JsonSchemaForm } from '@/components/schema/index';
 import type { ProFormColumnsType } from '@ant-design/pro-components';
 import { BetaSchemaForm } from '@ant-design/pro-components';
 import { schemaByModel } from '@/tauri/idns/index';
+import { updateAbilitySettings } from '@/tauri/abilities/index';
 
 import styles from './ability-settings.less';
 
@@ -52,11 +53,13 @@ export const AbilitySettings: React.FC<AbilitySettingsProps> = ({ className, abi
     return (
         <div className={classnames(styles.container, className)}>
             <BetaSchemaForm<any>
+                initialValues={JSON.parse(ability.settings)}
                 shouldUpdate={false}
                 layoutType="Form"
-                onFinish={async (values) => {
+                onFinish={async (values: any) => {
                     console.log(values);
                     //保存设置
+                    updateAbilitySettings(ability.ability, values);
                 }}
                 columns={columns}
             />
