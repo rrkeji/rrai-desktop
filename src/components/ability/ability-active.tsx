@@ -18,12 +18,24 @@ export const AbilityActive: React.FC<AbilityActiveProps> = ({ className, ability
 
     const [ellipsis, setEllipsis] = useState(false);
 
+
+    const guideMarkdown = () => {
+        let guide = ability.install_guide;
+        //TODO stable diffusion的先在前端写
+        if (ability.ability === 'StableDiffusion') {
+            guide = " > - 依赖Python的环境\n > - 安装依赖的库\n > - 下载模型文件\n > - 在下面输入模型的路径 ";
+        }
+        return guide;
+    };
+
+
+
     return (
         <div className={classnames(styles.container, className)}>
             <Divider />
             <Row>
                 <Col span={24} className={classnames(styles.buttons)} >
-                    <Button disabled={ability.is_available === 1} type="primary" danger
+                    <Button disabled={ability.is_available === 1 && false} type="primary" danger
                         onClick={async () => {
                             //激活
                             let res = await abilityScan(ability.ability);
@@ -34,11 +46,7 @@ export const AbilityActive: React.FC<AbilityActiveProps> = ({ className, ability
                 <Col span={24}>
                     <Title level={5}>能力激活说明</Title>
                     <Paragraph ellipsis={ellipsis}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            ```typescript
-                            import 
-                            ```
-                        </ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{guideMarkdown()}</ReactMarkdown>
                     </Paragraph>
                 </Col>
             </Row>

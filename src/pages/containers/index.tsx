@@ -54,6 +54,10 @@ export const ContainersPage: React.FC<ContainersPageProps> = ({ }) => {
                                         //未激活，点击进行如何激活的提示
                                         setCurrentAbility(item);
                                         setIsAbilityModalOpen(true);
+                                    }else{
+                                        //未激活，点击进行如何激活的提示
+                                        setCurrentAbility(item);
+                                        setIsAbilityModalOpen(true);
                                     }
                                 }}></AbilitiesList>
                             </Card>

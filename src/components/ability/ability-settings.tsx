@@ -24,6 +24,7 @@ export const AbilitySettings: React.FC<AbilitySettingsProps> = ({ className, abi
     useEffect(() => {
         console.log('settings_schema', ability.settings_schema);
         if (!ability.settings_schema || ability.settings_schema == '') {
+            setColumns([]);
             return;
         }
         //通过模型id获取到json schema
@@ -50,10 +51,19 @@ export const AbilitySettings: React.FC<AbilitySettingsProps> = ({ className, abi
         call();
     }, [ability.settings_schema]);
 
+    let initialValues = {};
+    if (ability.settings && ability.settings != '') {
+        try {
+            initialValues = JSON.parse(ability.settings);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <div className={classnames(styles.container, className)}>
             <BetaSchemaForm<any>
-                initialValues={JSON.parse(ability.settings)}
+                initialValues={initialValues}
                 shouldUpdate={false}
                 layoutType="Form"
                 onFinish={async (values: any) => {
