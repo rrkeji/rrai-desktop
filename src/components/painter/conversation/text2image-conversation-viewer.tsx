@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import { ConversationEntity, MessageEntity } from '@/databases';
 import { DrawingBoard } from '../draw-board/index';
-import { ImagesViewer } from '../image-viewer/index';
+import { ImageCarouselViewer } from '../image-viewer/index';
+import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 
 import styles from './text2image-conversation-viewer.less';
 
@@ -21,24 +22,25 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
             {
                 showHistory ? (
                     <>
-                        <div onClick={() => {
+                        <div className={classnames(styles.unshow_history_button)} onClick={() => {
                             setShowHistory(!showHistory);
                         }}>
-                            历史记录折叠
+                            <div>历史记录折叠</div>
+                            <div><DoubleRightOutlined /></div>
                         </div>
                     </>
                 ) : (
                     <>
                         <DrawingBoard className={classnames(styles.board)} conversation={conversation} conversationId={conversationId}></DrawingBoard>
-                        <ImagesViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImagesViewer>
+                        <ImageCarouselViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImageCarouselViewer>
                         <div className={classnames(styles.show_history_button)}
                             onClick={() => {
                                 setShowHistory(!showHistory);
                             }}>
-                            历史记录展开
+                            <div><DoubleLeftOutlined /></div>
+                            <div>历史记录展开</div>
                         </div>
                     </>
-
                 )
             }
         </div>
