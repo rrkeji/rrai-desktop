@@ -54,7 +54,7 @@ export const AddPainterConversation: React.FC<AddPainterConversationProps> = ({ 
                     onChange={(val) => {
                         onArgsChange({ ...args, painterType: val });
                     }}>
-                    <Option value={'text2image'}>文本生成图片</Option>
+                    <Option value={'text2image'}>文生图</Option>
                     <Option value={'image2image'}>图生图</Option>
                 </Select>
             </Col>
@@ -86,7 +86,7 @@ export const AddPainterConversation: React.FC<AddPainterConversationProps> = ({ 
                         },
                         {
                             icon: (<div>👩‍💻</div>),
-                            value: 'animal ',
+                            value: 'animal',
                             title: '动物'
                         },
                         {

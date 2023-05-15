@@ -34,3 +34,13 @@ export const abilityScan = async (ability: string): Promise<any> => {
     console.log(res);
     return res;
 }
+
+export const performTask = async (ability: string): Promise<any> => {
+
+    let res = await invoke('plugin:rrai-ability|perform_task', {
+        ability: ability,
+        args: "",
+    });
+    console.log(res);
+    return res;
+}

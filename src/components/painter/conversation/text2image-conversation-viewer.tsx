@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames';
 import { ConversationEntity, MessageEntity } from '@/databases';
 import { DrawingBoard } from '../draw-board/index';
@@ -14,10 +14,33 @@ export interface PainterConversationViewerProps {
 
 export const Text2ImagePainterConversationViewer: React.FC<PainterConversationViewerProps> = ({ className, conversationId, conversation }) => {
 
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+
     return (
         <div className={classnames(styles.container, className)}>
-            <DrawingBoard className={classnames(styles.board)}></DrawingBoard>
-            <ImagesViewer className={classnames(styles.content)}></ImagesViewer>
+            {
+                showHistory ? (
+                    <>
+                        <div onClick={() => {
+                            setShowHistory(!showHistory);
+                        }}>
+                            历史记录折叠
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <DrawingBoard className={classnames(styles.board)} conversation={conversation} conversationId={conversationId}></DrawingBoard>
+                        <ImagesViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImagesViewer>
+                        <div className={classnames(styles.show_history_button)}
+                            onClick={() => {
+                                setShowHistory(!showHistory);
+                            }}>
+                            历史记录展开
+                        </div>
+                    </>
+
+                )
+            }
         </div>
     );
 };

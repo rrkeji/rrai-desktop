@@ -6,9 +6,11 @@ import styles from './run-button.less';
 
 export interface RunButtonProps {
     className?: string;
+    ability: string;
+    args: any;
 }
 
-export const RunButton: React.FC<RunButtonProps> = ({ className }) => {
+export const RunButton: React.FC<RunButtonProps> = ({ className, ability, args }) => {
 
     const [value, setValue] = useState(1);
 

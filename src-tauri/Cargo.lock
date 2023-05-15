@@ -4218,6 +4218,8 @@ dependencies = [
  "bytes",
  "futures",
  "futures-util",
+ "hyper",
+ "hyper-tls",
  "mime",
  "mime_guess",
  "rrai-desktop-sdk-common",

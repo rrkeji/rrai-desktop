@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import { Row, Col, Input, Select, Slider, InputNumber } from 'antd';
+import { CommonProperties } from './common';
 const { TextArea } = Input;
 const { Option } = Select;
 import { CardSelect, ImageSelect } from '@/components/selects';
@@ -8,6 +9,7 @@ import styles from './click-board.less';
 
 export interface ClickBoardProps {
     className?: string;
+    purpose: 'figure' | 'animal' | 'scene';
 }
 
 const figureProperties = [
@@ -177,12 +179,15 @@ const figureProperties = [
 
 export const ClickBoard: React.FC<ClickBoardProps> = ({ }) => {
 
-    const [numOutputs, setNumOutputs] = useState<number>(1);
-
-    const onNumOutputsChange = (newValue: number | null) => {
-        if (newValue != null)
-            setNumOutputs(newValue);
-    };
+    const [commonProerties, setCommonProerties] = useState<{
+        steps: number;
+        batchSize: number;
+        ratio: string;
+    }>({
+        steps: 50,
+        batchSize: 2,
+        ratio: "1:1",
+    });
 
 
     return (
@@ -253,73 +258,13 @@ export const ClickBoard: React.FC<ClickBoardProps> = ({ }) => {
                     ></ImageSelect>
                 </Col>
                 <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>比例</label>
-                    <Select>
-                        <Option>1:1</Option>
-                        <Option>1:2</Option>
-                        <Option>4:3</Option>
-                        <Option>3:4</Option>
-                        <Option>16:9</Option>
-                        <Option>9:16</Option>
-                    </Select>
-                </Col>
-                <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>画质</label>
-                    <ImageSelect
-                        value={'figure'}
-                        items={[
-                            {
-                                icon: (<div>👩‍💻</div>),
-                                value: 'figure',
-                                title: '普通'
-                            },
-                            {
-                                icon: (<div>👩‍💻</div>),
-                                value: 'animal ',
-                                title: '高清'
-                            },
-                        ]}
-                        onValueChange={(val) => {
-                        }}
-                    ></ImageSelect>
-                </Col>
-                <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>比例</label>
-                    <Select>
-                        <Option>1:1</Option>
-                        <Option>1:2</Option>
-                        <Option>4:3</Option>
-                        <Option>3:4</Option>
-                        <Option>16:9</Option>
-                        <Option>9:16</Option>
-                    </Select>
-                </Col>
-                <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>数量</label>
-                    <Row>
-                        <Col span={17}>
-                            <Slider
-                                min={1}
-                                max={20}
-                                onChange={onNumOutputsChange}
-                                value={typeof numOutputs === 'number' ? numOutputs : 1}
-                            />
-                        </Col>
-                        <Col span={4}>
-                            <InputNumber
-                                min={1}
-                                max={20}
-                                style={{ margin: '0 16px' }}
-                                value={numOutputs}
-                                onChange={onNumOutputsChange}
-                            />
-                        </Col>
-                    </Row>
-                </Col>
-                <Col span={24} className={classnames(styles.item)}>
                     <label className={classnames(styles.label)}>画面描述</label>
                     <TextArea rows={5}></TextArea>
                 </Col>
+                <CommonProperties commonProerties={commonProerties} onChange={async (val) => {
+                    console.log(val);
+                    setCommonProerties(val);
+                }}></CommonProperties>
             </Row>
         </div>
     );
