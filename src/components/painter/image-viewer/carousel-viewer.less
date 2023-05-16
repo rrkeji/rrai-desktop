@@ -18,6 +18,14 @@
             width: 98%;
             height: 100px;
         }
+
+        .tool_buttons {
+            display: flex;
+
+            .tool_button {
+                margin: 0 5px;
+            }
+        }
     }
 
     .grid {
@@ -27,21 +35,39 @@
 
         display: flex;
         justify-content: center;
-        align-items: flex-start;
+        align-items: center;
 
         .card {
             width: 98%;
-            height: calc(100% -20px);
-            // max-height: 200px;
+            height: calc(100% - 20px);
+        }
 
-            overflow: auto;
-            // background-color: #000000;
+        .carousel {}
 
+        :global {
+            .ant-card-body {
+                padding: 0 0;
+                width: 100%;
+                height: 100%;
+            }
 
+            .carousel {
+                width: 100%;
+                height: 100%;
+                padding: 10px;
+                overflow: auto;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
         }
 
         .slider_container {
-            position: relative;
+            width: 100%;
+            overflow: hidden;
+            // position: relative;
             margin: auto;
 
             .button {
@@ -58,6 +84,8 @@
                 top: 50%;
                 left: 0;
                 transform: translateY(-50%);
+                margin-left: 10px;
+                opacity: 0.8;
             }
 
             .buttonNext {
@@ -65,35 +93,60 @@
                 top: 50%;
                 right: 0;
                 transform: translateY(-50%);
+                margin-right: 10px;
+                opacity: 0.8;
             }
 
 
             .image_item {
                 background-color: #000000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 img {}
             }
         }
-    }
 
-    .dot_group {
-        width: 100%;
-        text-align: center;
-        padding: 10px 10px;
 
-        display: flex;
-        justify-content: center;
+        .dot_group {
+            width: 90%;
+            overflow-x: auto;
+            padding: 10px 10px;
+            background-color: #dedede;
+            margin-top: 10px;
+            border-radius: 6px;
 
-        .dot_item {
-            margin: 0 5px;
-            width: 40px;
-            height: 60px;
+            display: flex;
+            justify-content: flex-start;
 
-            .dot_item_image {
+            .dot_item {
+                margin: 0 5px;
                 width: 40px;
                 height: 60px;
+
+                position: relative;
+
+                .dot_item_mask {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .dot_item_image {
+                    width: 40px;
+                    height: 60px;
+                }
+            }
+
+            .dot_item.current_slide {
+                .dot_item_mask {
+                    background-color: #999999;
+                    opacity: 0.8;
+                }
             }
         }
     }
-
 }

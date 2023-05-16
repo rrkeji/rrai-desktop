@@ -35,11 +35,33 @@ export const abilityScan = async (ability: string): Promise<any> => {
     return res;
 }
 
-export const performTask = async (ability: string): Promise<any> => {
+export const performTask = async (ability: string, args: string): Promise<any> => {
 
     let res = await invoke('plugin:rrai-ability|perform_task', {
         ability: ability,
-        args: "",
+        args: args,
+    });
+    console.log(res);
+    return res;
+}
+
+export const performTaskStdout = async (ability: string, runningTaskId: string, maxLineSize: number): Promise<any> => {
+
+    let res = await invoke('plugin:rrai-ability|perform_task_stdout', {
+        ability: ability,
+        runningTaskId: runningTaskId,
+        maxLineSize: maxLineSize,
+    });
+    console.log(res);
+    return res;
+}
+
+export const performTaskStatus = async (ability: string, runningTaskId: string, exitRemove: boolean): Promise<any> => {
+
+    let res = await invoke('plugin:rrai-ability|perform_task_status', {
+        ability: ability,
+        runningTaskId: runningTaskId,
+        exitRemove: exitRemove,
     });
     console.log(res);
     return res;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import { CardSelect, ImageSelect } from '@/components/selects';
 import { CommonProperties } from './common';
-
+import { StableDiffusionText2ImageArgs, StableDiffusionText2ImageArgsDefault } from '../types';
 import { Row, Col, Input, Select, Slider, InputNumber } from 'antd';
 const { TextArea } = Input;
 const { Option } = Select;
@@ -12,6 +12,8 @@ import styles from './simple-board.less';
 export interface SimpleBoardProps {
     className?: string;
     purpose: 'figure' | 'animal' | 'scene';
+    initArgs?: StableDiffusionText2ImageArgs;
+    onArgsChange: (args: StableDiffusionText2ImageArgs) => Promise<any>
 }
 
 

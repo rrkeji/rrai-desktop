@@ -68,8 +68,8 @@ export const AddPainterConversation: React.FC<AddPainterConversationProps> = ({ 
                     onChange={(val) => {
                         onArgsChange({ ...args, baseModel: val });
                     }}>
-                    <Option value={'sd1.4'}>Stable Difussion 1.4</Option>
-                    <Option value={'sd1.5'}>Stable Difussion 1.5</Option>
+                    <Option value={'StableDifussion'}>Stable Difussion 1.5</Option>
+                    <Option value={'StableDifussionWebUI'}>Stable Difussion WebUI</Option>
                 </Select>
             </Col>
             <Col span={24}>

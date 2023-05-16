@@ -42,6 +42,42 @@ export const getMessageByConversationId = async (conversationUid: string): Promi
     };
 }
 
+export const getLastMessageByConversationId = async (conversationUid: string): Promise<MessageEntity | null> => {
+
+    console.log('getMessageByConversationId.....');
+
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,conversation_uid,conversation_category,sender_type,sender_id,avatar,bot_role,model_id,model_options,text,typing,purpose_id,tokens_count,created,updated FROM messages WHERE conversation_uid=:conversation_uid order by id desc limit 0,1", {
+        ":conversation_uid": conversationUid
+    });
+
+    console.log(rows, 'getMessageByConversationId');
+    if (rows && rows.length > 0) {
+        let data = rows.map((item, index) => {
+
+            let message: MessageEntity = {
+                id: item.id,
+                senderType: item.sender_type,
+                senderId: item.sender_id,
+                avatar: item.avatar,
+                botRole: item.bot_role,
+                modelId: item.model_id,
+                modelOptions: item.model_options,
+                text: item.text,
+                typing: item.typing,
+                purposeId: item.purpose_id,
+                cacheTokensCount: item.tokens_count,
+                created: item.created,
+                updated: item.updated,
+            };
+
+            return message;
+        });
+        return data[0];
+    } else {
+        return null;
+    }
+}
+
 
 export const createMessage = async (conversationUid: string, conversationType: string,
     senderType: 'You' | 'Bot' | 'Person' | 'system', senderId: string, botRole: 'assistant' | 'system' | 'user', modelId: string, modelOptions: string,
@@ -161,6 +197,32 @@ export const createChatMessage = async (conversationUid: string, conversationTyp
 
     return await createMessage(conversationUid, conversationType, senderType, senderId, botRole, modelId, modelOptions, text, typing, purposeId, avatar);
 }
+
+
+
+export const createTaskMessage = async (conversationUid: string, ability: string, args: string, runningTaskId: string): Promise<boolean> => {
+    //通过会话 ID 查询会话相关的信息
+    let conversation = await queryConversationByUid(conversationUid);
+    console.log(conversation);
+    if (!conversation) {
+        return false;
+    }
+
+    if (!ability) {
+        //ability为必填项
+        return false;
+    }
+    console.log('createTaskMessage');
+
+    let senderType: 'You' | 'Bot' | 'Person' | 'system' = 'You';
+
+    let senderId = "";
+    let avatar = "";
+    let typing: string = 'false';
+
+    return await createMessage(conversationUid, 'painter', senderType, senderId, 'user', ability, args, runningTaskId, typing, '', avatar);
+}
+
 
 
 export const deleteMessagesByConversationUid = async (uid: string): Promise<boolean> => {

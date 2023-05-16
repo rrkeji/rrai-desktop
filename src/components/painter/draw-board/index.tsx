@@ -8,6 +8,7 @@ import { ExpertBoard } from './expert-board';
 import { SimpleBoard } from './simple-board';
 import { ConversationEntity, MessageEntity } from '@/databases';
 import { FreedomBoard } from './freedom-board';
+import { StableDiffusionText2ImageArgs, StableDiffusionText2ImageArgsDefault } from '../types';
 
 import styles from './index.less';
 
@@ -21,9 +22,9 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
 
     const [purpose, setPurpose] = useState<'figure' | 'animal' | 'scene'>('figure');
 
-    const [ability, setAbility] = useState<string>('StableDifussion');
+    const [ability, setAbility] = useState<string>('StableDiffusion');
 
-    const [args, setArgs] = useState<any>({});
+    const [args, setArgs] = useState<StableDiffusionText2ImageArgs>(StableDiffusionText2ImageArgsDefault);
 
     const onChange = (key: string) => {
         console.log(key);
@@ -34,14 +35,16 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
             key: '1',
             label: `简单描述`,
             children: (
-                <SimpleBoard className={classnames(styles.content)} purpose={purpose}></SimpleBoard>
+                <SimpleBoard className={classnames(styles.content)} purpose={purpose} initArgs={args} onArgsChange={async (args) => {
+                    setArgs(args);
+                }}></SimpleBoard>
             ),
         },
         {
             key: '3',
             label: `点选描述`,
             children: (
-                <ClickBoard className={classnames(styles.content)} purpose={purpose}></ClickBoard>
+                <ExpertBoard className={classnames(styles.content)} purpose={purpose}></ExpertBoard>
             ),
         },
         {
@@ -64,7 +67,14 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
                 defaultActiveKey="1"
                 items={items}
                 onChange={onChange} />
-            <RunButton className={classnames(styles.run_button)} ability={ability} args={args}></RunButton>
+            <RunButton className={classnames(styles.run_button)}
+                ability={ability}
+                args={JSON.stringify(args)}
+                onTaskPublished={async (res) => {
+                    console.log(res.runningTaskId);
+                    //插入会话消息
+
+                }}></RunButton>
         </div>
     );
 };

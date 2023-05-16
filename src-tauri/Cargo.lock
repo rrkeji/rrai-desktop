@@ -4220,6 +4220,7 @@ dependencies = [
  "futures-util",
  "hyper",
  "hyper-tls",
+ "lazy_static",
  "mime",
  "mime_guess",
  "rrai-desktop-sdk-common",
