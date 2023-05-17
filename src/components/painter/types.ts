@@ -10,6 +10,6 @@ export interface StableDiffusionText2ImageArgs {
 export const StableDiffusionText2ImageArgsDefault: StableDiffusionText2ImageArgs = {
     "prompts": "a dog",
     "negative_prompt": "lowres,",
-    "steps": 1,
+    "steps": 20,
     "batch_size": 2,
 }

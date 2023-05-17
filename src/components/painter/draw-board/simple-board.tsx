@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { CardSelect, ImageSelect } from '@/components/selects';
 import { CommonProperties } from './common';
@@ -249,7 +249,7 @@ const negativePromptsDefault = {
     'scene': "nsfw, blurry, bad anatomy, ugly, disfigured, deformed, extra limbs, mutation, out of frame, poorly drawn face, poorly drawn hands, low quality, worst quality, watermark, extra legs, extra arms, mutated hands, jpeg artifacts, nude, naked, topless, nipple, bottomless,",
 };
 
-export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose }) => {
+export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose, onArgsChange, initArgs }) => {
 
     const [commonProerties, setCommonProerties] = useState<{
         steps: number;
@@ -260,10 +260,21 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose }) => {
         batchSize: 2,
         ratio: "1:1",
     });
-
     const [prompt, setPrompt] = useState<string>('');
 
     const [negativePrompt, setNegativePrompt] = useState<string>(negativePromptsDefault[purpose]);
+
+    useEffect(() => {
+        if (initArgs) {
+            setPrompt(initArgs.prompts);
+            setNegativePrompt(initArgs.negative_prompt);
+            setCommonProerties({
+                steps: initArgs.steps,
+                batchSize: initArgs.batch_size,
+                ratio: "1:1",
+            });
+        }
+    }, [initArgs]);
 
     return (
         <div className={classnames(styles.container)}>
@@ -272,12 +283,24 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose }) => {
                     <label className={classnames(styles.label)}>画面描述</label>
                     <TextArea rows={5} value={prompt} onChange={(event) => {
                         setPrompt(event.target.value);
+                        onArgsChange({
+                            prompts: event.target.value,
+                            negative_prompt: negativePrompt,
+                            steps: commonProerties.steps,
+                            batch_size: commonProerties.batchSize,
+                        });
                     }}></TextArea>
                 </Col>
                 <Col span={24} className={classnames(styles.item)}>
                     <label className={classnames(styles.label)}>反向描述</label>
                     <TextArea rows={2} value={negativePrompt} onChange={(event) => {
                         setNegativePrompt(event.target.value);
+                        onArgsChange({
+                            prompts: prompt,
+                            negative_prompt: event.target.value,
+                            steps: commonProerties.steps,
+                            batch_size: commonProerties.batchSize,
+                        });
                     }}></TextArea>
                 </Col>
                 <Col span={24} className={classnames(styles.item)}>
@@ -311,6 +334,12 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose }) => {
                 <CommonProperties commonProerties={commonProerties} onChange={async (val) => {
                     console.log(val);
                     setCommonProerties(val);
+                    onArgsChange({
+                        prompts: prompt,
+                        negative_prompt: negativePrompt,
+                        steps: val.steps,
+                        batch_size: val.batchSize,
+                    });
                 }}></CommonProperties>
             </Row>
         </div>

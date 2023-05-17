@@ -9,16 +9,18 @@ import { SimpleBoard } from './simple-board';
 import { ConversationEntity, MessageEntity } from '@/databases';
 import { FreedomBoard } from './freedom-board';
 import { StableDiffusionText2ImageArgs, StableDiffusionText2ImageArgsDefault } from '../types';
+import { createTaskMessage } from '@/services/message-service';
 
 import styles from './index.less';
 
 export interface DrawingBoardProps {
     className?: string;
     conversationId: string;
-    conversation: ConversationEntity
+    conversation: ConversationEntity;
+    onMessageCreated: (res: { taskResult: { taskType: string, runningTaskId: string }, args: StableDiffusionText2ImageArgs }) => Promise<any>;
 }
 
-export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversationId, conversation }) => {
+export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversationId, conversation, onMessageCreated }) => {
 
     const [purpose, setPurpose] = useState<'figure' | 'animal' | 'scene'>('figure');
 
@@ -36,6 +38,7 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
             label: `简单描述`,
             children: (
                 <SimpleBoard className={classnames(styles.content)} purpose={purpose} initArgs={args} onArgsChange={async (args) => {
+                    console.log(args);
                     setArgs(args);
                 }}></SimpleBoard>
             ),
@@ -70,10 +73,15 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
             <RunButton className={classnames(styles.run_button)}
                 ability={ability}
                 args={JSON.stringify(args)}
-                onTaskPublished={async (res) => {
-                    console.log(res.runningTaskId);
+                onTaskPublished={async (taskResult) => {
+                    console.log(taskResult.runningTaskId);
                     //插入会话消息
-
+                    let res = await createTaskMessage(conversationId, ability, JSON.stringify(args), taskResult.taskType, taskResult.runningTaskId);
+                    console.log(res);
+                    onMessageCreated({
+                        args: args,
+                        taskResult: taskResult
+                    });
                 }}></RunButton>
         </div>
     );

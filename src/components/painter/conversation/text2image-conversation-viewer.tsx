@@ -5,9 +5,9 @@ import { DrawingBoard } from '../draw-board/index';
 import { ImageCarouselViewer } from '../image-viewer/index';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import { getLastMessageByConversationId } from '@/services/message-service';
-import { performTaskStdout, performTaskStatus } from '@/tauri/abilities/index';
+import { performTaskStdout, performTaskStderr, performTaskStatus } from '@/tauri/abilities/index';
 
-import { Empty, Button } from 'antd';
+import { Empty, Button, Spin, Row, Col } from 'antd';
 import styles from './text2image-conversation-viewer.less';
 
 export interface PainterConversationViewerProps {
@@ -22,12 +22,28 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     const [lastMessage, setLastMessage] = useState<MessageEntity | null | {}>({});
 
-    const [runningTaskId, setRunningTaskId] = useState<string | null>('e170239daef442e5812b6182038cfa7a');
+    const [runningTaskId, setRunningTaskId] = useState<string | null>(null);
+
+    const [waiting, setWaiting] = useState<boolean>(false);
+
+    const [stdout, setStdout] = useState<Array<string>>([]);
+
+    const [stderr, setStderr] = useState<Array<string>>([]);
 
     const refresh = async (conversationId: string) => {
-        let res = await getLastMessageByConversationId(conversationId);
+        let res: any = await getLastMessageByConversationId(conversationId);
         console.log(res);
         // setLastMessage(res);
+        //res.purposeId 'local'
+        if (res && res.typing === 'false') {
+            //正在
+            setWaiting(true);
+            setRunningTaskId(res.senderId);
+        } else {
+            //完成
+            setWaiting(false);
+            setRunningTaskId(res.senderId);
+        }
     };
 
     useEffect(() => {
@@ -46,6 +62,79 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
     //     call();
     // }, [runningTaskId]);
 
+    const queryTaskStatus = async (taskId: string) => {
+        console.log(taskId);
+
+        let res2: Array<any> = await performTaskStatus('StableDiffusion', taskId, false);
+        console.log(res2);
+        if (res2[0]) {
+            //完成, 更新Message
+            setWaiting(false);
+        } else {
+            let stdouts = await performTaskStdout('StableDiffusion', taskId);
+            setStdout(stdout.concat(stdouts));
+
+            let stderrs = await performTaskStderr('StableDiffusion', taskId);
+            setStderr(stderr.concat(stderrs));
+
+            // setTimeout(async () => {
+            //     await queryTaskStatus(taskId);
+            // }, 10000);
+        }
+    };
+
+    const contentElement = (waiting: boolean, taskId: string | null) => {
+        if (waiting) {
+            if (taskId != null) {
+                // queryTaskStatus(taskId);
+            }
+
+            //
+            return (
+                <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
+                    <Spin tip="Loading" size="large">
+                        <div className={styles.spin_content} />
+                    </Spin>
+                    <Button onClick={async () => {
+                        console.log('-------111');
+                        let res = await queryTaskStatus(runningTaskId!);
+                        console.log('-------222');
+                    }}>测试</Button>
+                    <Row>
+                        <Col span={12}>
+                            {stdout && stdout.map((line, index) => {
+                                return (
+                                    <div>
+                                        {line}
+                                    </div>
+                                );
+                            })}
+                        </Col>
+                        <Col span={12}>
+                            {stderr && stderr.map((line, index) => {
+                                return (
+                                    <div>
+                                        {line}
+                                    </div>
+                                );
+                            })}
+                        </Col>
+                    </Row>
+                </div>
+            );
+        } else if (lastMessage !== null) {
+            return (
+                <ImageCarouselViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImageCarouselViewer>
+            );
+        } else {
+            return (
+                <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
+                    <Empty description={'请在左侧运行任务'} />
+                </div>
+            );
+        }
+    };
+
     return (
         <div className={classnames(styles.container, className)}>
             {
@@ -60,24 +149,12 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     </>
                 ) : (
                     <>
-                        <DrawingBoard className={classnames(styles.board)} conversation={conversation} conversationId={conversationId}></DrawingBoard>
-                        {
-                            lastMessage == null ? (
-                                <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
-                                    <Empty description={'请在左侧运行任务'} />
-                                    <Button onClick={async () => {
-                                        console.log('-------111');
-                                        let res = await performTaskStdout('StableDiffusion', runningTaskId!, 10);
-                                        console.log(res);
-                                        console.log('-------222');
-                                        let res2 = await performTaskStatus('StableDiffusion', runningTaskId!, true);
-                                        console.log(res2);
-                                    }}>测试</Button>
-                                </div>
-                            ) : (
-                                <ImageCarouselViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImageCarouselViewer>
-                            )
-                        }
+                        <DrawingBoard className={classnames(styles.board)} conversation={conversation} conversationId={conversationId}
+                            onMessageCreated={async (res) => {
+                                let runningTaskId = res.taskResult.runningTaskId;
+                                setRunningTaskId(runningTaskId);
+                            }}></DrawingBoard>
+                        {contentElement(waiting, runningTaskId)}
                         <div className={classnames(styles.show_history_button)}
                             onClick={() => {
                                 setShowHistory(!showHistory);

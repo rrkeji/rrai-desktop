@@ -198,9 +198,7 @@ export const createChatMessage = async (conversationUid: string, conversationTyp
     return await createMessage(conversationUid, conversationType, senderType, senderId, botRole, modelId, modelOptions, text, typing, purposeId, avatar);
 }
 
-
-
-export const createTaskMessage = async (conversationUid: string, ability: string, args: string, runningTaskId: string): Promise<boolean> => {
+export const createTaskMessage = async (conversationUid: string, ability: string, args: string, taskType: string, taskId: string): Promise<boolean> => {
     //通过会话 ID 查询会话相关的信息
     let conversation = await queryConversationByUid(conversationUid);
     console.log(conversation);
@@ -215,12 +213,10 @@ export const createTaskMessage = async (conversationUid: string, ability: string
     console.log('createTaskMessage');
 
     let senderType: 'You' | 'Bot' | 'Person' | 'system' = 'You';
-
-    let senderId = "";
     let avatar = "";
     let typing: string = 'false';
 
-    return await createMessage(conversationUid, 'painter', senderType, senderId, 'user', ability, args, runningTaskId, typing, '', avatar);
+    return await createMessage(conversationUid, 'painter', senderType, taskId, 'user', ability, args, '', typing, taskType, avatar);
 }
 
 
