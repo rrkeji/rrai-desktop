@@ -80,7 +80,7 @@ export const getLastMessageByConversationId = async (conversationUid: string): P
 
 
 export const createMessage = async (conversationUid: string, conversationType: string,
-    senderType: 'You' | 'Bot' | 'Person' | 'system', senderId: string, botRole: 'assistant' | 'system' | 'user', modelId: string, modelOptions: string,
+    senderType: 'You' | 'Bot' | 'Person' | 'system', senderId: string, botRole: 'assistant' | 'system' | 'user', modelId: string, modelOptions: { [key: string]: any },
     text: string, typing: string, purposeId: string, avatar?: string): Promise<boolean> => {
 
 
@@ -198,7 +198,7 @@ export const createChatMessage = async (conversationUid: string, conversationTyp
     return await createMessage(conversationUid, conversationType, senderType, senderId, botRole, modelId, modelOptions, text, typing, purposeId, avatar);
 }
 
-export const createTaskMessage = async (conversationUid: string, ability: string, args: string, taskType: string, taskId: string): Promise<boolean> => {
+export const createTaskMessage = async (conversationUid: string, ability: string, args: { [key: string]: any }, taskType: string, taskId: string): Promise<boolean> => {
     //通过会话 ID 查询会话相关的信息
     let conversation = await queryConversationByUid(conversationUid);
     console.log(conversation);
@@ -219,6 +219,17 @@ export const createTaskMessage = async (conversationUid: string, ability: string
     return await createMessage(conversationUid, 'painter', senderType, taskId, 'user', ability, args, '', typing, taskType, avatar);
 }
 
+export const updateTaskMessage = async (id: number, result: string, completed: string) => {
+
+    let res = await db.execute(`UPDATE messages SET text = :text, typing = :typing where id = :id`, {
+        ":id": id,
+        ":text": result,
+        ":typing": completed,
+    });
+    console.log(res);
+
+    return;
+}
 
 
 export const deleteMessagesByConversationUid = async (uid: string): Promise<boolean> => {

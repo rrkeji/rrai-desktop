@@ -4,9 +4,9 @@ import { ConversationEntity, MessageEntity } from '@/databases';
 import { DrawingBoard } from '../draw-board/index';
 import { ImageCarouselViewer } from '../image-viewer/index';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
-import { getLastMessageByConversationId } from '@/services/message-service';
+import { getLastMessageByConversationId, updateTaskMessage } from '@/services/message-service';
 import { performTaskStdout, performTaskStderr, performTaskStatus } from '@/tauri/abilities/index';
-
+import { Text2ImageMessageList } from '../message/index';
 import { Empty, Button, Spin, Row, Col } from 'antd';
 import styles from './text2image-conversation-viewer.less';
 
@@ -20,7 +20,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     const [showHistory, setShowHistory] = useState<boolean>(false);
 
-    const [lastMessage, setLastMessage] = useState<MessageEntity | null | {}>({});
+    const [lastMessage, setLastMessage] = useState<MessageEntity | null>(null);
 
     const [runningTaskId, setRunningTaskId] = useState<string | null>(null);
 
@@ -30,20 +30,31 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     const [stderr, setStderr] = useState<Array<string>>([]);
 
+    const [messageListVersion, setMessageListVersion] = useState<number>(new Date().getTime());
+
     const refresh = async (conversationId: string) => {
         let res: any = await getLastMessageByConversationId(conversationId);
         console.log(res);
-        // setLastMessage(res);
-        //res.purposeId 'local'
-        if (res && res.typing === 'false') {
-            //正在
-            setWaiting(true);
-            setRunningTaskId(res.senderId);
+        if (res == null) {
+            setLastMessage(null);
         } else {
-            //完成
-            setWaiting(false);
-            setRunningTaskId(res.senderId);
+            setLastMessage(res);
+            //res.purposeId 'local'
+            if (res.typing === 'false') {
+                //正在
+                setWaiting(true);
+                setRunningTaskId(res.senderId);
+            } else if (res.typing === 'fail') {
+                //失败
+                setWaiting(false);
+                setRunningTaskId(res.senderId);
+            } else {
+                //完成
+                setWaiting(false);
+                setRunningTaskId(res.senderId);
+            }
         }
+
     };
 
     useEffect(() => {
@@ -51,42 +62,44 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
         refresh(conversationId);
     }, [conversationId]);
 
-    // useEffect(() => {
-    //     // 
-    //     const call = async () => {
-    //         let res = await performTaskStdout('StableDiffusion', runningTaskId!, 10);
-    //         console.log(res);
-    //         let res2 = await performTaskStatus('StableDiffusion', runningTaskId!, true);
-    //         console.log(res2);
-    //     };
-    //     call();
-    // }, [runningTaskId]);
+    let timeoutHandle: NodeJS.Timeout | null = null;
 
-    const queryTaskStatus = async (taskId: string) => {
+    const queryTaskStatus = async (taskId: string, message: MessageEntity) => {
         console.log(taskId);
 
-        let res2: Array<any> = await performTaskStatus('StableDiffusion', taskId, false);
-        console.log(res2);
-        if (res2[0]) {
-            //完成, 更新Message
-            setWaiting(false);
-        } else {
-            let stdouts = await performTaskStdout('StableDiffusion', taskId);
-            setStdout(stdout.concat(stdouts));
+        try {
+            let res2: Array<any> = await performTaskStatus('StableDiffusion', taskId, false);
+            console.log(res2);
+            if (res2[0]) {
+                //完成, 更新Message
+                setWaiting(false);
+                await updateTaskMessage(message.id, "result", "true");
+            } else {
+                let stdouts = await performTaskStdout('StableDiffusion', taskId);
+                setStdout(stdout.concat(stdouts));
 
-            let stderrs = await performTaskStderr('StableDiffusion', taskId);
-            setStderr(stderr.concat(stderrs));
+                let stderrs = await performTaskStderr('StableDiffusion', taskId);
+                setStderr(stderr.concat(stderrs));
 
-            // setTimeout(async () => {
-            //     await queryTaskStatus(taskId);
-            // }, 10000);
+                if (timeoutHandle !== null) {
+                    clearTimeout(timeoutHandle);
+                    timeoutHandle = null;
+                }
+                timeoutHandle = setTimeout(async () => {
+                    await queryTaskStatus(taskId, message);
+                }, 10000);
+            }
+        } catch (error) {
+            console.error(error);
+            //查询不到该任务，异常
+            await updateTaskMessage(message.id, "", "fail");
         }
     };
 
-    const contentElement = (waiting: boolean, taskId: string | null) => {
+    const contentElement = (waiting: boolean, taskId: string | null, message: MessageEntity) => {
         if (waiting) {
             if (taskId != null) {
-                // queryTaskStatus(taskId);
+                queryTaskStatus(taskId, message);
             }
 
             //
@@ -97,7 +110,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     </Spin>
                     <Button onClick={async () => {
                         console.log('-------111');
-                        let res = await queryTaskStatus(runningTaskId!);
+                        let res = await queryTaskStatus(runningTaskId!, message);
                         console.log('-------222');
                     }}>测试</Button>
                     <Row>
@@ -122,7 +135,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     </Row>
                 </div>
             );
-        } else if (lastMessage !== null) {
+        } else if (message !== null) {
             return (
                 <ImageCarouselViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImageCarouselViewer>
             );
@@ -143,9 +156,11 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                         <div className={classnames(styles.unshow_history_button)} onClick={() => {
                             setShowHistory(!showHistory);
                         }}>
-                            历史记录折叠
+                            图片生成
                             {/* <div><DoubleRightOutlined /></div> */}
                         </div>
+                        <Text2ImageMessageList className={classnames(styles.content)}
+                            conversation={conversation} conversationId={conversationId} version={messageListVersion}></Text2ImageMessageList>
                     </>
                 ) : (
                     <>
@@ -154,13 +169,13 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                                 let runningTaskId = res.taskResult.runningTaskId;
                                 setRunningTaskId(runningTaskId);
                             }}></DrawingBoard>
-                        {contentElement(waiting, runningTaskId)}
+                        {contentElement(waiting, runningTaskId, lastMessage!)}
                         <div className={classnames(styles.show_history_button)}
                             onClick={() => {
                                 setShowHistory(!showHistory);
                             }}>
                             {/* <div><DoubleLeftOutlined /></div> */}
-                            历史记录展开
+                            历史记录
                         </div>
                     </>
                 )

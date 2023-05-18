@@ -76,7 +76,7 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
                 onTaskPublished={async (taskResult) => {
                     console.log(taskResult.runningTaskId);
                     //插入会话消息
-                    let res = await createTaskMessage(conversationId, ability, JSON.stringify(args), taskResult.taskType, taskResult.runningTaskId);
+                    let res = await createTaskMessage(conversationId, ability, args, taskResult.taskType, taskResult.runningTaskId);
                     console.log(res);
                     onMessageCreated({
                         args: args,
