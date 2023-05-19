@@ -16,6 +16,8 @@ export interface PainterConversationViewerProps {
     conversation: ConversationEntity
 }
 
+let timeoutHandle: NodeJS.Timeout | null = null;
+
 export const Text2ImagePainterConversationViewer: React.FC<PainterConversationViewerProps> = ({ className, conversationId, conversation }) => {
 
     const [showHistory, setShowHistory] = useState<boolean>(false);
@@ -24,7 +26,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     const [runningTaskId, setRunningTaskId] = useState<string | null>(null);
 
-    const [waiting, setWaiting] = useState<boolean>(false);
+    const [progress, setProgress] = useState<'empty' | 'waiting' | 'completed' | 'fail'>('empty');
 
     const [stdout, setStdout] = useState<Array<string>>([]);
 
@@ -42,15 +44,15 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
             //res.purposeId 'local'
             if (res.typing === 'false') {
                 //正在
-                setWaiting(true);
+                setProgress('waiting');
                 setRunningTaskId(res.senderId);
             } else if (res.typing === 'fail') {
                 //失败
-                setWaiting(false);
+                setProgress('fail');
                 setRunningTaskId(res.senderId);
             } else {
                 //完成
-                setWaiting(false);
+                setProgress('completed');
                 setRunningTaskId(res.senderId);
             }
         }
@@ -62,18 +64,33 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
         refresh(conversationId);
     }, [conversationId]);
 
-    let timeoutHandle: NodeJS.Timeout | null = null;
+
+    useEffect(() => {
+        //
+        if (runningTaskId === null || lastMessage === null) {
+            return;
+        }
+        let message = lastMessage;
+        let taskId = runningTaskId;
+        //
+        queryTaskStatus(runningTaskId, lastMessage);
+
+        return () => {
+            if (timeoutHandle !== null) {
+                clearTimeout(timeoutHandle);
+                timeoutHandle = null;
+            }
+        };
+    }, [runningTaskId, lastMessage]);
 
     const queryTaskStatus = async (taskId: string, message: MessageEntity) => {
-        console.log(taskId);
-
         try {
             let res2: Array<any> = await performTaskStatus('StableDiffusion', taskId, false);
             console.log(res2);
             if (res2[0]) {
                 //完成, 更新Message
-                setWaiting(false);
                 await updateTaskMessage(message.id, "result", "true");
+                setProgress('completed');
             } else {
                 let stdouts = await performTaskStdout('StableDiffusion', taskId);
                 setStdout(stdout.concat(stdouts));
@@ -87,7 +104,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                 }
                 timeoutHandle = setTimeout(async () => {
                     await queryTaskStatus(taskId, message);
-                }, 10000);
+                }, 1000);
             }
         } catch (error) {
             console.error(error);
@@ -96,10 +113,22 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
         }
     };
 
-    const contentElement = (waiting: boolean, taskId: string | null, message: MessageEntity) => {
-        if (waiting) {
+    const contentElement = (progress: 'empty' | 'waiting' | 'completed' | 'fail', taskId: string | null, message: MessageEntity) => {
+        if (progress === 'empty') {
+            return (
+                <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
+                    <Empty description={'请在左侧运行任务'} />
+                </div>
+            );
+        } else if (progress === 'waiting') {
             if (taskId != null) {
-                queryTaskStatus(taskId, message);
+                // if (timeoutHandle !== null) {
+                //     clearTimeout(timeoutHandle);
+                //     timeoutHandle = null;
+                // }
+                // timeoutHandle = setTimeout(async () => {
+                //     await queryTaskStatus(taskId, message);
+                // }, 1000);
             }
 
             //
@@ -135,14 +164,14 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     </Row>
                 </div>
             );
-        } else if (message !== null) {
+        } else if (progress === 'completed') {
             return (
                 <ImageCarouselViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImageCarouselViewer>
             );
         } else {
             return (
                 <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
-                    <Empty description={'请在左侧运行任务'} />
+                    <Empty description={'执行任务中断或者失败!'} />
                 </div>
             );
         }
@@ -169,7 +198,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                                 let runningTaskId = res.taskResult.runningTaskId;
                                 setRunningTaskId(runningTaskId);
                             }}></DrawingBoard>
-                        {contentElement(waiting, runningTaskId, lastMessage!)}
+                        {contentElement(progress, runningTaskId, lastMessage!)}
                         <div className={classnames(styles.show_history_button)}
                             onClick={() => {
                                 setShowHistory(!showHistory);
