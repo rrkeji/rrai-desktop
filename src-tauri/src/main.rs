@@ -47,6 +47,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             commands::system::cmds_system_process_exec
         ])
         .register_uri_scheme_protocol("rrapp", rrai_desktop_sdk::plugins::appbox::rrapp_protocol)
+        .register_uri_scheme_protocol("rrfile", rrai_desktop_sdk::plugins::storage::rrfile_protocol)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 

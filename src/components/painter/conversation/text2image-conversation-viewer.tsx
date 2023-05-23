@@ -5,9 +5,11 @@ import { DrawingBoard } from '../draw-board/index';
 import { ImageCarouselViewer } from '../image-viewer/index';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import { getLastMessageByConversationId, updateTaskMessage } from '@/services/message-service';
-import { performTaskStdout, performTaskStderr, performTaskStatus } from '@/tauri/abilities/index';
+import { performTaskStatus } from '@/tauri/abilities/index';
 import { Text2ImageMessageList } from '../message/index';
 import { Empty, Button, Spin, Row, Col } from 'antd';
+import { TaskLogView } from '@/components/tasks/index';
+
 import styles from './text2image-conversation-viewer.less';
 
 export interface PainterConversationViewerProps {
@@ -32,6 +34,8 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     const [stderr, setStderr] = useState<Array<string>>([]);
 
+    const [result, setResult] = useState<Array<string>>([]);
+
     const [messageListVersion, setMessageListVersion] = useState<number>(new Date().getTime());
 
     const refresh = async (conversationId: string) => {
@@ -41,19 +45,17 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
             setLastMessage(null);
         } else {
             setLastMessage(res);
+            setRunningTaskId(res.senderId);
             //res.purposeId 'local'
             if (res.typing === 'false') {
                 //正在
                 setProgress('waiting');
-                setRunningTaskId(res.senderId);
             } else if (res.typing === 'fail') {
                 //失败
                 setProgress('fail');
-                setRunningTaskId(res.senderId);
             } else {
                 //完成
                 setProgress('completed');
-                setRunningTaskId(res.senderId);
             }
         }
 
@@ -85,35 +87,34 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     const queryTaskStatus = async (taskId: string, message: MessageEntity) => {
         try {
-            let res2: Array<any> = await performTaskStatus('StableDiffusion', taskId, false);
+            let res2: any = await performTaskStatus(taskId);
+            //
             console.log(res2);
-            if (res2[0]) {
+            if (res2 && res2.result_code == 2) {
                 //完成, 更新Message
-                await updateTaskMessage(message.id, "result", "true");
+                setResult(JSON.parse(res2.result));
+                //
                 setProgress('completed');
             } else {
-                let stdouts = await performTaskStdout('StableDiffusion', taskId);
-                setStdout(stdout.concat(stdouts));
-
-                let stderrs = await performTaskStderr('StableDiffusion', taskId);
-                setStderr(stderr.concat(stderrs));
+                setStdout(res2.stdout.split('\n'));
+                setStderr(res2.stderr.split('\n'));
 
                 if (timeoutHandle !== null) {
                     clearTimeout(timeoutHandle);
                     timeoutHandle = null;
                 }
-                timeoutHandle = setTimeout(async () => {
-                    await queryTaskStatus(taskId, message);
-                }, 1000);
+                // timeoutHandle = setTimeout(async () => {
+                //     await queryTaskStatus(taskId, message);
+                // }, 1000);
             }
         } catch (error) {
             console.error(error);
             //查询不到该任务，异常
-            await updateTaskMessage(message.id, "", "fail");
+            // await updateTaskMessage(message.id, "", "fail");
         }
     };
 
-    const contentElement = (progress: 'empty' | 'waiting' | 'completed' | 'fail', taskId: string | null, message: MessageEntity) => {
+    const contentElement = (progress: 'empty' | 'waiting' | 'completed' | 'fail', taskId: string | null, message: MessageEntity, images: Array<string>) => {
         if (progress === 'empty') {
             return (
                 <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
@@ -122,51 +123,46 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
             );
         } else if (progress === 'waiting') {
             if (taskId != null) {
-                // if (timeoutHandle !== null) {
-                //     clearTimeout(timeoutHandle);
-                //     timeoutHandle = null;
-                // }
-                // timeoutHandle = setTimeout(async () => {
-                //     await queryTaskStatus(taskId, message);
-                // }, 1000);
+                if (timeoutHandle !== null) {
+                    clearTimeout(timeoutHandle);
+                    timeoutHandle = null;
+                }
+                timeoutHandle = setTimeout(async () => {
+                    await queryTaskStatus(taskId, message);
+                }, 10000);
             }
 
             //
             return (
-                <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
+                <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', flexDirection: 'column', 'alignItems': 'center', justifyContent: 'center' }}>
                     <Spin tip="Loading" size="large">
                         <div className={styles.spin_content} />
                     </Spin>
-                    <Button onClick={async () => {
-                        console.log('-------111');
-                        let res = await queryTaskStatus(runningTaskId!, message);
-                        console.log('-------222');
-                    }}>测试</Button>
                     <Row>
-                        <Col span={12}>
-                            {stdout && stdout.map((line, index) => {
-                                return (
-                                    <div>
-                                        {line}
-                                    </div>
-                                );
-                            })}
+                        <Col span={24}>
+                            <TaskLogView logs={stdout}></TaskLogView>
                         </Col>
-                        <Col span={12}>
-                            {stderr && stderr.map((line, index) => {
-                                return (
-                                    <div>
-                                        {line}
-                                    </div>
-                                );
-                            })}
+                        <Col span={24}>
+                            <TaskLogView logs={stderr}></TaskLogView>
                         </Col>
                     </Row>
                 </div>
             );
         } else if (progress === 'completed') {
             return (
-                <ImageCarouselViewer className={classnames(styles.content)} conversation={conversation} conversationId={conversationId}></ImageCarouselViewer>
+                <ImageCarouselViewer
+                    className={classnames(styles.content)}
+                    conversation={conversation}
+                    conversationId={conversationId}
+                    images={images.map((item, index) => {
+                        return {
+                            src: 'rrfile://localhost' + item,
+                            // src: 'rrfile://ipfs/QmdLuUuPRHpnQSV8iC4HVdpjjVF3Gsb3c3CVSR84fGXp7S?filename=3f298d37-9a69-459a-8f4e-ac7e0c9e9a3b.jpeg',
+                            width: 512,
+                            height: 512,
+                        }
+                    })}
+                ></ImageCarouselViewer>
             );
         } else {
             return (
@@ -198,7 +194,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                                 let runningTaskId = res.taskResult.runningTaskId;
                                 setRunningTaskId(runningTaskId);
                             }}></DrawingBoard>
-                        {contentElement(progress, runningTaskId, lastMessage!)}
+                        {contentElement(progress, runningTaskId, lastMessage!, result)}
                         <div className={classnames(styles.show_history_button)}
                             onClick={() => {
                                 setShowHistory(!showHistory);

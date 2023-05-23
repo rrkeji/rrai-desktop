@@ -16,115 +16,12 @@ import styles from './carousel-viewer.less';
 export interface ImageCarouselViewerProps {
     className?: string
     conversationId: string;
-    conversation: ConversationEntity
+    conversation: ConversationEntity;
+    images: Array<{ src: string; width: number; height: number; }>
 }
-
-const images = [
-    {
-        src: 'https://image.lexica.art/full_jpg/3f298d37-9a69-459a-8f4e-ac7e0c9e9a3b',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/118caf2c-37e3-416f-b375-2ff310aa7453',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/ec0d3462-b54e-4a61-a9b1-427d4b26d656',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/ec0d3462-b54e-4a61-a9b1-427d4b26d656',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-    {
-        src: 'https://image.lexica.art/full_jpg/8eabd0b1-6bd1-460a-b6d5-2b7da7c51cd3',
-        with: 2048,
-        height: 3072,
-    },
-];
-
 // hasMasterSpinner
 
-export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ className }) => {
+export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ className, images }) => {
 
     const [ref, { x, y, width, height }] = useDimensions();
 
@@ -151,7 +48,7 @@ export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ classN
                                     let boxWidth = width * 0.98 - 20;
                                     let boxHeight = height * 0.98 - 100;
 
-                                    let imageWidth = item.with;
+                                    let imageWidth = item.width;
                                     let imageHeight = item.height;
 
                                     if ((boxWidth / imageWidth) * imageHeight > boxHeight) {

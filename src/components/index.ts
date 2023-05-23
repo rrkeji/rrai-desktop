@@ -13,3 +13,4 @@ export * from './buttons/index';
 export * from './selects/index';
 export * from './ability/index';
 export * from './schema/index';
+export * from './tasks/index';

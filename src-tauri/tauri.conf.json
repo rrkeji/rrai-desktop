@@ -82,6 +82,38 @@
           ]
         },
         {
+          "scheme": "rrfile",
+          "enableTauriAPI": true,
+          "domain": "localhost",
+          "plugins": [
+            "rrai-appbox",
+            "rrai-idns",
+            "rrai-sqlite",
+            "rrai-ability",
+            "rrai-storage"
+          ],
+          "windows": [
+            "main",
+            "rrapp"
+          ]
+        },
+        {
+          "scheme": "rrfile",
+          "enableTauriAPI": true,
+          "domain": "ipfs",
+          "plugins": [
+            "rrai-appbox",
+            "rrai-idns",
+            "rrai-sqlite",
+            "rrai-ability",
+            "rrai-storage"
+          ],
+          "windows": [
+            "main",
+            "rrapp"
+          ]
+        },
+        {
           "scheme": "https",
           "enableTauriAPI": true,
           "domain": "rrai.idns.link",

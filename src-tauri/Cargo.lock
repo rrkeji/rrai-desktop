@@ -4287,6 +4287,7 @@ dependencies = [
  "tracing-subscriber",
  "url",
  "uuid",
+ "walkdir",
 ]
 
 [[package]]
@@ -4353,6 +4354,8 @@ dependencies = [
  "anyhow",
  "bytes",
  "futures",
+ "mime",
+ "mime_guess",
  "rrai-desktop-sdk-common",
  "serde",
  "serde_json",
@@ -4360,6 +4363,7 @@ dependencies = [
  "thiserror",
  "tracing",
  "tracing-subscriber",
+ "url",
 ]
 
 [[package]]
