@@ -94,6 +94,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                 //完成, 更新Message
                 setResult(JSON.parse(res2.result));
                 //
+                await updateTaskMessage(message.id, res2.result, "true");
                 setProgress('completed');
             } else {
                 setStdout(res2.stdout.split('\n'));
@@ -110,7 +111,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
         } catch (error) {
             console.error(error);
             //查询不到该任务，异常
-            // await updateTaskMessage(message.id, "", "fail");
+            await updateTaskMessage(message.id, "", "fail");
         }
     };
 
@@ -185,7 +186,9 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                             {/* <div><DoubleRightOutlined /></div> */}
                         </div>
                         <Text2ImageMessageList className={classnames(styles.content)}
-                            conversation={conversation} conversationId={conversationId} version={messageListVersion}></Text2ImageMessageList>
+                            conversation={conversation} conversationId={conversationId} version={messageListVersion} back={() => {
+                                setShowHistory(!showHistory);
+                            }}></Text2ImageMessageList>
                     </>
                 ) : (
                     <>
