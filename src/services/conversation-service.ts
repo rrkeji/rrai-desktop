@@ -5,12 +5,14 @@ import { deleteMessagesByConversationUid } from './message-service';
 
 const db = new SQLite(CONVERSATION_DB_NAME);
 
-export const getConversationsByType = async (conversationType: string): Promise<{ total: number, data: Array<ConversationEntity> }> => {
+export const getConversationsByType = async (conversationType: string, keywords?: string): Promise<{ total: number, data: Array<ConversationEntity> }> => {
 
     const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,uid,category,name,avatar,args,created,updated FROM conversation WHERE category=:category order by id", {
         ":category": conversationType
     });
+
     console.log(rows);
+
     let data = rows.map((item, index) => {
         let conversation: ConversationEntity = {
             id: item.id,

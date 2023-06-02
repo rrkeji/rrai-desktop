@@ -19,15 +19,6 @@ export default defineConfig({
       layout: false
     },
     {
-      path: "/home",
-      component: "home/index",
-      wrappers: ['@/wrappers/auth'],
-    },
-    {
-      path: "/miniprogram",
-      component: "@/pages/miniprogram/index"
-    },
-    {
       wrappers: ['@/wrappers/auth'],
       path: "/conversation/:conversationType",
       component: "@/pages/conversation/index"
@@ -36,11 +27,6 @@ export default defineConfig({
       wrappers: ['@/wrappers/auth'],
       path: "/conversation/:conversationType/:conversationId",
       component: "@/pages/conversation/index"
-    },
-    {
-      wrappers: ['@/wrappers/auth'],
-      path: "/prompts/index",
-      component: "@/pages/prompts/index"
     },
     {
       wrappers: ['@/wrappers/auth'],
@@ -58,14 +44,15 @@ export default defineConfig({
       component: "@/pages/containers/index"
     },
     {
+      wrappers: ['@/wrappers/auth'],
+      path: "/discovery",
+      component: "@/pages/discovery/index"
+    },
+    {
       path: '/',
       component: '@/layouts/side-layout',
       wrappers: ['@/wrappers/auth'],
       routes: [
-        {
-          path: "/browser/:src",
-          component: "@/pages/browser/index"
-        },
         {
           path: "/settings/account",
           component: "@/pages/settings/account/index",
@@ -85,18 +72,6 @@ export default defineConfig({
         {
           path: "/settings/customerservice",
           component: "@/pages/settings/customer-service/index",
-        },
-        {
-          path: "/tools",
-          component: "tools/index"
-        },
-        {
-          path: "/tools/sdinstall",
-          component: "@/pages/tools/sdinstall/index"
-        },
-        {
-          path: "/tools/terminal",
-          component: "@/pages/tools/terminal/index"
         },
       ],
     },

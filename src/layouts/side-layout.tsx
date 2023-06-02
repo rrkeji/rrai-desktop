@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Link, Outlet, history, useLocation } from 'umi';
 import classnames from 'classnames';
-import { SideList, SideListItem, SideHeader } from '@/components/index';
+import { SideList, SideListItem } from '@/components/index';
 import { ConversationBar } from '@/components/conversation/index';
 import { Divider } from 'antd';
 import { getLocalValue } from '@/utils';

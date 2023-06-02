@@ -28,6 +28,8 @@ export const ConversationPage = () => {
 
   const [conversationId, setConversationId] = useState<string | null>(null);
 
+  const [keywords, setKeywords] = useState<string>('');
+
   if (!conversationType) {
     return <>conversationType为空!</>
   }
@@ -80,10 +82,17 @@ export const ConversationPage = () => {
         menuFolded ? ('') : (
           <div className={styles.left}>
             <div data-tauri-drag-region className={styles.height24}></div>
-            <SideHeader activeModule={conversationType!} className={styles.side_header} onAddConversation={async (conversationType) => {
-              //弹出对话框
-              setAddShown(true);
-            }}></SideHeader>
+            <SideHeader
+              activeModule={conversationType!}
+              className={styles.side_header}
+              onAddConversation={async (conversationType) => {
+                //弹出对话框
+                setAddShown(true);
+              }}
+              onSearch={async (keywords) => {
+                setKeywords(keywords);
+              }}
+            ></SideHeader>
             <SideList className={styles.side}>
               {
                 items && items.map((item: any, index: number) => {

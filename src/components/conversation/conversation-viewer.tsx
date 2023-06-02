@@ -2,7 +2,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 
 import { history, useLocation, useParams } from 'umi';
 import classnames from 'classnames';
-import { SideList, SideListItem, SideHeader, MessageList, ComposerFacade, Message, PainterConversationViewer } from '@/components/index';
+import { SideList, SideListItem, MessageList, ComposerFacade, Message, PainterConversationViewer } from '@/components/index';
 import { ConversationBar, AddConversation } from '@/components/conversation/index';
 import { Drawer, Spin } from 'antd';
 import { getConversationsByType, createConversation, queryConversationByUid } from '@/services/conversation-service';

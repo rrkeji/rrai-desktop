@@ -128,6 +128,22 @@
             "main",
             "rrapp"
           ]
+        },
+        {
+          "scheme": "https",
+          "enableTauriAPI": true,
+          "domain": "open.weixin.qq.com",
+          "windows": [
+            "main"
+          ]
+        },
+        {
+          "scheme": "wss",
+          "enableTauriAPI": true,
+          "domain": "wsschat.idns.link",
+          "windows": [
+            "main"
+          ]
         }
       ],
       "csp": null

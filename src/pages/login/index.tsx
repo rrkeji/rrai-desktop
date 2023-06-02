@@ -35,11 +35,10 @@ export default function LoginPage() {
       console.log(res);
       if (res && res.openid) {
         setContextValue("rrai_token", token);
-
         setLocalValue("rrai_web_openid", res.openid);
         setLocalValue("rrai_unionid", res.unionid);
         setLocalValue("rrai_web_appid", res.appid);
-        history.push('/home');
+        history.push('/conversation/chat');
       }
     };
 

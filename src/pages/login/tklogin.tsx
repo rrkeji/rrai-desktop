@@ -8,11 +8,6 @@ import { getToken, setToken, isLogin } from '@/utils/index';
 import styles from './tklogin.less';
 import { setContextValue } from "@/tauri";
 
-const APPID = "wxd2ed8df26eea65be";
-
-const BASE_REDIRECT_URL = "https://www.idns.link/rrai/proxy/wx/login/notify";
-
-
 const parseSearch = (search: string): { [key: string]: any } => {
   let params: { [key: string]: any } = {};
 

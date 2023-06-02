@@ -1,0 +1,43 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .fileEntry {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    .fileName {
+      font-size: 12px;
+      color: #6f6f6f;
+      line-height: 24px;
+      padding-left: 5px;
+    }
+
+    .fileIconContainer {
+      width: 24px;
+      height: 24px;
+
+      .fileIcon {
+        width: 100%;
+        height: 100%;
+        color: '#FFD23D';
+      }
+
+      .fileDirIcon {
+        color: #ffd23d;
+      }
+    }
+  }
+
+  .fileSize {
+    color: #6f6f6f;
+  }
+
+  .directory {
+    flex: 1;
+    min-height: 0;
+  }
+}

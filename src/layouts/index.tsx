@@ -93,8 +93,7 @@ export default function Layout() {
               isWindowFocused={isWindowFocused}></Controls>
           </div>
           <div className={classnames(styles.item, styles.img_item, active === 'home' ? styles.active : undefined)}>
-            <img className={classnames(styles.item_icon)} src={LOGO_PNG}></img>
-            <div className={classnames(styles.item_title)}>软软AI</div>
+            <img className={classnames(styles.item_icon, styles.logo)} src={LOGO_PNG}></img>
           </div>
           <div className={classnames(styles.item, active === 'chat' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'chat');
@@ -112,33 +111,16 @@ export default function Layout() {
             <div className={classnames(styles.item_icon, 'iconfont icon-huihua')}></div>
             <div className={classnames(styles.item_title)}>AI绘画</div>
           </div>
-          <div className={classnames(styles.item, active === 'discovery' ? styles.active : undefined)} onClick={() => {
-            setLocalValue('rrai_active_menu', 'discovery');
-            setActive('discovery');
-            history.push('/prompts/index');
-          }}>
-            <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
-            <div className={classnames(styles.item_title)}>发现</div>
-          </div>
-
-          <div className={classnames(styles.item, active === 'tools' ? styles.active : undefined)} onClick={() => {
-            setLocalValue('rrai_active_menu', 'tools');
-            setActive('tools');
-            history.push('/conversation/rrapp?search=tools');
-          }}>
-            <div className={classnames(styles.item_icon, 'iconfont icon-Tools')}></div>
-            <div className={classnames(styles.item_title)}>工具箱</div>
-          </div>
         </div>
 
         <div className={classnames(styles.items)}>
-          <div className={classnames(styles.item, active === 'miniprogram' ? styles.active : undefined)} onClick={() => {
-            setLocalValue('rrai_active_menu', 'miniprogram');
-            setActive('miniprogram');
-            history.push('/miniprogram');
+          <div className={classnames(styles.item, active === 'discovery' ? styles.active : undefined)} onClick={() => {
+            setLocalValue('rrai_active_menu', 'discovery');
+            setActive('discovery');
+            history.push('/discovery');
           }}>
-            <div className={classnames(styles.item_icon, 'iconfont icon-xiaochengxu')}></div>
-            <div className={classnames(styles.item_title)}>小程序</div>
+            <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
+            <div className={classnames(styles.item_title)}>发现</div>
           </div>
           <div className={classnames(styles.item, active === 'containers' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'containers');
