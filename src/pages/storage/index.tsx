@@ -96,6 +96,17 @@ export default function StoragePage() {
             {
               active === 'cloud' && (
                 <>
+                  <StorageHeaderIconItem
+                    icon={<FolderAddOutlined />}
+                    onClick={() => {
+                      setVisible(true);
+                    }}
+                  ></StorageHeaderIconItem>
+
+                  <StorageHeaderIconItem
+                    icon={<ReloadOutlined />}
+                    onClick={() => { }}
+                  ></StorageHeaderIconItem>
                 </>
               )
             }

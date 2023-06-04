@@ -23,10 +23,23 @@ export const ipfsFilesMkdirs = async (paths: string[]): Promise<any> => {
     console.log(res);
     return res;
 }
+
 export const ipfsStringContentByCid = async (cid: string, fileName: string): Promise<string> => {
     let res: string = await invoke('plugin:rrai-idns|ipfs_string_content', {
         cid: cid,
         fileName: fileName,
     });
     return res;
+}
+
+export const ipfsPinFilesSearch = async (conditions: { [key: string]: any }, page: number, pageSize: number)
+    : Promise<{ data: Array<any>; page: number; page_size: number; total: number }> => {
+    let res: string = await invoke('plugin:rrai-idns|ipfs_files_search', {
+        page: page,
+        pageSize: pageSize,
+        conditions: conditions,
+    });
+    console.log(res);
+    let data: { data: { data: Array<any>; page: number; page_size: number; total: number } } = JSON.parse(res);
+    return data.data;
 }
