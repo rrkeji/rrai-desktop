@@ -33,7 +33,7 @@ const _ChatGPT: React.FC<_ChatGPTProps> = ({ name, model, onModelChange, onCusto
                 </Typography>
                 <Textarea maxRows={2} value={name} onChange={handleEditTextChanged}></Textarea>
             </Box>
-            <Box sx={{ marginTop: '10px' }}>
+            {/* <Box sx={{ marginTop: '10px' }}>
                 <Typography level='body3' color='neutral' sx={{ mb: 2 }}>
                     模型选择：
                 </Typography>
@@ -42,7 +42,7 @@ const _ChatGPT: React.FC<_ChatGPTProps> = ({ name, model, onModelChange, onCusto
                         onModelChange(value);
                     }
                 }} />
-            </Box>
+            </Box> */}
             <PurposeSelector sx={{ marginTop: '10px' }}
                 systemPurposeId={systemPurposeId} handlePurposeChange={(purpose: SystemPurposeId | null) => {
                     if (purpose) {

@@ -27,6 +27,9 @@ export interface MessageEntity {
 
     cacheTokensCount?: number;
 
+    is_shared: number;
+    shared_message_id: string;
+
     created: number;
     updated: number | null;
 }

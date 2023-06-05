@@ -155,6 +155,8 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
                                     typing: false,
                                     purposeId: conversation.args['purposeId'],
                                     cacheTokensCount: 0,
+                                    is_shared: 0,
+                                    shared_message_id: '',
                                     updated: 0,
                                     created: 0
                                 });

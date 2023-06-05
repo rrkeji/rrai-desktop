@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { history, useLocation } from 'umi';
 import classnames from 'classnames';
 import { Button, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
@@ -62,7 +63,9 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
     return (
         <div className={classnames(styles.container, className)}>
             <div className={classnames(styles.example)}>
-                <Button type={'link'}>查看示例</Button>
+                <Button type={'link'} onClick={() => {
+                    history.push('/discovery');
+                }}>查看示例</Button>
             </div>
             <Tabs
                 centered

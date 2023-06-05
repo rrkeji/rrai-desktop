@@ -160,6 +160,7 @@ export const FileListLayout: React.FC<FileListLayoutProps> = ({ className, provi
         rowKey="id"
         pagination={false}
       />
+
       <FilePanel
         {...selectedFile}
         visible={drawerVisible}

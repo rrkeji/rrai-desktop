@@ -139,14 +139,10 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     <Spin tip="Loading" size="large">
                         <div className={styles.spin_content} />
                     </Spin>
-                    <Row>
-                        <Col span={24}>
-                            <TaskLogView logs={stdout}></TaskLogView>
-                        </Col>
-                        <Col span={24}>
-                            <TaskLogView logs={stderr}></TaskLogView>
-                        </Col>
-                    </Row>
+                    <div className={classnames(styles.logs)}>
+                        <TaskLogView logs={stdout} title={"标准输出"} className={classnames(styles.logview)}></TaskLogView>
+                        <TaskLogView logs={stderr} title={"错误输出"} className={classnames(styles.logview)}></TaskLogView>
+                    </div>
                 </div>
             );
         } else if (progress === 'completed') {
@@ -155,6 +151,12 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     className={classnames(styles.content)}
                     conversation={conversation}
                     conversationId={conversationId}
+                    onHeaderItemClick={async (command: string, args: any) => {
+                        if (command === 'ShowHistory') {
+                            setShowHistory(true);
+                        }
+                    }}
+                    message={message}
                     images={images.map((item, index) => {
                         return {
                             src: 'rrfile://localhost' + item,
@@ -179,32 +181,35 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
             {
                 showHistory ? (
                     <>
-                        <div className={classnames(styles.unshow_history_button)} onClick={() => {
+                        {/* <div className={classnames(styles.unshow_history_button)} onClick={() => {
                             setShowHistory(!showHistory);
                         }}>
                             图片生成
-                            {/* <div><DoubleRightOutlined /></div> */}
-                        </div>
+                        </div> */}
                         <Text2ImageMessageList className={classnames(styles.content)}
-                            conversation={conversation} conversationId={conversationId} version={messageListVersion} back={() => {
+                            conversation={conversation}
+                            conversationId={conversationId}
+                            version={messageListVersion}
+                            back={async () => {
                                 setShowHistory(!showHistory);
                             }}></Text2ImageMessageList>
                     </>
                 ) : (
                     <>
-                        <DrawingBoard className={classnames(styles.board)} conversation={conversation} conversationId={conversationId}
+                        <DrawingBoard className={classnames(styles.board)}
+                            conversation={conversation}
+                            conversationId={conversationId}
                             onMessageCreated={async (res) => {
                                 let runningTaskId = res.taskResult.runningTaskId;
-                                setRunningTaskId(runningTaskId);
+                                await refresh(conversationId);
                             }}></DrawingBoard>
                         {contentElement(progress, runningTaskId, lastMessage!, result)}
-                        <div className={classnames(styles.show_history_button)}
+                        {/* <div className={classnames(styles.show_history_button)}
                             onClick={() => {
                                 setShowHistory(!showHistory);
                             }}>
-                            {/* <div><DoubleLeftOutlined /></div> */}
                             历史记录
-                        </div>
+                        </div> */}
                     </>
                 )
             }

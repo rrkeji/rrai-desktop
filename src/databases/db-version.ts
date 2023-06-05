@@ -61,17 +61,21 @@ export const mergeDbVersion = async (dbName: string, versionList: Array<Database
 
     for (let i = 0; i < vlist.length; i++) {
         let item = vlist[i];
+        console.log('version....', item.version, version);
         if (item.version > version) {
-            //before
-            await item.before();
-            //dll
-            for (let j = 0; j < item.ddl.length; j++) {
-                let sql = item.ddl[j];
-                await db.execute(sql);
+            try {
+                //before
+                await item.before();
+                //dll
+                for (let j = 0; j < item.ddl.length; j++) {
+                    let sql = item.ddl[j];
+                    await db.execute(sql);
+                }
+                //after
+                await item.after();
+            } catch (error) {
+                console.error(error);
             }
-            //after
-            await item.after();
-
             newVersion = item.version;
         }
     }

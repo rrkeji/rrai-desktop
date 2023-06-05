@@ -21,24 +21,14 @@ export const FilePanel = (props: {
   const [radioValue, setRadioValue] = useState<string>('detail');
 
   const [preview, setPreview] = useState<any>();
+
   useEffect(() => {
-    if (props.category === 'IMAGE') {
-      const call = async () => {
-        // let content = await getContent(props.fileHash);
-        // if (content != null) {
-        //   console.log(content);
-        //   let blob = new Blob([content], { type: props.fileType });
-        //   content = null;
-        //   let url = URL.createObjectURL(blob);
-        //   console.log(url);
-        //   setPreview((
-        //     <div>
-        //       <img src={'http://localhost:8080/ipfs/' + props.fileHash}></img>
-        //     </div>
-        //   ));
-        // }
-      };
-      call();
+    if (props.fileType === 'image/png') {
+      setPreview((
+        <div>
+          <img src={`rrfile://ipfs/${props.fileHash}?filename=${props.fileName}`}></img>
+        </div>
+      ));
     }
   }, [props.id]);
 
@@ -49,6 +39,7 @@ export const FilePanel = (props: {
     console.log(file);
     return '文件详情';
   };
+
   return (
     <Drawer
       className={classnames(styles.container)}

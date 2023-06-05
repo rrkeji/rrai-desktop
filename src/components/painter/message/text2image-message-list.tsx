@@ -102,7 +102,7 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
                             console.log(error);
                         }
                     }
-                    console.log(options);
+                    console.log(message);
                     return {
                         prompts: options.prompts,
                         size: options.prompts,

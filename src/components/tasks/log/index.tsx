@@ -7,16 +7,22 @@ export interface TaskLogViewProps {
     className?: string;
     lineClassName?: string;
     logs: Array<string>;
+    title?: string;
 }
 
-export const TaskLogView: React.FC<TaskLogViewProps> = ({ className, logs, lineClassName }) => {
+export const TaskLogView: React.FC<TaskLogViewProps> = ({ className, logs, title, lineClassName }) => {
     return (
         <div className={classnames(styles.container, className)}>
+            {
+                title && (
+                    <div>{title}</div>
+                )
+            }
             {
                 logs && logs.map((line, index) => {
                     return (
                         <div key={index} className={classnames(styles.line, lineClassName)}>
-                            {line}
+                            {index}.{line}
                         </div>
                     );
                 })
@@ -24,5 +30,6 @@ export const TaskLogView: React.FC<TaskLogViewProps> = ({ className, logs, lineC
         </div>
     );
 };
+
 
 export default TaskLogView;

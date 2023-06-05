@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import { Button, Card, Carousel } from 'antd';
+import { Button, Card, Carousel, Modal } from 'antd';
 import { RightOutlined, LeftOutlined, ShareAltOutlined, DownloadOutlined } from '@ant-design/icons';
 import useDimensions from 'react-use-dimensions';
 import {
@@ -10,6 +10,8 @@ import {
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { IconButton } from '@/components/buttons/index';
 import { ConversationEntity, MessageEntity } from '@/databases';
+import { shareSdMessage } from '@/services/message-service';
+const { confirm, info, error } = Modal;
 
 import styles from './carousel-viewer.less';
 
@@ -17,11 +19,15 @@ export interface ImageCarouselViewerProps {
     className?: string
     conversationId: string;
     conversation: ConversationEntity;
-    images: Array<{ src: string; width: number; height: number; }>
+    message: MessageEntity,
+    images: Array<{ src: string; width: number; height: number; }>;
+    onHeaderItemClick?: (command: string, args: any) => Promise<any>;
 }
+
+
 // hasMasterSpinner
 
-export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ className, images }) => {
+export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ className, images, message, onHeaderItemClick }) => {
 
     const [ref, { x, y, width, height }] = useDimensions();
 
@@ -106,6 +112,11 @@ export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ classN
 
     return (
         <div className={classnames(styles.container, className)}>
+            <div className={classnames(styles.top)}>
+                <Button type={'link'} onClick={async () => {
+                    onHeaderItemClick && await onHeaderItemClick("ShowHistory", {});
+                }}>历史记录</Button>
+            </div>
             <div className={classnames(styles.grid)} ref={ref}>
                 <Card className={classnames(styles.card)}>
                     {carouselElement && carouselElement}
@@ -114,9 +125,32 @@ export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ classN
             <div className={classnames(styles.toolbar)}>
                 <Card className={classnames(styles.card)}>
                     <div className={classnames(styles.tool_buttons)}>
-                        <IconButton className={classnames(styles.tool_button)} title={"分享"} icon={<ShareAltOutlined style={{ color: '#fff' }} />} iconBackgroud={'#ECA554'}></IconButton>
-                        <IconButton className={classnames(styles.tool_button)} title={"下载"} icon={<DownloadOutlined style={{ color: '#fff' }} />} iconBackgroud={'#A7E9BB'}></IconButton>
-                        <IconButton className={classnames(styles.tool_button)} title={"分享"} icon={<ShareAltOutlined style={{ color: '#fff' }} />} iconBackgroud={'#EB7D54'}></IconButton>
+                        <IconButton className={classnames(styles.tool_button)}
+                            title={"分享"}
+                            icon={<ShareAltOutlined />} iconBackgroud={'#EB7D54'}
+                            onClick={async () => {
+                                //
+                                let res = await shareSdMessage(message.id, '');
+                                if (res.result) {
+                                    info({
+                                        title: '分享成功'
+                                    })
+                                } else {
+                                    error({
+                                        title: res.message
+                                    });
+                                }
+                            }}
+                            disabled={message.is_shared === 1}
+                        ></IconButton>
+                        <IconButton className={classnames(styles.tool_button)}
+                            title={"下载"}
+                            icon={<DownloadOutlined />} iconBackgroud={'#A7E9BB'}
+                            onClick={async () => {
+
+                            }}
+                            disabled={message.is_shared === 1}
+                        ></IconButton>
                     </div>
                 </Card>
             </div>

@@ -59,7 +59,7 @@ export const AddPainterConversation: React.FC<AddPainterConversationProps> = ({ 
                 </Select>
             </Col>
             <Col span={24}>
-                <label className={classnames(styles.label)}>基础模型：</label>
+                <label className={classnames(styles.label)}>工具：</label>
             </Col>
             <Col span={24}>
                 <Select

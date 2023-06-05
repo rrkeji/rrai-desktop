@@ -16,6 +16,34 @@ export const ipfsCreateWithContent = async (paths: string[], content: string, fi
     return data.data;
 }
 
+// 返回CID
+export const ipfsCreateWithBytesContent = async (paths: string[], content: Uint8Array, fileType: string, fileName: string, category: string): Promise<string> => {
+    let res: string = await invoke('plugin:rrai-idns|ipfs_files_create_with_bytes_content', {
+        paths: paths,
+        content: content,
+        fileType: fileType,
+        fileName: fileName,
+        category: category
+    });
+    console.log(res);
+    let data: { data: string } = JSON.parse(res);
+    return data.data;
+}
+
+// 返回CID
+export const ipfsCreateWithLocalFile = async (paths: string[], localPath: string, fileType: string, fileName: string, category: string): Promise<string> => {
+    let res: string = await invoke('plugin:rrai-idns|ipfs_files_create_with_local_file', {
+        paths: paths,
+        content: localPath,
+        fileType: fileType,
+        fileName: fileName,
+        category: category
+    });
+    console.log(res);
+    let data: { data: string } = JSON.parse(res);
+    return data.data;
+}
+
 export const ipfsFilesMkdirs = async (paths: string[]): Promise<any> => {
     let res = await invoke('plugin:rrai-idns|ipfs_files_mkdirs', {
         paths: paths,

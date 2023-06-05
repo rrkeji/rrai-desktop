@@ -2,6 +2,9 @@ import { SQLite } from '@/tauri/sqlite/index';
 import { CONVERSATION_DB_NAME, MessageEntity } from '@/databases/conversation/index';
 import { getUuid } from '@/utils';
 import { queryConversationByUid } from './conversation-service';
+
+import { ipfsCreateWithContent, datasetCreateByModelId, datasetCreateRow, ipfsCreateWithBytesContent, ipfsCreateWithLocalFile } from '@/tauri/index';
+
 import { defaultChatModelId, ChatModels, ChatModelId, defaultSystemPurposeId, SystemPurposeId, SystemPurposes } from '@/databases/data/index'
 
 const db = new SQLite(CONVERSATION_DB_NAME);
@@ -10,7 +13,7 @@ export const getMessageByConversationId = async (conversationUid: string): Promi
 
     console.log('getMessageByConversationId.....');
 
-    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,conversation_uid,conversation_category,sender_type,sender_id,avatar,bot_role,model_id,model_options,text,typing,purpose_id,tokens_count,created,updated FROM messages WHERE conversation_uid=:conversation_uid order by created asc", {
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,conversation_uid,conversation_category,sender_type,sender_id,avatar,bot_role,model_id,model_options,text,typing,purpose_id,tokens_count,is_shared,shared_message_id,created,updated FROM messages WHERE conversation_uid=:conversation_uid order by created asc", {
         ":conversation_uid": conversationUid
     });
 
@@ -30,6 +33,8 @@ export const getMessageByConversationId = async (conversationUid: string): Promi
             typing: item.typing,
             purposeId: item.purpose_id,
             cacheTokensCount: item.tokens_count,
+            is_shared: item.is_shared,
+            shared_message_id: item.shared_message_id,
             created: item.created,
             updated: item.updated,
         };
@@ -46,7 +51,7 @@ export const getLastMessageByConversationId = async (conversationUid: string): P
 
     console.log('getMessageByConversationId.....');
 
-    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,conversation_uid,conversation_category,sender_type,sender_id,avatar,bot_role,model_id,model_options,text,typing,purpose_id,tokens_count,created,updated FROM messages WHERE conversation_uid=:conversation_uid order by id desc limit 0,1", {
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,conversation_uid,conversation_category,sender_type,sender_id,avatar,bot_role,model_id,model_options,text,typing,purpose_id,tokens_count,is_shared,shared_message_id,created,updated FROM messages WHERE conversation_uid=:conversation_uid order by id desc limit 0,1", {
         ":conversation_uid": conversationUid
     });
 
@@ -65,6 +70,8 @@ export const getLastMessageByConversationId = async (conversationUid: string): P
                 text: item.text,
                 typing: item.typing,
                 purposeId: item.purpose_id,
+                is_shared: item.is_shared,
+                shared_message_id: item.shared_message_id,
                 cacheTokensCount: item.tokens_count,
                 created: item.created,
                 updated: item.updated,
@@ -122,7 +129,7 @@ export const deleteMessageById = async (id: number) => {
 
 export const queryMessageById = async (id: number): Promise<MessageEntity | null> => {
 
-    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,conversation_uid,conversation_category,sender_type,sender_id,avatar,bot_role,model_id,model_options,text,typing,purpose_id,tokens_count,created,updated FROM messages WHERE  id=:id", {
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,conversation_uid,conversation_category,sender_type,sender_id,avatar,bot_role,model_id,model_options,text,typing,purpose_id,tokens_count,is_shared,shared_message_id,created,updated FROM messages WHERE  id=:id", {
         ":id": id
     });
 
@@ -142,6 +149,8 @@ export const queryMessageById = async (id: number): Promise<MessageEntity | null
             typing: item.typing,
             purposeId: item.purpose_id,
             cacheTokensCount: item.tokens_count,
+            is_shared: item.is_shared,
+            shared_message_id: item.shared_message_id,
             created: item.created,
             updated: item.updated,
         };
@@ -252,4 +261,77 @@ export const clearMessagesByConversationUid = async (uid: string): Promise<boole
     });
 
     return true;
+}
+
+
+const SD_IMAGE_MODEL_ID = '35ad567c69254adeb6f27ffbdc289593';
+
+export const shareSdMessage = async (id: number, template: string): Promise<{ result: boolean, message: string }> => {
+
+    //查询该信息的内容
+    let msg = await queryMessageById(id);
+
+    if (msg == null) {
+        //
+        return {
+            result: false,
+            message: "数据错误,没有找到该消息!"
+        };
+    }
+    //msg.text
+    let images = [];
+    try {
+        images = JSON.parse(msg.text);
+    } catch (error) {
+        return {
+            result: false,
+            message: '结果格式错误!'
+        };
+    }
+
+    //上传图片
+    let imageCids: Array<string> = [];
+    for (let i = 0; i < images.length; i++) {
+        let cid = await ipfsCreateWithLocalFile([".rrai", "datasets", SD_IMAGE_MODEL_ID, msg.senderId],
+            images[i],
+            "image/png",
+            `image_${i}.png`,
+            "dataset");
+        console.log(cid);
+        imageCids.push(cid);
+    }
+    let options: any = JSON.parse(msg.modelOptions);
+    //保存信息到IPFS中
+    let cid = await ipfsCreateWithContent([".rrai", "datasets", SD_IMAGE_MODEL_ID, msg.senderId],
+        JSON.stringify({
+            "prompts": options.prompts,
+            "negative_prompt": options.negative_prompt,
+            "steps": options.steps,
+            "batch_size": options.batch_size,
+            "results": imageCids,
+        }),
+        "application/json",
+        'sd.json',
+        "dataset");
+    console.log(cid);
+
+    //获取datasetId
+    let datasetId = await datasetCreateByModelId(SD_IMAGE_MODEL_ID);
+    console.log(datasetId);
+    //创建dataset row
+    let rowId = await datasetCreateRow(datasetId, cid, `,`);
+    console.log(rowId);
+
+    let res = await db.execute(`UPDATE messages SET is_shared = :is_shared, shared_message_id = :shared_message_id where id = :id`, {
+        ":id": id,
+        ":is_shared": 1,
+        ":shared_message_id": JSON.stringify({
+            "cid": cid,
+            "rowId": rowId
+        }),
+    });
+    return {
+        result: true,
+        message: ""
+    };
 }
