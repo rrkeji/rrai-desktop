@@ -1,10 +1,11 @@
 
 import {
     FileEntity as StorageFileEntity, listFiles, listFilesByCategory,
-    createDir as createLocalDir
+    createDir as createLocalDir,
+
 } from '@/tauri/storage/index';
 
-import { ipfsPinFilesSearch } from '@/tauri/idns/index';
+import { ipfsPinFilesSearch, } from '@/tauri/idns/index';
 
 export interface FileEntity {
     id: number;
