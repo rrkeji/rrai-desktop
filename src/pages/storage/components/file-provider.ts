@@ -48,6 +48,14 @@ export class FileProvider {
         }
     }
 
+    async deleteFile(id: number): Promise<{ result: boolean, message: string }> {
+
+        return {
+            result: true,
+            message: ''
+        };
+    }
+
 }
 
 async function _localListFiles(parentId: number, options: { [key: string]: any }): Promise<FileEntity[]> {

@@ -141,7 +141,7 @@ export const ImageCarouselViewer: React.FC<ImageCarouselViewerProps> = ({ classN
                                     });
                                 }
                             }}
-                            disabled={message.is_shared === 1}
+                            disabled={message.is_shared !== 1}
                         ></IconButton>
                         <IconButton className={classnames(styles.tool_button)}
                             title={"下载"}

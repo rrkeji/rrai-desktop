@@ -3,17 +3,17 @@ import classnames from 'classnames';
 
 import styles from './index.less';
 
-export interface ImageViewerProps {
+export interface JsonViewerProps {
     className?: string;
-    url: string;
+    content: string;
 }
 
-export const ImageViewer: React.FC<ImageViewerProps> = ({ className, url }) => {
+export const JsonViewer: React.FC<JsonViewerProps> = ({ className, content }) => {
     return (
         <div className={classnames(styles.container, className)}>
-            <img src={url}></img>
+            {content}
         </div>
     );
 };
 
-export default ImageViewer;
+export default JsonViewer;

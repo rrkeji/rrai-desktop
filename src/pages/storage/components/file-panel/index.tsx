@@ -3,6 +3,7 @@ import { Drawer, Button, Row, Col, Space, Radio, Divider } from 'antd';
 import { DownloadOutlined, AppstoreOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
 import { fileDownload } from '@/utils';
+import { UrlViewer } from '@/components/viewer/index';
 
 import styles from './index.less';
 import { getContent } from '@/tauri/storage/index';
@@ -21,16 +22,6 @@ export const FilePanel = (props: {
   const [radioValue, setRadioValue] = useState<string>('detail');
 
   const [preview, setPreview] = useState<any>();
-
-  useEffect(() => {
-    if (props.fileType === 'image/png') {
-      setPreview((
-        <div>
-          <img src={`rrfile://ipfs/${props.fileHash}?filename=${props.fileName}`}></img>
-        </div>
-      ));
-    }
-  }, [props.id]);
 
   const getFileName = (file: any) => {
     if (file && file.fileName) {
@@ -68,7 +59,7 @@ export const FilePanel = (props: {
         </div>
       }
     >
-      {!!preview ? <>{preview}</> : <div>不支持该类型文件的预览!</div>}
+      <UrlViewer className={classnames()} url={`rrfile://ipfs/${props.fileHash}?filename=${props.fileName}`} fileType={props.fileType}></UrlViewer>
     </Drawer>
   );
 };
