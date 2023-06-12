@@ -4,7 +4,6 @@ export const publishTask = async (name: string, taskType: string, model: string,
     modelArgs: string, description: string, assignStrategy: string,
     reward: number): Promise<any> => {
     //查看token是否设置
-
     let res = await invoke('plugin:rrai-idns|tasks_task_publish', {
         name: name,
         taskType: taskType,

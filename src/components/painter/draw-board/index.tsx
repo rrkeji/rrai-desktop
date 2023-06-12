@@ -74,6 +74,7 @@ export const DrawingBoard: React.FC<DrawingBoardProps> = ({ className, conversat
                 items={items}
                 onChange={onChange} />
             <RunButton className={classnames(styles.run_button)}
+                taskType={'AI_STABLE_DIFFUSION'}
                 ability={ability}
                 args={JSON.stringify(args)}
                 onTaskPublished={async (taskResult) => {
