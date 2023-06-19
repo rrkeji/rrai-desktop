@@ -49,17 +49,24 @@ export default defineConfig({
       component: "@/pages/discovery/index"
     },
     {
+      path: '/ghost',
+      component: '@/layouts/empty',
+      layout: false,
+      routes: [
+        {
+          path: 'forbid',
+          component: '@/pages/forbid/index',
+        },
+      ]
+    },
+    {
       path: '/',
-      component: '@/layouts/side-layout',
+      component: '@/pages/settings/index',
       wrappers: ['@/wrappers/auth'],
       routes: [
         {
           path: "/settings/account",
           component: "@/pages/settings/account/index",
-        },
-        {
-          path: "/settings/settings",
-          component: "@/pages/settings/settings/index",
         },
         {
           path: "/settings/upgrade",
@@ -68,6 +75,14 @@ export default defineConfig({
         {
           path: "/settings/helper",
           component: "@/pages/settings/helper/index",
+        },
+        {
+          path: "/settings/feedback",
+          component: "@/pages/settings/feedback/index",
+        },
+        {
+          path: "/settings/about",
+          component: "@/pages/settings/about/index",
         },
         {
           path: "/settings/customerservice",
