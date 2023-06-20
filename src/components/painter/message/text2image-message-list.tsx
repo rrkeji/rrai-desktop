@@ -35,11 +35,13 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
             title: '提示词',
             dataIndex: 'prompts',
             key: 'prompts',
+            width: '30%'
         },
         {
-            title: '分辨率',
-            dataIndex: 'size',
-            key: 'size',
+            title: '反向提示词',
+            dataIndex: 'negative_prompt',
+            key: 'negative_prompt',
+            width: '30%'
         },
         {
             title: '数量',
@@ -58,11 +60,11 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
                         {images.map((image: string) => {
                             if (image.indexOf('rrfile') >= 0) {
                                 return (
-                                    <img src={`${image}`} width={60} height={60}></img>
+                                    <img className={styles.image} src={`${image}`} width={120} height={120}></img>
                                 );
                             } else {
                                 return (
-                                    <img src={`rrfile://localhost${image}`} width={60} height={60}></img>
+                                    <img className={styles.image} src={`rrfile://localhost${image}`} width={120} height={120}></img>
                                 );
                             }
 
@@ -112,6 +114,7 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
                     console.log(message);
                     return {
                         prompts: options.prompts,
+                        negative_prompt: options.negative_prompt,
                         size: options.prompts,
                         batchSize: options.batch_size,
                         images: result,

@@ -109,9 +109,9 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                         clearTimeout(timeoutHandle);
                         timeoutHandle = null;
                     }
-                    // timeoutHandle = setTimeout(async () => {
-                    //     await queryTaskStatus(taskId, message);
-                    // }, 1000);
+                    timeoutHandle = setTimeout(async () => {
+                        await queryTaskStatus(taskId, message);
+                    }, 1000);
                 }
             } else {
                 let res2 = await queryRemoteTaskById(parseInt(taskId + ''));
@@ -129,6 +129,14 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     //
                     await updateTaskMessage(message.id, JSON.stringify(images), "true");
                     setProgress('completed');
+                }else{
+                    if (timeoutHandle !== null) {
+                        clearTimeout(timeoutHandle);
+                        timeoutHandle = null;
+                    }
+                    timeoutHandle = setTimeout(async () => {
+                        await queryTaskStatus(taskId, message);
+                    }, 1000);
                 }
             }
         } catch (error) {
