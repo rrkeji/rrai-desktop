@@ -56,9 +56,16 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
                 return (
                     <>
                         {images.map((image: string) => {
-                            return (
-                                <img src={`rrfile://localhost${image}`} width={60} height={60}></img>
-                            );
+                            if (image.indexOf('rrfile') >= 0) {
+                                return (
+                                    <img src={`${image}`} width={60} height={60}></img>
+                                );
+                            } else {
+                                return (
+                                    <img src={`rrfile://localhost${image}`} width={60} height={60}></img>
+                                );
+                            }
+
                         })}
                     </>
                 );

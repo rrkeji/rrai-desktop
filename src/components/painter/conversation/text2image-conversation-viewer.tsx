@@ -6,6 +6,8 @@ import { ImageCarouselViewer } from '../image-viewer/index';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import { getLastMessageByConversationId, updateTaskMessage } from '@/services/message-service';
 import { performTaskStatus } from '@/tauri/abilities/index';
+import { qureyTaskById as queryRemoteTaskById } from '@/tauri/idns/index';
+
 import { Text2ImageMessageList } from '../message/index';
 import { Empty, Button, Spin, Row, Col } from 'antd';
 import { TaskLogView } from '@/components/tasks/index';
@@ -86,27 +88,48 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
     }, [runningTaskId, lastMessage]);
 
     const queryTaskStatus = async (taskId: string, message: MessageEntity) => {
-        try {
-            let res2: any = await performTaskStatus(taskId);
-            //
-            console.log(res2);
-            if (res2 && res2.result_code == 2) {
-                //完成, 更新Message
-                setResult(JSON.parse(res2.result));
-                //
-                await updateTaskMessage(message.id, res2.result, "true");
-                setProgress('completed');
-            } else {
-                setStdout(res2.stdout.split('\n'));
-                setStderr(res2.stderr.split('\n'));
 
-                if (timeoutHandle !== null) {
-                    clearTimeout(timeoutHandle);
-                    timeoutHandle = null;
+
+        try {
+            if (message.purposeId === 'local') {
+                let res2: any = await performTaskStatus(taskId);
+                //
+                console.log(res2);
+                if (res2 && res2.result_code == 2) {
+                    //完成, 更新Message
+                    setResult(JSON.parse(res2.result));
+                    //
+                    await updateTaskMessage(message.id, res2.result, "true");
+                    setProgress('completed');
+                } else {
+                    setStdout(res2.stdout.split('\n'));
+                    setStderr(res2.stderr.split('\n'));
+
+                    if (timeoutHandle !== null) {
+                        clearTimeout(timeoutHandle);
+                        timeoutHandle = null;
+                    }
+                    // timeoutHandle = setTimeout(async () => {
+                    //     await queryTaskStatus(taskId, message);
+                    // }, 1000);
                 }
-                // timeoutHandle = setTimeout(async () => {
-                //     await queryTaskStatus(taskId, message);
-                // }, 1000);
+            } else {
+                let res2 = await queryRemoteTaskById(parseInt(taskId + ''));
+                console.log(res2);
+                if (res2 && res2.task_status == 2) {
+                    //完成, 更新Message
+                    let list: Array<Array<string>> = JSON.parse(res2.result);
+                    let images: Array<string> = [];
+                    for (let i = 0; i < list.length; i++) {
+                        images = images.concat(list[i].map((cid, index) => {
+                            return `rrfile://ipfs/${cid}?filename=image.png`;
+                        }));
+                    }
+                    setResult(images);
+                    //
+                    await updateTaskMessage(message.id, JSON.stringify(images), "true");
+                    setProgress('completed');
+                }
             }
         } catch (error) {
             console.error(error);
@@ -159,7 +182,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     message={message}
                     images={images.map((item, index) => {
                         return {
-                            src: 'rrfile://localhost' + item,
+                            src: item.indexOf('rrfile') >= 0 ? item : 'rrfile://localhost' + item,
                             // src: 'rrfile://ipfs/QmdLuUuPRHpnQSV8iC4HVdpjjVF3Gsb3c3CVSR84fGXp7S?filename=3f298d37-9a69-459a-8f4e-ac7e0c9e9a3b.jpeg',
                             width: 512,
                             height: 512,
