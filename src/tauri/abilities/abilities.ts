@@ -3,9 +3,17 @@ import { invoke } from '@tauri-apps/api/tauri'
 
 export const autoScan = async (): Promise<boolean> => {
 
-    let res = await invoke('plugin:rrai-ability|auto_scan', {});
+    let res = await invoke('plugin:rrai-ability|env_auto_scan', {});
     console.log(res);
     return res as boolean;
+}
+
+
+export const listAbilityEnvs = async (): Promise<Array<any>> => {
+
+    let res = await invoke('plugin:rrai-ability|list_ability_envs', {});
+    console.log(res);
+    return res;
 }
 
 

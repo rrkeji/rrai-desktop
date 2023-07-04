@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { ArrowDownOutlined, FieldTimeOutlined, MoreOutlined, FireOutlined, CheckOutlined, TransactionOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Modal, Statistic, Typography } from 'antd';
 
-import { AbilitiesList, AbilityActive } from '@/components/ability/index';
+import { AbilitiesList, AbilityActive, AbilityEnvList } from '@/components/ability/index';
 
 import styles from './local-container.less';
 import { autoScan, listAbilities } from '@/tauri/abilities/abilities';
@@ -48,7 +48,7 @@ export const LocalContainersPage: React.FC<LocalContainersPageProps> = ({ }) => 
                                         <MoreOutlined className={classnames(styles.icon, styles.infor_icon)} />
                                     </div>
                                 }>
-                                <AbilitiesList v={abilitiesVersion} itemClick={(item) => {
+                                <AbilityEnvList v={abilitiesVersion} itemClick={(item) => {
                                     //
                                     if (item.is_available !== 1) {
                                         //未激活，点击进行如何激活的提示
@@ -59,7 +59,7 @@ export const LocalContainersPage: React.FC<LocalContainersPageProps> = ({ }) => 
                                         setCurrentAbility(item);
                                         setIsAbilityModalOpen(true);
                                     }
-                                }}></AbilitiesList>
+                                }}></AbilityEnvList>
                             </Card>
                         </Col>
 
