@@ -99,3 +99,19 @@ export const updateDatasetRowById = async (id: number, rowCid: string, parts: st
     }
     return res.data;
 }
+
+export const queryKeyValues = async (datasetId: string): Promise<Array<{ key: string; value: string, data: any }>> => {
+
+    let res: string = await invoke('plugin:rrai-idns|dataset_rows_search', {
+        datasetId: datasetId,
+        page: 1,
+        pageSize: 10000
+    });
+    //{"data":{"data":[],"page":10,"page_size":1,"total":0}} 
+    let data: { data: { data: Array<{ parts: string;[key: string]: any }>, page: number, page_size: number, total: number } } = JSON.parse(res);
+
+    return data.data.data.map((item) => {
+        let data: { key: string; value: string, data: any } = JSON.parse(item.parts);
+        return data;
+    });
+}

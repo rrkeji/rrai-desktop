@@ -16,13 +16,11 @@ import styles from './text2image-conversation-viewer.less';
 
 export interface PainterConversationViewerProps {
     className?: string;
-    conversationId: string;
-    conversation: ConversationEntity
 }
 
 let timeoutHandle: NodeJS.Timeout | null = null;
 
-export const Text2ImagePainterConversationViewer: React.FC<PainterConversationViewerProps> = ({ className, conversationId, conversation }) => {
+export const Text2ImagePainterViewer: React.FC<PainterConversationViewerProps> = ({ className }) => {
 
     const [showHistory, setShowHistory] = useState<boolean>(false);
 
@@ -65,8 +63,8 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
 
     useEffect(() => {
         //获取该会话最近的消息
-        refresh(conversationId);
-    }, [conversationId]);
+        refresh('');
+    }, ['']);
 
 
     useEffect(() => {
@@ -129,7 +127,7 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                     //
                     await updateTaskMessage(message.id, JSON.stringify(images), "true");
                     setProgress('completed');
-                }else{
+                } else {
                     if (timeoutHandle !== null) {
                         clearTimeout(timeoutHandle);
                         timeoutHandle = null;
@@ -180,8 +178,8 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
             return (
                 <ImageCarouselViewer
                     className={classnames(styles.content)}
-                    conversation={conversation}
-                    conversationId={conversationId}
+                    conversation={{} as any}
+                    conversationId={''}
                     onHeaderItemClick={async (command: string, args: any) => {
                         if (command === 'ShowHistory') {
                             setShowHistory(true);
@@ -218,8 +216,8 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                             图片生成
                         </div> */}
                         <Text2ImageMessageList className={classnames(styles.content)}
-                            conversation={conversation}
-                            conversationId={conversationId}
+                            conversation={{} as any}
+                            conversationId={''}
                             version={messageListVersion}
                             back={async () => {
                                 setShowHistory(!showHistory);
@@ -228,11 +226,11 @@ export const Text2ImagePainterConversationViewer: React.FC<PainterConversationVi
                 ) : (
                     <>
                         <DrawingBoard className={classnames(styles.board)}
-                            conversation={conversation}
-                            conversationId={conversationId}
+                            conversation={{} as any}
+                            conversationId={''}
                             onMessageCreated={async (res) => {
                                 let runningTaskId = res.taskResult.runningTaskId;
-                                await refresh(conversationId);
+                                await refresh('');
                             }}></DrawingBoard>
                         {contentElement(progress, runningTaskId, lastMessage!, result)}
                         {/* <div className={classnames(styles.show_history_button)}
@@ -254,4 +252,4 @@ const TaskLoading = () => {
 
 }
 
-export default Text2ImagePainterConversationViewer;
+export default Text2ImagePainterViewer;

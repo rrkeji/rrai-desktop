@@ -4,6 +4,7 @@ import { CardSelect, ImageSelect } from '@/components/selects';
 import { CommonProperties } from './common';
 import { StableDiffusionText2ImageArgs, StableDiffusionText2ImageArgsDefault } from '../types';
 import { Row, Col, Input, Select, Slider, InputNumber } from 'antd';
+import { queryKeyValues, datasetRowsSearch } from '@/tauri/idns/index';
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -17,230 +18,162 @@ export interface SimpleBoardProps {
 }
 
 
-const imageStyles = [
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '漫画',
-        title: '漫画'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '现实照片',
-        title: '现实照片'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '赛博朋克',
-        title: '赛博朋克'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '蒸汽朋克',
-        title: '蒸汽朋克'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '吉卜力',
-        title: '吉卜力'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '水彩',
-        title: '水彩'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '插画',
-        title: '插画'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '油画',
-        title: '油画'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '素描',
-        title: '素描'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '涂鸦',
-        title: '涂鸦'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '浮世绘',
-        title: '浮世绘'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '壁画',
-        title: '壁画'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '像素艺术',
-        title: '像素艺术'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '国画',
-        title: '国画'
-    }, {
-        icon: (<div>👩‍💻</div>),
-        value: '3D',
-        title: '3D'
-    }
-];
-
-const scenes = [
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '微距',
-        title: '微距'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '特写 ',
-        title: '特写'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '头像',
-        title: '头像'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '半身照 ',
-        title: '半身照'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '全身照 ',
-        title: '全身照'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '低角度 ',
-        title: '低角度'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '鱼眼 ',
-        title: '鱼眼'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '景深 ',
-        title: '景深'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '镜头光晕 ',
-        title: '镜头光晕'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '航拍 ',
-        title: '航拍'
-    },
-];
-
-const artists = [
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '莫兰',
-        title: '莫兰'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '达芬奇',
-        title: '达芬奇'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '慕夏',
-        title: '慕夏'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '蒙德里安',
-        title: '蒙德里安'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '科尔',
-        title: '科尔'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '莫奈',
-        title: '莫奈'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '维米尔',
-        title: '维米尔'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '伦勃朗',
-        title: '伦勃朗'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '毕加索',
-        title: '毕加索'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '金凯德',
-        title: '金凯德'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '梵高',
-        title: '梵高'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '安格尔',
-        title: '安格尔'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '保罗·高更',
-        title: '保罗·高更'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '齐白石',
-        title: '齐白石'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '林风眠',
-        title: '林风眠'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '潘天寿',
-        title: '潘天寿'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '吴冠中',
-        title: '吴冠中'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '丰子恺',
-        title: '丰子恺'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '张大千',
-        title: '张大千'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '李可染',
-        title: '李可染'
-    },
-    {
-        icon: (<div>👩‍💻</div>),
-        value: '丢勒',
-        title: '丢勒'
-    },
-];
+const samplers =
+    [
+        {
+            "name": "Euler a",
+            "aliases": [
+                "k_euler_a",
+                "k_euler_ancestral"
+            ],
+            "options": {}
+        },
+        {
+            "name": "Euler",
+            "aliases": [
+                "k_euler"
+            ],
+            "options": {}
+        },
+        {
+            "name": "LMS",
+            "aliases": [
+                "k_lms"
+            ],
+            "options": {}
+        },
+        {
+            "name": "Heun",
+            "aliases": [
+                "k_heun"
+            ],
+            "options": {}
+        },
+        {
+            "name": "DPM2",
+            "aliases": [
+                "k_dpm_2"
+            ],
+            "options": {
+                "discard_next_to_last_sigma": "True"
+            }
+        },
+        {
+            "name": "DPM2 a",
+            "aliases": [
+                "k_dpm_2_a"
+            ],
+            "options": {
+                "discard_next_to_last_sigma": "True"
+            }
+        },
+        {
+            "name": "DPM++ 2S a",
+            "aliases": [
+                "k_dpmpp_2s_a"
+            ],
+            "options": {}
+        },
+        {
+            "name": "DPM++ 2M",
+            "aliases": [
+                "k_dpmpp_2m"
+            ],
+            "options": {}
+        },
+        {
+            "name": "DPM++ SDE",
+            "aliases": [
+                "k_dpmpp_sde"
+            ],
+            "options": {}
+        },
+        {
+            "name": "DPM fast",
+            "aliases": [
+                "k_dpm_fast"
+            ],
+            "options": {}
+        },
+        {
+            "name": "DPM adaptive",
+            "aliases": [
+                "k_dpm_ad"
+            ],
+            "options": {}
+        },
+        {
+            "name": "LMS Karras",
+            "aliases": [
+                "k_lms_ka"
+            ],
+            "options": {
+                "scheduler": "karras"
+            }
+        },
+        {
+            "name": "DPM2 Karras",
+            "aliases": [
+                "k_dpm_2_ka"
+            ],
+            "options": {
+                "scheduler": "karras",
+                "discard_next_to_last_sigma": "True"
+            }
+        },
+        {
+            "name": "DPM2 a Karras",
+            "aliases": [
+                "k_dpm_2_a_ka"
+            ],
+            "options": {
+                "scheduler": "karras",
+                "discard_next_to_last_sigma": "True"
+            }
+        },
+        {
+            "name": "DPM++ 2S a Karras",
+            "aliases": [
+                "k_dpmpp_2s_a_ka"
+            ],
+            "options": {
+                "scheduler": "karras"
+            }
+        },
+        {
+            "name": "DPM++ 2M Karras",
+            "aliases": [
+                "k_dpmpp_2m_ka"
+            ],
+            "options": {
+                "scheduler": "karras"
+            }
+        },
+        {
+            "name": "DPM++ SDE Karras",
+            "aliases": [
+                "k_dpmpp_sde_ka"
+            ],
+            "options": {
+                "scheduler": "karras"
+            }
+        },
+        {
+            "name": "DDIM",
+            "aliases": [],
+            "options": {}
+        },
+        {
+            "name": "PLMS",
+            "aliases": [],
+            "options": {}
+        },
+        {
+            "name": "UniPC",
+            "aliases": [],
+            "options": {}
+        }
+    ];
 
 
 const negativePromptsDefault = {
@@ -249,7 +182,18 @@ const negativePromptsDefault = {
     'scene': "nsfw, blurry, bad anatomy, ugly, disfigured, deformed, extra limbs, mutation, out of frame, poorly drawn face, poorly drawn hands, low quality, worst quality, watermark, extra legs, extra arms, mutated hands, jpeg artifacts, nude, naked, topless, nipple, bottomless,",
 };
 
+const BASE_MODEL_DATASET_ID = "46bf35665c06449b9d8a3a55a2fae31b";
+
 export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose, onArgsChange, initArgs }) => {
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [baseModels, setBaseModels] = useState<Array<{ key: string; value: string, data: any }>>([]);
+
+    const [baseModel, setBaseModel] = useState();
+
+    //sampler_index
+    const [samplerIndex, setSamplerIndex] = useState<string>('DPM++ 2S a Karras');
 
     const [commonProerties, setCommonProerties] = useState<{
         steps: number;
@@ -260,14 +204,35 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose, onArgsChange,
         batchSize: 2,
         ratio: "1:1",
     });
+
     const [prompt, setPrompt] = useState<string>('');
 
     const [negativePrompt, setNegativePrompt] = useState<string>(negativePromptsDefault[purpose]);
+
+    const refresh = () => {
+        setLoading(true);
+        //
+        queryKeyValues(BASE_MODEL_DATASET_ID).then((res) => {
+            setBaseModels(res);
+            setLoading(false);
+        }).catch((err) => {
+            console.log(err);
+            setLoading(false);
+        });
+    };
+
+
+    useEffect(() => {
+        //
+        refresh();
+    }, []);
+
 
     useEffect(() => {
         if (initArgs) {
             setPrompt(initArgs.prompts);
             setNegativePrompt(initArgs.negative_prompt);
+            
             setCommonProerties({
                 steps: initArgs.steps,
                 batchSize: initArgs.batch_size,
@@ -280,6 +245,33 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose, onArgsChange,
         <div className={classnames(styles.container)}>
             <Row>
                 <Col span={24} className={classnames(styles.item)}>
+                    <label className={classnames(styles.label)}>基础模型</label>
+                    <ImageSelect
+                        value={'漫画'}
+                        items={baseModels}
+                        onValueChange={(val) => {
+                        }}
+                    ></ImageSelect>
+                </Col>
+                <Col span={24} className={classnames(styles.item)}>
+                    <label className={classnames(styles.label)}>{'风格(LoRA)'}</label>
+                    <ImageSelect
+                        value={'漫画'}
+                        items={baseModels}
+                        onValueChange={(val) => {
+                        }}
+                    ></ImageSelect>
+                </Col>
+                <Col span={24} className={classnames(styles.item)}>
+                    <label className={classnames(styles.label)}>VAE</label>
+                    <ImageSelect
+                        value={'漫画'}
+                        items={baseModels}
+                        onValueChange={(val) => {
+                        }}
+                    ></ImageSelect>
+                </Col>
+                <Col span={24} className={classnames(styles.item)}>
                     <label className={classnames(styles.label)}>画面描述</label>
                     <TextArea rows={5} value={prompt} onChange={(event) => {
                         setPrompt(event.target.value);
@@ -291,6 +283,7 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose, onArgsChange,
                         });
                     }}></TextArea>
                 </Col>
+
                 <Col span={24} className={classnames(styles.item)}>
                     <label className={classnames(styles.label)}>反向描述</label>
                     <TextArea rows={2} value={negativePrompt} onChange={(event) => {
@@ -303,34 +296,24 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ purpose, onArgsChange,
                         });
                     }}></TextArea>
                 </Col>
-                <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>风格</label>
-                    <ImageSelect
-                        value={'漫画'}
-                        items={imageStyles}
-                        onValueChange={(val) => {
-                        }}
-                    ></ImageSelect>
-                </Col>
-                <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>镜头</label>
-                    <ImageSelect
-                        value={'头像'}
-                        items={scenes}
-                        onValueChange={(val) => {
 
-                        }}
-                    ></ImageSelect>
-                </Col>
                 <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>艺术家</label>
+                    <label className={classnames(styles.label)}>{'采样器'}</label>
                     <ImageSelect
-                        value={'达芬奇'}
-                        items={artists}
+                        value={samplerIndex}
+                        items={samplers.map((item) => {
+                            return {
+                                key: item.name,
+                                data: item,
+                                value: item.name
+                            };
+                        })}
                         onValueChange={(val) => {
+                            setSamplerIndex(val)
                         }}
                     ></ImageSelect>
                 </Col>
+
                 <CommonProperties commonProerties={commonProerties} onChange={async (val) => {
                     console.log(val);
                     setCommonProerties(val);

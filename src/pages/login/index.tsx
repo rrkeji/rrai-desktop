@@ -38,7 +38,7 @@ export default function LoginPage() {
         setLocalValue("rrai_web_openid", res.openid);
         setLocalValue("rrai_unionid", res.unionid);
         setLocalValue("rrai_web_appid", res.appid);
-        history.push('/conversation/chat');
+        history.push('/art');
       }
     };
 

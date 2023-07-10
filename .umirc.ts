@@ -49,6 +49,11 @@ export default defineConfig({
       component: "@/pages/discovery/index"
     },
     {
+      wrappers: ['@/wrappers/auth'],
+      path: "/art",
+      component: "@/pages/art/index"
+    },
+    {
       path: '/ghost',
       component: '@/layouts/empty',
       layout: false,

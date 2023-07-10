@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { getConversationsByType, createConversation, queryConversationByUid } from '@/services/conversation-service';
 import { ConversationEntity, MessageEntity } from '@/databases';
 
-import { Text2ImagePainterConversationViewer } from './text2image-conversation-viewer';
+// import { Text2ImagePainterConversationViewer } from './text2image-conversation-viewer';
 
 import styles from './conversation-viewer.less';
 
@@ -42,16 +42,16 @@ export const PainterConversationViewer: React.FC<PainterConversationViewerProps>
         );
     }
 
-    if (conversation.args['painterType'] === 'text2image') {
+    // if (conversation.args['painterType'] === 'text2image') {
 
-        return (
-            <Text2ImagePainterConversationViewer
-                className={classnames(styles.container, className)}
-                conversationId={conversationId}
-                conversation={conversation}
-            ></Text2ImagePainterConversationViewer>
-        );
-    }
+    //     return (
+    //         <Text2ImagePainterConversationViewer
+    //             className={classnames(styles.container, className)}
+    //             conversationId={conversationId}
+    //             conversation={conversation}
+    //         ></Text2ImagePainterConversationViewer>
+    //     );
+    // }
 
     return (
         <div className={classnames(styles.container, className)}>

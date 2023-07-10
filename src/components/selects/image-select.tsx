@@ -29,9 +29,9 @@ const ImageSelectOption: React.FC<ImageSelectOptionProps> = ({ className, select
 export interface ImageSelectProps {
     className?: string;
     items: Array<{
-        value: string;
-        icon: React.ReactNode,
-        title: React.ReactNode | string,
+        key: string;
+        data: any,
+        value: React.ReactNode | string,
     }>;
     value: string;
     onValueChange?: (value: string) => Promise<void> | void;
@@ -41,16 +41,16 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({ className, items, valu
 
     return (
         <Select className={classnames(styles.container, className)} value={value} onChange={(val) => {
-            onValueChange && onValueChange(value);
+            onValueChange && onValueChange(val);
         }}>
             {
                 items && items.map((item, index) => {
                     return (
                         <Option
                             key={index}
-                            value={item.value}
+                            value={item.key}
                         >
-                            {item.title}
+                            {item.value}
                         </Option>
                     );
                 })

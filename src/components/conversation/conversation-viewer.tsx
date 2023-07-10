@@ -223,11 +223,11 @@ export const ConversationViewer: React.FC<ConversationViewerProps> = ({ classNam
                 }}></ConversationBar>
 
             <div className={styles.content}>
-                {
+                {/* {
                     conversationType === 'painter' && (
                         <PainterConversationViewer conversationId={conversationId!}></PainterConversationViewer>
                     )
-                }
+                } */}
                 {
                     conversationType === 'chat' && (
                         <>
