@@ -1,40 +1,46 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import classnames from 'classnames';
-import { ConversationEntity, MessageEntity } from '@/databases';
-import { getMessageByConversationId } from '@/services/message-service';
+import { LocalTaskEntity } from '@/databases/task';
+import { getLocalTasksByTaskType } from '@/services/local-task-service';
 import { Table, Button } from 'antd';
 
 import styles from './text2image-message-list.less';
 
 export interface Text2ImageMessageListProps {
     className?: string;
-    conversationId: string;
-    conversation: ConversationEntity;
     beforeNode?: ReactNode;
     afterNode?: ReactNode;
     version: number;
     back: () => Promise<any>;
 }
 
-export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ className, conversationId, conversation, version, beforeNode, afterNode, back }) => {
+export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ className, version, beforeNode, afterNode, back }) => {
 
-    const [messages, setMessages] = useState<Array<MessageEntity>>([]);
+    const [messages, setMessages] = useState<Array<any>>([]);
 
-    const refresh = async (conversationId: string) => {
-        let res = await getMessageByConversationId(conversationId);
-        setMessages(res.data);
+    const refresh = async () => {
+        const TASK_TYPE = "AI_STABLE_DIFFUSION";
+
+        const TASK_ABILITY = "AI_STABLE_DIFFUSION_WEBUI";
+
+        let res = await getLocalTasksByTaskType(TASK_TYPE, TASK_ABILITY, 1, 1000);
+        setMessages(res.data.map((item) => {
+            return {
+                images: JSON.parse(item.result),
+                ...JSON.parse(item.args),
+            };
+        }));
     }
-
     useEffect(() => {
         //获取列表
-        refresh(conversationId);
-    }, [conversationId]);
+        refresh();
+    }, [version]);
 
     const columns = [
         {
             title: '提示词',
-            dataIndex: 'prompts',
-            key: 'prompts',
+            dataIndex: 'prompt',
+            key: 'prompt',
             width: '30%'
         },
         {
@@ -45,8 +51,8 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
         },
         {
             title: '数量',
-            dataIndex: 'batchSize',
-            key: 'batchSize',
+            dataIndex: 'batch_size',
+            key: 'batch_size',
         },
         {
             title: '图片',

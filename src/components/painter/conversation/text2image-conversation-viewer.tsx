@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import { ConversationEntity, MessageEntity } from '@/databases';
+import { LocalTaskEntity } from '@/databases/task';
 import { DrawingBoard } from '../draw-board/index';
 import { ImageCarouselViewer } from '../image-viewer/index';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
-import { getLastMessageByConversationId, updateTaskMessage } from '@/services/message-service';
+import { getLastLocalTaskByTaskType, updateLocalTaskResult } from '@/services/local-task-service';
 import { performTaskStatus } from '@/tauri/abilities/index';
 import { qureyTaskById as queryRemoteTaskById } from '@/tauri/idns/index';
 
@@ -20,42 +20,42 @@ export interface PainterConversationViewerProps {
 
 let timeoutHandle: NodeJS.Timeout | null = null;
 
+const TASK_TYPE = "AI_STABLE_DIFFUSION";
+
+const TASK_ABILITY = "AI_STABLE_DIFFUSION_WEBUI";
+
 export const Text2ImagePainterViewer: React.FC<PainterConversationViewerProps> = ({ className }) => {
 
     const [showHistory, setShowHistory] = useState<boolean>(false);
 
-    const [lastMessage, setLastMessage] = useState<MessageEntity | null>(null);
+    const [lastMessage, setLastMessage] = useState<LocalTaskEntity | null>(null);
 
     const [runningTaskId, setRunningTaskId] = useState<string | null>(null);
 
     const [progress, setProgress] = useState<'empty' | 'waiting' | 'completed' | 'fail'>('empty');
-
-    const [stdout, setStdout] = useState<Array<string>>([]);
-
-    const [stderr, setStderr] = useState<Array<string>>([]);
 
     const [result, setResult] = useState<Array<string>>([]);
 
     const [messageListVersion, setMessageListVersion] = useState<number>(new Date().getTime());
 
     const refresh = async (conversationId: string) => {
-        let res: any = await getLastMessageByConversationId(conversationId);
+        let res: any = await getLastLocalTaskByTaskType(TASK_TYPE, TASK_ABILITY);
         console.log(res);
         if (res == null) {
             setLastMessage(null);
         } else {
             setLastMessage(res);
-            setRunningTaskId(res.senderId);
-            //res.purposeId 'local'
-            if (res.typing === 'false') {
+            setRunningTaskId(res.request_task_id);
+            //res.status  
+            if (res.status === 1) {
                 //正在
                 setProgress('waiting');
-            } else if (res.typing === 'fail') {
+            } else if (res.status === 2) {
                 //失败
-                setProgress('fail');
+                setProgress('completed');
             } else {
                 //完成
-                setProgress('completed');
+                setProgress('fail');
             }
         }
 
@@ -85,62 +85,36 @@ export const Text2ImagePainterViewer: React.FC<PainterConversationViewerProps> =
         };
     }, [runningTaskId, lastMessage]);
 
-    const queryTaskStatus = async (taskId: string, message: MessageEntity) => {
-
-
+    const queryTaskStatus = async (taskId: string, message: LocalTaskEntity) => {
         try {
-            if (message.purposeId === 'local') {
-                let res2: any = await performTaskStatus(taskId);
+            let res2 = await queryRemoteTaskById(parseInt(taskId + ''));
+            console.log(res2);
+            if (res2 && res2.task_status == 2) {
+                //完成, 更新Message
+                let list: Array<Array<string>> = JSON.parse(res2.result);
+                let images: Array<string> = [];
+                for (let i = 0; i < list.length; i++) {
+                    images = images.concat(list[i].map((cid, index) => {
+                        return `rrfile://ipfs/${cid}?filename=image.png`;
+                    }));
+                }
+                setResult(images);
                 //
-                console.log(res2);
-                if (res2 && res2.result_code == 2) {
-                    //完成, 更新Message
-                    setResult(JSON.parse(res2.result));
-                    //
-                    await updateTaskMessage(message.id, res2.result, "true");
-                    setProgress('completed');
-                } else {
-                    setStdout(res2.stdout.split('\n'));
-                    setStderr(res2.stderr.split('\n'));
-
-                    if (timeoutHandle !== null) {
-                        clearTimeout(timeoutHandle);
-                        timeoutHandle = null;
-                    }
-                    timeoutHandle = setTimeout(async () => {
-                        await queryTaskStatus(taskId, message);
-                    }, 1000);
-                }
+                await updateLocalTaskResult(message.id, 0, JSON.stringify(images), images[0], 2);
+                setProgress('completed');
             } else {
-                let res2 = await queryRemoteTaskById(parseInt(taskId + ''));
-                console.log(res2);
-                if (res2 && res2.task_status == 2) {
-                    //完成, 更新Message
-                    let list: Array<Array<string>> = JSON.parse(res2.result);
-                    let images: Array<string> = [];
-                    for (let i = 0; i < list.length; i++) {
-                        images = images.concat(list[i].map((cid, index) => {
-                            return `rrfile://ipfs/${cid}?filename=image.png`;
-                        }));
-                    }
-                    setResult(images);
-                    //
-                    await updateTaskMessage(message.id, JSON.stringify(images), "true");
-                    setProgress('completed');
-                } else {
-                    if (timeoutHandle !== null) {
-                        clearTimeout(timeoutHandle);
-                        timeoutHandle = null;
-                    }
-                    timeoutHandle = setTimeout(async () => {
-                        await queryTaskStatus(taskId, message);
-                    }, 1000);
+                if (timeoutHandle !== null) {
+                    clearTimeout(timeoutHandle);
+                    timeoutHandle = null;
                 }
+                timeoutHandle = setTimeout(async () => {
+                    await queryTaskStatus(taskId, message);
+                }, 1000);
             }
         } catch (error) {
             console.error(error);
             //查询不到该任务，异常
-            await updateTaskMessage(message.id, "", "fail");
+            await updateLocalTaskResult(message.id, 3, '', '', 3);
         }
     };
 
@@ -169,8 +143,6 @@ export const Text2ImagePainterViewer: React.FC<PainterConversationViewerProps> =
                         <div className={styles.spin_content} />
                     </Spin>
                     <div className={classnames(styles.logs)}>
-                        <TaskLogView logs={stdout} title={"标准输出"} className={classnames(styles.logview)}></TaskLogView>
-                        <TaskLogView logs={stderr} title={"错误输出"} className={classnames(styles.logview)}></TaskLogView>
                     </div>
                 </div>
             );
@@ -226,8 +198,6 @@ export const Text2ImagePainterViewer: React.FC<PainterConversationViewerProps> =
                 ) : (
                     <>
                         <DrawingBoard className={classnames(styles.board)}
-                            conversation={{} as any}
-                            conversationId={''}
                             onMessageCreated={async (res) => {
                                 let runningTaskId = res.taskResult.runningTaskId;
                                 await refresh('');

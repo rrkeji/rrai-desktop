@@ -30,9 +30,6 @@ export default function ArtPage() {
         <div className={classnames(styles.container)}>
             <div data-tauri-drag-region className={classnames(styles.header)}>
                 <div data-tauri-drag-region className={classnames(styles.left)}>
-
-                </div>
-                <div data-tauri-drag-region className={classnames(styles.center)}>
                     <Radio.Group
                         options={[
                             { label: '文生图', value: 'txt2img' },
@@ -46,6 +43,9 @@ export default function ArtPage() {
                         optionType="button"
                         buttonStyle="solid"
                     />
+                </div>
+                <div data-tauri-drag-region className={classnames(styles.center)}>
+
                 </div>
                 <div data-tauri-drag-region className={classnames(styles.right)}>
 

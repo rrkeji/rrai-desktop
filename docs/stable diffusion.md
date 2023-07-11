@@ -130,3 +130,32 @@ normal quality
 
 示例可以见1上的反向提示词。
 
+
+
+
+https://github.com/mxinden/rust-libp2p-server
+
+
+```
+{
+  "enable_hr": false,
+  "denoising_strength": 0,
+  "prompt": "<lora:Chinese style_20230608163116:1>",
+  "seed": 3664758608,
+  "batch_size": 1,
+  "n_iter": 1,
+  "steps": 20,
+  "cfg_scale": 7,
+  "width": 512,
+  "height": 512,
+  "restore_faces": false,
+  "tiling": false,
+  "negative_prompt": "",
+  "override_settings": {
+      "sd_model_checkpoint" :"glove_2d_v1.0.safetensors [5a7c8c091d]"
+   },
+  "script_args": [
+   ],
+  "sampler_index": "Euler a"
+}
+```

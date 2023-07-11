@@ -3,3 +3,4 @@ export * from './conversation-service';
 export * from './message-service';
 export * from './lexica-service';
 export * from './types';
+export * from './local-task-service';

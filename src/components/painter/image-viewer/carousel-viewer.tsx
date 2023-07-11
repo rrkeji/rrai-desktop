@@ -9,7 +9,7 @@ import {
 } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { IconButton } from '@/components/buttons/index';
-import { ConversationEntity, MessageEntity } from '@/databases';
+import { LocalTaskEntity } from '@/databases/task';
 import { shareSdMessage } from '@/services/message-service';
 const { confirm, info, error } = Modal;
 
@@ -17,9 +17,7 @@ import styles from './carousel-viewer.less';
 
 export interface ImageCarouselViewerProps {
     className?: string
-    conversationId: string;
-    conversation: ConversationEntity;
-    message: MessageEntity,
+    message: LocalTaskEntity,
     images: Array<{ src: string; width: number; height: number; }>;
     onHeaderItemClick?: (command: string, args: any) => Promise<any>;
 }
