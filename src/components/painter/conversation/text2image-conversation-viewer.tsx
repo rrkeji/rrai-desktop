@@ -118,7 +118,7 @@ export const Text2ImagePainterViewer: React.FC<PainterConversationViewerProps> =
         }
     };
 
-    const contentElement = (progress: 'empty' | 'waiting' | 'completed' | 'fail', taskId: string | null, message: MessageEntity, images: Array<string>) => {
+    const contentElement = (progress: 'empty' | 'waiting' | 'completed' | 'fail', taskId: string | null, message: LocalTaskEntity, images: Array<string>) => {
         if (progress === 'empty') {
             return (
                 <div data-tauri-drag-region className={classnames(styles.content)} style={{ display: 'flex', 'alignItems': 'center', justifyContent: 'center' }}>
@@ -150,8 +150,6 @@ export const Text2ImagePainterViewer: React.FC<PainterConversationViewerProps> =
             return (
                 <ImageCarouselViewer
                     className={classnames(styles.content)}
-                    conversation={{} as any}
-                    conversationId={''}
                     onHeaderItemClick={async (command: string, args: any) => {
                         if (command === 'ShowHistory') {
                             setShowHistory(true);
