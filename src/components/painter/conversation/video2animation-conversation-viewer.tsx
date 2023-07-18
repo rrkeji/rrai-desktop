@@ -12,9 +12,9 @@ import { Text2ImageMessageList } from '../message/index';
 import { Empty, Button, Spin, Row, Col } from 'antd';
 import { TaskLogView } from '@/components/tasks/index';
 
-import styles from './text2image-conversation-viewer.less';
+import styles from './video2animation-conversation-viewer.less';
 
-export interface Text2ImagePainterViewerProps {
+export interface Video2AnimationPainterViewerProps {
     className?: string;
 }
 
@@ -22,9 +22,9 @@ let timeoutHandle: NodeJS.Timeout | null = null;
 
 const TASK_TYPE = "AI_STABLE_DIFFUSION";
 
-const TASK_ABILITY = "AI_STABLE_DIFFUSION_WEBUI";
+const TASK_ABILITY = "RRAI_VIDEO_TO_ANIMATION";
 
-export const Text2ImagePainterViewer: React.FC<Text2ImagePainterViewerProps> = ({ className }) => {
+export const Video2AnimationPainterViewer: React.FC<Video2AnimationPainterViewerProps> = ({ className }) => {
 
     const [showHistory, setShowHistory] = useState<boolean>(false);
 
@@ -218,4 +218,4 @@ const TaskLoading = () => {
 
 }
 
-export default Text2ImagePainterViewer;
+export default Video2AnimationPainterViewer;

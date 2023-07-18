@@ -6,7 +6,7 @@ import { datasetRowsSearchByModelId } from '@/tauri/idns/index';
 import { Input, Radio, Card, Typography, Tabs, Skeleton, Pagination, Spin } from 'antd';
 import { ipfsStringContentByCid } from '@/tauri/idns/index';
 // import { ActivityContentItem, ActivityDefaultViewer } from '@/components/activity/viewer/default-viewer';
-import { Text2ImagePainterViewer } from '@/components/painter/index';
+import { Text2ImagePainterViewer, Video2AnimationPainterViewer } from '@/components/painter/index';
 
 const { Title, Paragraph } = Typography;
 
@@ -22,7 +22,7 @@ const MODEL_ID_MAP: { [key: string]: string } = {
 
 export default function ArtPage() {
 
-    const [active, setActive] = useState<'txt2img' | 'img2img'>('txt2img');
+    const [active, setActive] = useState<'txt2img' | 'img2img' | 'video2animation'>('video2animation');
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -34,7 +34,7 @@ export default function ArtPage() {
                         options={[
                             { label: '文生图', value: 'txt2img' },
                             { label: '图生图', value: 'img2img', disabled: true },
-                            { label: '图片信息', value: 'png', disabled: true },
+                            { label: '视频生动漫', value: 'video2animation' },
                         ]}
                         onChange={({ target: { value } }: RadioChangeEvent) => {
                             setActive(value);
@@ -55,6 +55,11 @@ export default function ArtPage() {
                 {
                     active === 'txt2img' && (
                         <Text2ImagePainterViewer></Text2ImagePainterViewer>
+                    )
+                }
+                {
+                    active === 'video2animation' && (
+                        <Video2AnimationPainterViewer></Video2AnimationPainterViewer>
                     )
                 }
             </div>

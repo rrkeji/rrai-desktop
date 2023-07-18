@@ -2,39 +2,56 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { LocalTaskEntity } from '@/databases/task';
 import { getLocalTasksByTaskType } from '@/services/local-task-service';
-import { Table, Button } from 'antd';
+import { Table, Button, Pagination, Divider } from 'antd';
 
 import styles from './text2image-message-list.less';
 
 export interface Text2ImageMessageListProps {
     className?: string;
-    beforeNode?: ReactNode;
-    afterNode?: ReactNode;
     version: number;
     back: () => Promise<any>;
 }
 
-export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ className, version, beforeNode, afterNode, back }) => {
+export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ className, version, back }) => {
+
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [messages, setMessages] = useState<Array<any>>([]);
 
-    const refresh = async () => {
+    const [page, setPage] = useState<number>(1);
+
+    const [pageSize, setPageSize] = useState<number>(5);
+
+    const [total, setTotal] = useState<number>(0);
+
+    const [current, setCurrent] = useState<number>(0);
+
+    const refresh = async (page: number, pageSize: number,) => {
+
         const TASK_TYPE = "AI_STABLE_DIFFUSION";
 
         const TASK_ABILITY = "AI_STABLE_DIFFUSION_WEBUI";
 
-        let res = await getLocalTasksByTaskType(TASK_TYPE, TASK_ABILITY, 1, 1000);
-        setMessages(res.data.map((item) => {
-            return {
-                images: JSON.parse(item.result),
-                ...JSON.parse(item.args),
-            };
-        }));
+        setLoading(true);
+        try {
+            let res = await getLocalTasksByTaskType(TASK_TYPE, TASK_ABILITY, page, pageSize);
+            setTotal(res.total);
+            setMessages(res.data.map((item) => {
+                return {
+                    images: JSON.parse(item.result),
+                    ...JSON.parse(item.args),
+                };
+            }));
+            setLoading(false);
+        } catch (e) {
+            console.error(e);
+            setLoading(false);
+        }
     }
     useEffect(() => {
         //获取列表
-        refresh();
-    }, [version]);
+        refresh(page, pageSize);
+    }, [version, page, pageSize]);
 
     const columns = [
         {
@@ -86,7 +103,6 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
     //
     return (
         <div className={classnames(styles.container, className)}>
-            {beforeNode}
             <Table
                 title={() => {
                     return (
@@ -99,35 +115,24 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
                         </>
                     );
                 }}
-                dataSource={messages.map((message, index) => {
-                    if (!message) {
-                        return [];
-                    }
-                    console.log(message);
-
-                    let options: any = {};
-                    if (message.modelOptions && message.modelOptions.length > 0) {
-                        options = JSON.parse(message.modelOptions);
-                    }
-                    let result = [];
-                    if (message.text && message.text.length > 0) {
-                        try {
-                            result = JSON.parse(message.text);
-                        } catch (error) {
-                            console.log(error);
-                        }
-                    }
-                    console.log(message);
-                    return {
-                        prompts: options.prompts,
-                        negative_prompt: options.negative_prompt,
-                        size: options.prompts,
-                        batchSize: options.batch_size,
-                        images: result,
-                    }
-                })} columns={columns} />
-
-            {afterNode}
+                loading={loading}
+                pagination={false}
+                dataSource={messages} columns={columns} />
+            <Divider></Divider>
+            <Pagination
+                total={total}
+                current={page}
+                pageSize={pageSize}
+                pageSizeOptions={[5, 10, 20, 50]}
+                onChange={(newPage, nePpageSize) => {
+                    console.log(newPage, nePpageSize);
+                    setPage(newPage);
+                    setPageSize(nePpageSize);
+                    refresh(newPage, nePpageSize,);
+                }}
+                onShowSizeChange={(current, size) => {
+                    setPageSize(size);
+                }} />
         </div >
     );
 };

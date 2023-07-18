@@ -11,7 +11,7 @@ export const getLocalTasksByTaskType = async (taskType: string, ability: string,
 
     console.log('getLocalTasksByTaskType.....');
     //总数
-    const count_rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT  count(1) FROM tasks WHERE task_type = :task_type AND ability = :ability order by created asc limit 0,1", {
+    const count_rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT  count(1) cnt FROM tasks WHERE task_type = :task_type AND ability = :ability order by created asc limit 0,1", {
         ":task_type": taskType,
         ":ability": ability,
     });
@@ -52,7 +52,7 @@ export const getLocalTasksByTaskType = async (taskType: string, ability: string,
         return message;
     });
     return {
-        total: rows.length,
+        total: count_rows[0].cnt,
         data: data
     };
 }
