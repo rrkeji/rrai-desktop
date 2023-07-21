@@ -6,11 +6,7 @@ import { datasetRowsSearchByModelId } from '@/tauri/idns/index';
 import { Input, Radio, Card, Typography, Tabs, Skeleton, Pagination, Spin } from 'antd';
 import { ipfsStringContentByCid } from '@/tauri/idns/index';
 // import { ActivityContentItem, ActivityDefaultViewer } from '@/components/activity/viewer/default-viewer';
-import { Text2ImagePainterViewer, Video2AnimationPainterViewer } from '@/components/painter/index';
-
-const { Title, Paragraph } = Typography;
-
-import HPG_PNG from '@/assets/hbg.png';
+import { Text2ImagePainterViewer, Video2AnimationPainterViewer, Image2ImagePainterViewer } from '@/components/painter/index';
 
 const { Search } = Input;
 
@@ -33,7 +29,7 @@ export default function ArtPage() {
                     <Radio.Group
                         options={[
                             { label: '文生图', value: 'txt2img' },
-                            { label: '图生图', value: 'img2img', disabled: true },
+                            { label: '图生图', value: 'img2img' },
                             { label: '视频生动漫', value: 'video2animation' },
                         ]}
                         onChange={({ target: { value } }: RadioChangeEvent) => {
@@ -55,6 +51,11 @@ export default function ArtPage() {
                 {
                     active === 'txt2img' && (
                         <Text2ImagePainterViewer></Text2ImagePainterViewer>
+                    )
+                }
+                {
+                    active === 'img2img' && (
+                        <Image2ImagePainterViewer></Image2ImagePainterViewer>
                     )
                 }
                 {

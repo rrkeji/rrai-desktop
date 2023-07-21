@@ -122,6 +122,17 @@ export default function Layout() {
         </div>
 
         <div className={classnames(styles.items)}>
+
+          <div className={classnames(styles.item, active === 'storage' ? styles.active : undefined)} onClick={() => {
+            setLocalValue('rrai_active_menu', 'storage');
+            setActive('storage');
+            history.push('/storage');
+          }}>
+            <div className={classnames(styles.item_icon, 'iconfont icon-faxian')}></div>
+            <div className={classnames(styles.item_title)}>storage</div>
+          </div>
+
+
           <div className={classnames(styles.item, active === 'settings' ? styles.active : undefined)} onClick={() => {
             setLocalValue('rrai_active_menu', 'settings');
             setActive('settings');

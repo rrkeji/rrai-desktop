@@ -7,6 +7,7 @@ export interface LocalTaskEntity {
     request_task_id: string;
     name: string;
     ability: string;
+    action: string;
     args: string;
 
     result_code: number;

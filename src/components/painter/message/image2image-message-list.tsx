@@ -4,15 +4,15 @@ import { LocalTaskEntity } from '@/databases/task';
 import { getLocalTasksByAction } from '@/services/local-task-service';
 import { Table, Button, Pagination, Divider } from 'antd';
 
-import styles from './text2image-message-list.less';
+import styles from './image2image-message-list.less';
 
-export interface Text2ImageMessageListProps {
+export interface Image2ImageMessageListProps {
     className?: string;
     version: number;
     back: () => Promise<any>;
 }
 
-export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ className, version, back }) => {
+export const Image2ImageMessageList: React.FC<Image2ImageMessageListProps> = ({ className, version, back }) => {
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -137,4 +137,4 @@ export const Text2ImageMessageList: React.FC<Text2ImageMessageListProps> = ({ cl
     );
 };
 
-export default Text2ImageMessageList;
+export default Image2ImageMessageList;

@@ -4,7 +4,7 @@ import { LocalTaskEntity } from '@/databases/task';
 import { DrawingBoard } from '../draw-board/index';
 import { ImageCarouselViewer } from '../image-viewer/index';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
-import { getLastLocalTaskByTaskType, updateLocalTaskResult } from '@/services/local-task-service';
+import { getLastLocalTaskByAction, updateLocalTaskResult } from '@/services/local-task-service';
 import { performTaskStatus } from '@/tauri/abilities/index';
 import { qureyTaskById as queryRemoteTaskById } from '@/tauri/idns/index';
 
@@ -38,8 +38,8 @@ export const Text2ImagePainterViewer: React.FC<Text2ImagePainterViewerProps> = (
 
     const [messageListVersion, setMessageListVersion] = useState<number>(new Date().getTime());
 
-    const refresh = async (conversationId: string) => {
-        let res: any = await getLastLocalTaskByTaskType(TASK_TYPE, TASK_ABILITY);
+    const refresh = async () => {
+        let res: any = await getLastLocalTaskByAction(TASK_TYPE, TASK_ABILITY, 'IMG2IMG');
         console.log(res);
         if (res == null) {
             setLastMessage(null);
@@ -63,8 +63,8 @@ export const Text2ImagePainterViewer: React.FC<Text2ImagePainterViewerProps> = (
 
     useEffect(() => {
         //获取该会话最近的消息
-        refresh('');
-    }, ['']);
+        refresh();
+    }, []);
 
 
     useEffect(() => {
@@ -194,9 +194,10 @@ export const Text2ImagePainterViewer: React.FC<Text2ImagePainterViewerProps> = (
                 ) : (
                     <>
                         <DrawingBoard className={classnames(styles.board)}
+                            action={'TXT2IMG'}
                             onMessageCreated={async (res) => {
                                 let runningTaskId = res.taskResult.runningTaskId;
-                                await refresh('');
+                                await refresh();
                             }}></DrawingBoard>
                         {contentElement(progress, runningTaskId, lastMessage!, result)}
                         {/* <div className={classnames(styles.show_history_button)}

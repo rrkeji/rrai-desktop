@@ -7,19 +7,22 @@ import { ipfsCreateWithContent, datasetCreateByModelId, datasetCreateRow, ipfsCr
 
 const db = new SQLite(TASKS_DB_NAME);
 
-export const getLocalTasksByTaskType = async (taskType: string, ability: string, page: number, pageSize: number): Promise<{ total: number, data: Array<LocalTaskEntity> }> => {
+
+export const getLocalTasksByAction = async (taskType: string, ability: string, action: string, page: number, pageSize: number): Promise<{ total: number, data: Array<LocalTaskEntity> }> => {
 
     console.log('getLocalTasksByTaskType.....');
     //总数
-    const count_rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT  count(1) cnt FROM tasks WHERE task_type = :task_type AND ability = :ability order by created asc limit 0,1", {
+    const count_rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT  count(1) cnt FROM tasks WHERE task_type = :task_type AND ability = :ability AND action = :action order by created asc limit 0,1", {
         ":task_type": taskType,
         ":ability": ability,
+        ":action": action,
     });
     console.log(count_rows, 'getLocalTasksByTaskType');
 
-    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE task_type = :task_type AND ability = :ability order by created asc limit :size, :page_size", {
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,action,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE task_type = :task_type AND ability = :ability AND action = :action order by created asc limit :size, :page_size", {
         ":task_type": taskType,
         ":ability": ability,
+        ":action": action,
         ":size": (page - 1) * pageSize,
         ":page_size": pageSize
     });
@@ -35,6 +38,7 @@ export const getLocalTasksByTaskType = async (taskType: string, ability: string,
             request_task_id: item.request_task_id,
             name: item.name,
             ability: item.ability,
+            action: item.action,
             args: item.args,
             result_code: item.result_code,
             result: item.result,
@@ -57,13 +61,65 @@ export const getLocalTasksByTaskType = async (taskType: string, ability: string,
     };
 }
 
-export const getLastLocalTaskByTaskType = async (taskType: string, ability: string,): Promise<LocalTaskEntity | null> => {
+export const getLocalTasksByTaskType = async (taskType: string, ability: string, page: number, pageSize: number): Promise<{ total: number, data: Array<LocalTaskEntity> }> => {
+
+    console.log('getLocalTasksByTaskType.....');
+    //总数
+    const count_rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT  count(1) cnt FROM tasks WHERE task_type = :task_type AND ability = :ability order by created asc limit 0,1", {
+        ":task_type": taskType,
+        ":ability": ability,
+    });
+    console.log(count_rows, 'getLocalTasksByTaskType');
+
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,action,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE task_type = :task_type AND ability = :ability order by created asc limit :size, :page_size", {
+        ":task_type": taskType,
+        ":ability": ability,
+        ":size": (page - 1) * pageSize,
+        ":page_size": pageSize
+    });
+
+    console.log(rows, 'getLocalTasksByTaskType');
+
+    let data = rows.map((item, index) => {
+
+        let message: LocalTaskEntity = {
+            id: item.id,
+            category: item.category,
+            task_type: item.task_type,
+            request_task_id: item.request_task_id,
+            name: item.name,
+            ability: item.ability,
+            action: item.action,
+            args: item.args,
+            result_code: item.result_code,
+            result: item.result,
+            cover_image: item.cover_image,
+            stdout: item.stdout,
+            stderr: item.stderr,
+            progress: item.progress,
+            status: item.status,
+            is_shared: item.is_shared,
+            shared_message_id: item.shared_message_id,
+            created: item.created,
+            updated: item.updated,
+        };
+
+        return message;
+    });
+    return {
+        total: count_rows[0].cnt,
+        data: data
+    };
+}
+
+export const getLastLocalTaskByAction = async (taskType: string, ability: string, action: string): Promise<LocalTaskEntity | null> => {
 
     console.log('getLastLocalTaskByTaskType.....');
 
-    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE task_type = :task_type AND ability = :ability order by id desc limit 0,1", {
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,action,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE task_type = :task_type AND ability = :ability AND action = :action order by id desc limit 0,1", {
         ":task_type": taskType,
         ":ability": ability,
+        ":action": action,
     });
 
     console.log(rows, 'getLastLocalTaskByTaskType');
@@ -78,6 +134,7 @@ export const getLastLocalTaskByTaskType = async (taskType: string, ability: stri
                 request_task_id: item.request_task_id,
                 name: item.name,
                 ability: item.ability,
+                action: item.action,
                 args: item.args,
                 result_code: item.result_code,
                 result: item.result,
@@ -101,11 +158,57 @@ export const getLastLocalTaskByTaskType = async (taskType: string, ability: stri
 }
 
 
-export const createLocalTask = async (taskType: string, ability: string, args: string, requestTaskId: string, name: string): Promise<boolean> => {
+export const getLastLocalTaskByTaskType = async (taskType: string, ability: string,): Promise<LocalTaskEntity | null> => {
 
-    let res = await db.execute(`INSERT INTO tasks (task_type,ability,args,request_task_id,name)VALUES (:task_type,:ability,:args,:request_task_id,:name)`, {
+    console.log('getLastLocalTaskByTaskType.....');
+
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,action,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE task_type = :task_type AND ability = :ability order by id desc limit 0,1", {
         ":task_type": taskType,
         ":ability": ability,
+    });
+
+    console.log(rows, 'getLastLocalTaskByTaskType');
+
+    if (rows && rows.length > 0) {
+        let data = rows.map((item, index) => {
+
+            let message: LocalTaskEntity = {
+                id: item.id,
+                category: item.category,
+                task_type: item.task_type,
+                request_task_id: item.request_task_id,
+                name: item.name,
+                ability: item.ability,
+                action: item.action,
+                args: item.args,
+                result_code: item.result_code,
+                result: item.result,
+                cover_image: item.cover_image,
+                stdout: item.stdout,
+                stderr: item.stderr,
+                progress: item.progress,
+                status: item.status,
+                is_shared: item.is_shared,
+                shared_message_id: item.shared_message_id,
+                created: item.created,
+                updated: item.updated,
+            };
+
+            return message;
+        });
+        return data[0];
+    } else {
+        return null;
+    }
+}
+
+
+export const createLocalTask = async (taskType: string, ability: string, action: string, args: string, requestTaskId: string, name: string): Promise<boolean> => {
+
+    let res = await db.execute(`INSERT INTO tasks (task_type,ability,action,args,request_task_id,name)VALUES (:task_type,:ability,:action,:args,:request_task_id,:name)`, {
+        ":task_type": taskType,
+        ":ability": ability,
+        ":action": action,
         ":args": args,
         ":request_task_id": requestTaskId,
         ":name": name,
@@ -137,7 +240,7 @@ export const deleteLocalTaskById = async (id: number) => {
 
 export const queryLocalTaskById = async (id: number): Promise<LocalTaskEntity | null> => {
 
-    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE  id=:id", {
+    const rows = await db.queryWithArgs<Array<{ [key: string]: any }>>("SELECT id,category,task_type,request_task_id,name,ability,action,args,result_code,result,cover_image,stdout,stderr,progress,is_shared,shared_message_id,status,created,updated FROM tasks WHERE  id=:id", {
         ":id": id
     });
 
@@ -152,6 +255,7 @@ export const queryLocalTaskById = async (id: number): Promise<LocalTaskEntity | 
             request_task_id: item.request_task_id,
             name: item.name,
             ability: item.ability,
+            action: item.action,
             args: item.args,
             result_code: item.result_code,
             result: item.result,
@@ -172,6 +276,18 @@ export const queryLocalTaskById = async (id: number): Promise<LocalTaskEntity | 
     }
 }
 
+export const deleteLocalTasksByAction = async (taskType: string, ability: string, action: string): Promise<boolean> => {
+
+    //删除
+    let res1 = await db.execute("delete from tasks where task_type = :task_type AND ability = :ability AND action = :action", {
+        ":task_type": taskType,
+        ":ability": ability,
+        ":action": action,
+    });
+
+    return true;
+}
+
 export const deleteLocalTasksByTaskType = async (taskType: string, ability: string): Promise<boolean> => {
 
     //删除
@@ -182,9 +298,6 @@ export const deleteLocalTasksByTaskType = async (taskType: string, ability: stri
 
     return true;
 }
-
-
-
 
 const SD_IMAGE_MODEL_ID = '35ad567c69254adeb6f27ffbdc289593';
 

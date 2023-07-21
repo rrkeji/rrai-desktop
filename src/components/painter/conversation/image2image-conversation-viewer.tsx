@@ -12,9 +12,9 @@ import { Text2ImageMessageList } from '../message/index';
 import { Empty, Button, Spin, Row, Col } from 'antd';
 import { TaskLogView } from '@/components/tasks/index';
 
-import styles from './video2animation-conversation-viewer.less';
+import styles from './text2image-conversation-viewer.less';
 
-export interface Video2AnimationPainterViewerProps {
+export interface Image2ImagePainterViewerProps {
     className?: string;
 }
 
@@ -22,9 +22,9 @@ let timeoutHandle: NodeJS.Timeout | null = null;
 
 const TASK_TYPE = "AI_STABLE_DIFFUSION";
 
-const TASK_ABILITY = "RRAI_VIDEO_TO_ANIMATION";
+const TASK_ABILITY = "AI_STABLE_DIFFUSION_WEBUI";
 
-export const Video2AnimationPainterViewer: React.FC<Video2AnimationPainterViewerProps> = ({ className }) => {
+export const Image2ImagePainterViewer: React.FC<Image2ImagePainterViewerProps> = ({ className }) => {
 
     const [showHistory, setShowHistory] = useState<boolean>(false);
 
@@ -39,7 +39,7 @@ export const Video2AnimationPainterViewer: React.FC<Video2AnimationPainterViewer
     const [messageListVersion, setMessageListVersion] = useState<number>(new Date().getTime());
 
     const refresh = async () => {
-        let res: any = await getLastLocalTaskByAction(TASK_TYPE, TASK_ABILITY, 'VIDEO2ANIMATION');
+        let res: any = await getLastLocalTaskByAction(TASK_TYPE, TASK_ABILITY, "TXT2IMG");
         console.log(res);
         if (res == null) {
             setLastMessage(null);
@@ -194,7 +194,7 @@ export const Video2AnimationPainterViewer: React.FC<Video2AnimationPainterViewer
                 ) : (
                     <>
                         <DrawingBoard className={classnames(styles.board)}
-                            action={'VIDEO2ANIMATION'}
+                            action={'IMG2IMG'}
                             onMessageCreated={async (res) => {
                                 let runningTaskId = res.taskResult.runningTaskId;
                                 await refresh();
@@ -219,4 +219,4 @@ const TaskLoading = () => {
 
 }
 
-export default Video2AnimationPainterViewer;
+export default Image2ImagePainterViewer;

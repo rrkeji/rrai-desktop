@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/tauri'
 
-export const publishTask = async (name: string, taskType: string, model: string,
+export const publishTask = async (name: string, taskType: string, model: string, action: string,
     modelArgs: string, description: string, assignStrategy: string,
     reward: number): Promise<any> => {
     //查看token是否设置
@@ -8,6 +8,7 @@ export const publishTask = async (name: string, taskType: string, model: string,
         name: name,
         taskType: taskType,
         model: model,
+        action: action,
         modelArgs: modelArgs,
         description: description,
         assignStrategy: assignStrategy,

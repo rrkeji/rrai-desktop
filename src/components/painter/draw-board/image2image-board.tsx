@@ -2,20 +2,23 @@ import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { CardSelect, ImageSelect } from '@/components/selects';
 import { CommonProperties } from './common';
-import { StableDiffusionText2ImageArgs, StableDiffusionText2ImageArgsDefault } from '../types';
-import { Row, Col, Input, Select, Slider, InputNumber, Divider } from 'antd';
+import { StableDiffusionImage2ImageArgs, StableDiffusionImage2ImageArgsDefault } from '../types';
+import { Row, Col, Input, Select, Slider, InputNumber, Divider, Modal, Upload } from 'antd';
 import { queryKeyValues, datasetRowsSearch } from '@/tauri/idns/index';
+import { PlusOutlined } from '@ant-design/icons';
+import type { RcFile, UploadProps } from 'antd/es/upload';
+import type { UploadFile } from 'antd/es/upload/interface';
+
 const { TextArea } = Input;
 const { Option } = Select;
 
-import styles from './simple-board.less';
+import styles from './image2image-board.less';
 
-export interface SimpleBoardProps {
+export interface Image2ImageBoardProps {
     className?: string;
-    initArgs: StableDiffusionText2ImageArgs;
-    onArgsChange: (args: StableDiffusionText2ImageArgs) => Promise<any>
+    initArgs: StableDiffusionImage2ImageArgs;
+    onArgsChange: (args: StableDiffusionImage2ImageArgs) => Promise<any>
 }
-
 
 const samplers =
     [
@@ -174,13 +177,22 @@ const samplers =
         }
     ];
 
+const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+    });
+
+
 const BASE_MODEL_DATASET_ID = "46bf35665c06449b9d8a3a55a2fae31b";
 
 const LORA_DATASET_ID = "4b42018d859446a196397aa5a59affaa";
 
 const VAE_DATASET_ID = "6155e1c7d6cb4e84b7bbd33303fa9e35";
 
-export const SimpleBoard: React.FC<SimpleBoardProps> = ({ onArgsChange, initArgs }) => {
+export const Image2ImageBoard: React.FC<Image2ImageBoardProps> = ({ onArgsChange, initArgs }) => {
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -208,7 +220,7 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ onArgsChange, initArgs
     //sampler_index
     const [samplerIndex, setSamplerIndex] = useState<string>('DPM++ 2S a Karras');
 
-    const [values, setValues] = useState<StableDiffusionText2ImageArgs>(initArgs);
+    const [values, setValues] = useState<StableDiffusionImage2ImageArgs>(initArgs);
 
     const [prompt, setPrompt] = useState<string>('');
 
@@ -219,6 +231,14 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ onArgsChange, initArgs
     const [batchSize, setBatchSize] = useState<number>(20);
 
     const [negativePrompt, setNegativePrompt] = useState<string>('');
+
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+    const [previewOpen, setPreviewOpen] = useState(false);
+
+    const [previewImage, setPreviewImage] = useState('');
+
+    const [previewTitle, setPreviewTitle] = useState('');
 
     const refresh = async () => {
         //
@@ -262,6 +282,20 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ onArgsChange, initArgs
             setBatchSize(initArgs.batch_size);
         }
     }, [initArgs]);
+
+    const handleCancel = () => setPreviewOpen(false);
+
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj as RcFile);
+        }
+
+        setPreviewImage(file.url || (file.preview as string));
+        setPreviewOpen(true);
+        setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
+    };
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+        setFileList(newFileList);
 
     // 720P 1280*720 1080P 1920*1080  480P 720*480
     useEffect(() => {
@@ -357,6 +391,26 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ onArgsChange, initArgs
                         }}
                     ></ImageSelect>
                 </Col>
+
+                <Col span={24} className={classnames(styles.item)}>
+                    <label className={classnames(styles.label)}>原图片</label>
+                    <div className={classnames(styles.upload)}>
+                        <Upload
+                            listType="picture-card"
+                            fileList={fileList}
+                            onPreview={handlePreview}
+                            onChange={handleChange}
+                        >
+                            {fileList.length >= 1 ? null : (
+                                <div className={classnames(styles.upload_button)}>
+                                    <PlusOutlined />
+                                    <div style={{ marginTop: 8 }}>Upload</div>
+                                </div>
+                            )}
+                        </Upload>
+                    </div>
+                </Col>
+
                 <Col span={24} className={classnames(styles.item)}>
                     <label className={classnames(styles.label)}>画面描述</label>
                     <TextArea rows={5} value={prompt} onChange={(event) => {
@@ -372,14 +426,14 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ onArgsChange, initArgs
                 </Col>
                 <Divider style={{ margin: '10px 0 0 0' }}></Divider>
                 {/* <Col span={24} className={classnames(styles.item)}>
-                    <label className={classnames(styles.label)}>VAE</label>
-                    <ImageSelect
-                        value={vae}
-                        items={vaes}
-                        onValueChange={(val) => {
-                        }}
-                    ></ImageSelect>
-                </Col> */}
+                        <label className={classnames(styles.label)}>VAE</label>
+                        <ImageSelect
+                            value={vae}
+                            items={vaes}
+                            onValueChange={(val) => {
+                            }}
+                        ></ImageSelect>
+                    </Col> */}
                 <Col span={24} className={classnames(styles.item)}>
                     <label className={classnames(styles.label)}>{'采样器'}</label>
                     <ImageSelect
@@ -539,8 +593,11 @@ export const SimpleBoard: React.FC<SimpleBoardProps> = ({ onArgsChange, initArgs
                     </Row>
                 </Col>
             </Row>
+            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+                <img alt="example" style={{ width: '100%' }} src={previewImage} />
+            </Modal>
         </div>
     );
 };
 
-export default SimpleBoard;
+export default Image2ImageBoard;

@@ -11,6 +11,7 @@ export interface RunButtonProps {
     className?: string;
     taskType: string;
     ability: string;
+    action: string;
     args: string;
     onTaskPublished: (result: {
         taskType: 'local' | 'remote',
@@ -18,7 +19,7 @@ export interface RunButtonProps {
     }) => Promise<void>
 }
 
-export const RunButton: React.FC<RunButtonProps> = ({ className, taskType, ability, args, onTaskPublished }) => {
+export const RunButton: React.FC<RunButtonProps> = ({ className, taskType, ability, action, args, onTaskPublished }) => {
 
     const [value, setValue] = useState(1);
 
@@ -65,7 +66,7 @@ export const RunButton: React.FC<RunButtonProps> = ({ className, taskType, abili
                     } else if (value === 2) {
                         //远程发布
                         //发布到远程, 并获取到任务ID
-                        let runningTaskId = await publishTask(ability, "AI_STABLE_DIFFUSION", ability, args, "", "", 1000);
+                        let runningTaskId = await publishTask(ability, "AI_STABLE_DIFFUSION", ability, action, args, "", "", 1000);
                         console.log(runningTaskId);
                         await onTaskPublished({
                             taskType: 'remote',
